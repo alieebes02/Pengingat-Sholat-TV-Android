@@ -17,8 +17,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Siapkan Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Tunjuk lokasi Android SDK bawaan server
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Siapkan Gradle versi tetap
         uses: gradle/actions/setup-gradle@v4
