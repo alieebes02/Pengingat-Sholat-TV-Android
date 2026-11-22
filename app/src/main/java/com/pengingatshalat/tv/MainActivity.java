@@ -1,9 +1,14 @@
 package com.pengingatshalat.tv;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.GeolocationPermissions;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -15,7 +20,9 @@ import androidx.core.content.ContextCompat;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQ_LOCATION = 1001;
+    private static final int REQ_FILE_CHOOSER = 1002;
     private WebView webView;
+    private ValueCallback<Uri[]> filePathCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         settings.setGeolocationEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setAllowFileAccess(true);
 
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
@@ -42,9 +50,27 @@ public class MainActivity extends AppCompatActivity {
                                 == PackageManager.PERMISSION_GRANTED;
                 callback.invoke(origin, izinSudahAda, false);
             }
+
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                mintaIzinPenyimpanan();
+                if (filePathCallback != null) {
+                    filePathCallback.onReceiveValue(null);
+                }
+                filePathCallback = callback;
+                Intent intent = params.createIntent();
+                try {
+                    startActivityForResult(intent, REQ_FILE_CHOOSER);
+                } catch (ActivityNotFoundException e) {
+                    filePathCallback = null;
+                    return false;
+                }
+                return true;
+            }
         });
 
         mintaIzinLokasi();
+        mintaIzinPenyimpanan();
         webView.loadUrl("file:///android_asset/index.html");
     }
 
@@ -57,6 +83,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void mintaIzinPenyimpanan() {
+        String izin = Build.VERSION.SDK_INT >= 33
+                ? Manifest.permission.READ_MEDIA_AUDIO
+                : Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (ContextCompat.checkSelfPermission(this, izin) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{izin}, REQ_LOCATION);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_FILE_CHOOSER) {
+            if (filePathCallback == null) return;
+            Uri[] hasil = null;
+            if (resultCode == RESULT_OK && data != null && data.getDataString() != null) {
+                hasil = new Uri[]{Uri.parse(data.getDataString())};
+            }
+            filePathCallback.onReceiveValue(hasil);
+            filePathCallback = null;
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()) {
@@ -66,4 +116,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
