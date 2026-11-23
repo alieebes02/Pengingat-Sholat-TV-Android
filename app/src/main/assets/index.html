@@ -149,7 +149,18 @@ selMetode.value=loadPref('metode','kemenag');
 root.setAttribute('data-theme', selTema.value);
 
 selTema.addEventListener('change',()=>{ root.setAttribute('data-theme',selTema.value); savePref('tema',selTema.value); });
-selMetode.addEventListener('change',()=>{ savePref('metode',selMetode.value); hitungDanTampilkan(); });
+selMetode.addEventListener('change',()=>{ savePref('metode',selMetode.value); hitungDanTampilkan(); syncNative(); });
+
+function syncNative(){
+  if(typeof Native==='undefined') return;
+  try{
+    const nadaSubuh=document.getElementById('selNada-subuh') ? document.getElementById('selNada-subuh').value : 'lembut';
+    const nadaLainnya=document.getElementById('selNada-lainnya') ? document.getElementById('selNada-lainnya').value : 'lembut';
+    const vol=document.getElementById('volSlider') ? parseInt(document.getElementById('volSlider').value,10)||80 : 80;
+    Native.simpanPengaturan(selMetode.value, nadaSubuh, nadaLainnya, vol);
+    Native.jadwalkanUlang();
+  }catch(e){}
+}
 
 // ---------- Jam & tanggal ----------
 function tickClock(){
@@ -306,6 +317,7 @@ function aktifkanLokasi(){
     info.textContent='Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
     info.classList.add('ok');
     hitungDanTampilkan();
+    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
   }, err=>{
     info.textContent='Izin lokasi ditolak/gagal. Gunakan menu remote TV untuk mengizinkan akses lokasi.';
   }, {enableHighAccuracy:false, timeout:10000});
@@ -318,6 +330,7 @@ function aktifkanLokasi(){
     document.getElementById('locInfo').textContent='Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
     document.getElementById('locInfo').classList.add('ok');
     hitungDanTampilkan();
+    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
   }
 })();
 
@@ -370,7 +383,7 @@ function setupSlot(slot, labelNama){
   }
   refresh();
 
-  sel.addEventListener('change', ()=> savePref('nada-'+slot, sel.value));
+  sel.addEventListener('change', ()=>{ savePref('nada-'+slot, sel.value); syncNative(); });
   btnUpload.addEventListener('click', ()=> fileInput.click());
   fileInput.addEventListener('change', (e)=>{
     const f=e.target.files && e.target.files[0];
@@ -387,6 +400,9 @@ function setupSlot(slot, labelNama){
         state.data=reader.result; state.name=f.name;
         sel.value='custom'; savePref('nada-'+slot,'custom');
         refresh();
+        if(typeof Native!=='undefined' && typeof Native.simpanAudioBase64==='function'){
+          try{ Native.simpanAudioBase64(slot, reader.result, f.name); }catch(e){}
+        }
         document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' berhasil diunggah dan tersimpan di perangkat ini.';
       }catch(err){
         document.getElementById('statusMsg').textContent='Gagal menyimpan audio (penyimpanan perangkat mungkin penuh). Coba file yang lebih kecil.';
@@ -398,6 +414,9 @@ function setupSlot(slot, labelNama){
     try{ localStorage.removeItem('customAdzan-'+slot+'-data'); localStorage.removeItem('customAdzan-'+slot+'-name'); }catch(e){}
     state.data=null; state.name='';
     refresh();
+    if(typeof Native!=='undefined' && typeof Native.hapusAudioNative==='function'){
+      try{ Native.hapusAudioNative(slot); }catch(e){}
+    }
     document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' dihapus. Kembali ke nada bawaan.';
   });
   btnTest.addEventListener('click', ()=> mainkan(slot));
@@ -409,6 +428,8 @@ function setupSlot(slot, labelNama){
 }
 setupSlot('subuh','Suara Subuh');
 setupSlot('lainnya','Suara Lainnya');
+volSlider.addEventListener('input', syncNative);
+syncNative();
 
 function mainkan(slot){
   const { sel, state }=SLOTS[slot];
