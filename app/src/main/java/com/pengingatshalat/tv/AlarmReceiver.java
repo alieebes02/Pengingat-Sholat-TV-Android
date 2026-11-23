@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.ToneGenerator;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.core.app.NotificationCompat;
+import java.io.File;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -66,10 +68,27 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void mainkanNada(Context context, String slot){
         SharedPreferences prefs = context.getSharedPreferences("pengingat_shalat", Context.MODE_PRIVATE);
-        String nada = prefs.getString("nada_" + slot, "lembut");
-        int volumePersen = prefs.getInt("volume", 80);
-        int volume = Math.max(0, Math.min(100, volumePersen)) * ToneGenerator.MAX_VOLUME / 100;
+        String audioPath = prefs.getString("audio_path_" + slot, null);
+        float vol = Math.max(0, Math.min(100, prefs.getInt("volume", 80))) / 100f;
 
+        if (audioPath != null) {
+            File f = new File(audioPath);
+            if (f.exists()) {
+                try {
+                    MediaPlayer mp = new MediaPlayer();
+                    mp.setDataSource(audioPath);
+                    mp.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+                    mp.setVolume(vol, vol);
+                    mp.setOnCompletionListener(MediaPlayer::release);
+                    mp.prepare();
+                    mp.start();
+                    return;
+                } catch (Exception ignored) { /* lanjut pakai nada bawaan */ }
+            }
+        }
+
+        String nada = prefs.getString("nada_" + slot, "lembut");
+        int volume = (int) (vol * ToneGenerator.MAX_VOLUME);
         final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, volume);
         Handler handler = new Handler(Looper.getMainLooper());
 
