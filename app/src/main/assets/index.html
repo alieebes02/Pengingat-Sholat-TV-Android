@@ -104,9 +104,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="status" style="color:var(--accent); font-weight:800;">Suara Subuh (biasanya berbeda dari waktu lain)</div>
     <div class="controls">
       <select id="selNada-subuh">
-        <option value="lembut">Nada: Lembut</option>
-        <option value="klasik">Nada: Klasik</option>
-        <option value="modern">Nada: Modern</option>
+        <option value="bawaan">Nada: Bawaan</option>
         <option value="custom">Nada: Audio Saya</option>
       </select>
       <button id="btnTest-subuh">🔔 Tes</button>
@@ -121,9 +119,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="status" style="color:var(--accent); font-weight:800;">Suara Dzuhur / Ashar / Maghrib / Isya</div>
     <div class="controls">
       <select id="selNada-lainnya">
-        <option value="lembut">Nada: Lembut</option>
-        <option value="klasik">Nada: Klasik</option>
-        <option value="modern">Nada: Modern</option>
+        <option value="bawaan">Nada: Bawaan</option>
         <option value="custom">Nada: Audio Saya</option>
       </select>
       <button id="btnTest-lainnya">🔔 Tes</button>
@@ -354,10 +350,8 @@ function beep(freq, start, dur, type){
   osc.connect(gain); gain.connect(ctx.destination);
   osc.start(ctx.currentTime+start); osc.stop(ctx.currentTime+start+dur+0.05);
 }
-function mainkanBeep(jenis){
-  if(jenis==='klasik'){ beep(392,0,0.4); beep(392,0.4,0.4); beep(523,0.8,0.7); }
-  else if(jenis==='modern'){ beep(660,0,0.2); beep(880,0.2,0.2); beep(660,0.4,0.2); beep(880,0.6,0.5); }
-  else { beep(523,0,0.6); beep(659,0.5,0.6); beep(784,1.0,0.9); }
+function mainkanBeep(){
+  beep(523,0,0.5); beep(523,0.6,0.5); beep(523,1.2,0.5);
 }
 
 const SLOTS={};
@@ -369,7 +363,7 @@ function setupSlot(slot, labelNama){
   const fileInput=document.getElementById('fileAdzan-'+slot);
   const fileNameLabel=document.getElementById('fileNameLabel-'+slot);
   const state={ data: loadPref('customAdzan-'+slot+'-data', null), name: loadPref('customAdzan-'+slot+'-name','') };
-  sel.value=loadPref('nada-'+slot,'lembut');
+  sel.value=loadPref('nada-'+slot,'bawaan');
 
   function refresh(){
     if(state.data){
@@ -378,7 +372,7 @@ function setupSlot(slot, labelNama){
     } else {
       fileNameLabel.textContent='';
       btnHapus.style.display='none';
-      if(sel.value==='custom'){ sel.value='lembut'; savePref('nada-'+slot,'lembut'); }
+      if(sel.value==='custom'){ sel.value='bawaan'; savePref('nada-'+slot,'bawaan'); }
     }
   }
   refresh();
@@ -439,7 +433,7 @@ function mainkan(slot){
     audio.volume=getVolume();
     audio.play().catch(()=>{ document.getElementById('statusMsg').textContent='Tidak bisa memutar audio kustom otomatis di browser ini.'; });
   } else {
-    mainkanBeep(jenis);
+    mainkanBeep();
   }
   document.getElementById('statusMsg').textContent='🔔 Waktu shalat telah tiba — nada pengingat diputar.';
   if('Notification' in window && Notification.permission==='granted'){
