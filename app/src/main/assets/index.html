@@ -366,8 +366,9 @@ function setupSlot(slot, labelNama){
   sel.value=loadPref('nada-'+slot,'bawaan');
 
   function refresh(){
-    if(state.data){
-      fileNameLabel.textContent='🎵 '+labelNama+': '+(state.name||'audio kustom');
+    const adaFile = loadPref('customAdzan-'+slot+'-hasfile', null)==='true';
+    if(adaFile){
+      fileNameLabel.textContent='🎵 '+labelNama+': '+(loadPref('customAdzan-'+slot+'-name','') || 'audio kustom');
       btnHapus.style.display='inline-block';
     } else {
       fileNameLabel.textContent='';
@@ -386,15 +387,17 @@ function setupSlot(slot, labelNama){
       document.getElementById('statusMsg').textContent='File terlalu besar (maks sekitar 3MB). Pilih audio yang lebih pendek.';
       return;
     }
+    const hasNative = typeof Native!=='undefined' && typeof Native.simpanAudioBase64==='function';
     const reader=new FileReader();
     reader.onload=()=>{
       try{
-        savePref('customAdzan-'+slot+'-data', reader.result);
+        if(!hasNative){ savePref('customAdzan-'+slot+'-data', reader.result); state.data=reader.result; }
         savePref('customAdzan-'+slot+'-name', f.name);
-        state.data=reader.result; state.name=f.name;
+        savePref('customAdzan-'+slot+'-hasfile', 'true');
+        state.name=f.name;
         sel.value='custom'; savePref('nada-'+slot,'custom');
         refresh();
-        if(typeof Native!=='undefined' && typeof Native.simpanAudioBase64==='function'){
+        if(hasNative){
           try{ Native.simpanAudioBase64(slot, reader.result, f.name); }catch(e){}
         }
         document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' berhasil diunggah dan tersimpan di perangkat ini.';
@@ -405,7 +408,11 @@ function setupSlot(slot, labelNama){
     reader.readAsDataURL(f);
   });
   btnHapus.addEventListener('click', ()=>{
-    try{ localStorage.removeItem('customAdzan-'+slot+'-data'); localStorage.removeItem('customAdzan-'+slot+'-name'); }catch(e){}
+    try{
+      localStorage.removeItem('customAdzan-'+slot+'-data');
+      localStorage.removeItem('customAdzan-'+slot+'-name');
+      localStorage.removeItem('customAdzan-'+slot+'-hasfile');
+    }catch(e){}
     state.data=null; state.name='';
     refresh();
     if(typeof Native!=='undefined' && typeof Native.hapusAudioNative==='function'){
@@ -428,10 +435,16 @@ syncNative();
 function mainkan(slot){
   const { sel, state }=SLOTS[slot];
   const jenis=sel.value;
-  if(jenis==='custom' && state.data){
-    const audio=new Audio(state.data);
-    audio.volume=getVolume();
-    audio.play().catch(()=>{ document.getElementById('statusMsg').textContent='Tidak bisa memutar audio kustom otomatis di browser ini.'; });
+  if(jenis==='custom'){
+    if(typeof Native!=='undefined' && typeof Native.mainkanTes==='function'){
+      try{ Native.mainkanTes(slot); }catch(e){ mainkanBeep(); }
+    } else if(state.data){
+      const audio=new Audio(state.data);
+      audio.volume=getVolume();
+      audio.play().catch(()=>{ document.getElementById('statusMsg').textContent='Tidak bisa memutar audio kustom otomatis di browser ini.'; });
+    } else {
+      mainkanBeep();
+    }
   } else {
     mainkanBeep();
   }
