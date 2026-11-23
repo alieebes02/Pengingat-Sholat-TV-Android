@@ -68,6 +68,22 @@ public class JSBridge {
         e.apply();
     }
 
+        @JavascriptInterface
+    public void mainkanTes(String slot){
+        String path = prefs().getString("audio_path_" + slot, null);
+        if (path == null) return;
+        java.io.File f = new java.io.File(path);
+        if (!f.exists()) return;
+        try {
+            android.media.MediaPlayer mp = new android.media.MediaPlayer();
+            mp.setDataSource(path);
+            mp.setAudioStreamType(android.media.AudioManager.STREAM_NOTIFICATION);
+            mp.setOnCompletionListener(android.media.MediaPlayer::release);
+            mp.prepare();
+            mp.start();
+        } catch (Exception ignored) { }
+    }
+
     private SharedPreferences prefs(){
         return context.getSharedPreferences("pengingat_shalat", Context.MODE_PRIVATE);
     }
