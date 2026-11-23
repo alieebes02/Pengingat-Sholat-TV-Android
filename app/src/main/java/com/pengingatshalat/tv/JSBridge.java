@@ -24,8 +24,8 @@ public class JSBridge {
     public void simpanPengaturan(String metode, String nadaSubuh, String nadaLainnya, int volume){
         SharedPreferences.Editor e = prefs().edit();
         e.putString("metode", metode);
-        e.putString("nada_subuh", "custom".equals(nadaSubuh) ? "lembut" : nadaSubuh);
-        e.putString("nada_lainnya", "custom".equals(nadaLainnya) ? "lembut" : nadaLainnya);
+        e.putString("nada_subuh", "custom".equals(nadaSubuh) ? "bawaan" : nadaSubuh);
+        e.putString("nada_lainnya", "custom".equals(nadaLainnya) ? "bawaan" : nadaLainnya);
         e.putInt("volume", volume);
         e.apply();
     }
