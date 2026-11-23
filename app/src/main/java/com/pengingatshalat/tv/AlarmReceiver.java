@@ -90,8 +90,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         int volume = (int) (vol * ToneGenerator.MAX_VOLUME);
         final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, volume);
         Handler handler = new Handler(Looper.getMainLooper());
-        final int durasi = 900;
-        try { tg.startTone(ToneGenerator.TONE_PROP_BEEP, durasi); } catch (Exception ignored) { }
-        handler.postDelayed(tg::release, durasi + 300);
+        final int durasi = 400;
+        int[] jeda = {0, 600, 1200};
+        for (int t : jeda) {
+            handler.postDelayed(() -> {
+                try { tg.startTone(ToneGenerator.TONE_PROP_BEEP, durasi); } catch (Exception ignored) { }
+            }, t);
+        }
+        handler.postDelayed(tg::release, jeda[jeda.length - 1] + durasi + 300);
     }
 }
