@@ -2,7 +2,10 @@ package com.pengingatshalat.tv;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 import android.webkit.JavascriptInterface;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class JSBridge {
     private final Context context;
@@ -30,6 +33,39 @@ public class JSBridge {
     @JavascriptInterface
     public void jadwalkanUlang(){
         AlarmScheduler.scheduleAll(context);
+    }
+
+    @JavascriptInterface
+    public void simpanAudioBase64(String slot, String dataUrl, String fileName){
+        try {
+            int comma = dataUrl.indexOf(',');
+            String base64 = comma >= 0 ? dataUrl.substring(comma + 1) : dataUrl;
+            byte[] bytes = Base64.decode(base64, Base64.DEFAULT);
+            String ext = "audio";
+            if (fileName != null && fileName.contains(".")) {
+                ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+            }
+            File out = new File(context.getFilesDir(), "adzan_" + slot + "." + ext);
+            FileOutputStream fos = new FileOutputStream(out);
+            fos.write(bytes);
+            fos.close();
+            SharedPreferences.Editor e = prefs().edit();
+            e.putString("audio_path_" + slot, out.getAbsolutePath());
+            e.putString("audio_name_" + slot, fileName);
+            e.apply();
+        } catch (Exception ignored) { }
+    }
+
+    @JavascriptInterface
+    public void hapusAudioNative(String slot){
+        String path = prefs().getString("audio_path_" + slot, null);
+        if (path != null) {
+            new File(path).delete();
+        }
+        SharedPreferences.Editor e = prefs().edit();
+        e.remove("audio_path_" + slot);
+        e.remove("audio_name_" + slot);
+        e.apply();
     }
 
     private SharedPreferences prefs(){
