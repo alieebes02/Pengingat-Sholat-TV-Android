@@ -314,6 +314,7 @@ function aktifkanLokasi(){
     info.classList.add('ok');
     hitungDanTampilkan();
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
+    ambilNamaLokasi(coords.lat, coords.lng);
   }, err=>{
     info.textContent='Izin lokasi ditolak/gagal. Gunakan menu remote TV untuk mengizinkan akses lokasi.';
   }, {enableHighAccuracy:false, timeout:10000});
@@ -323,12 +324,37 @@ function aktifkanLokasi(){
   const lat=loadPref('lat',null), lng=loadPref('lng',null);
   if(lat && lng){
     coords={lat:parseFloat(lat), lng:parseFloat(lng)};
-    document.getElementById('locInfo').textContent='Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
+    const namaTersimpan=loadPref('lokasiNama', null);
+    document.getElementById('locInfo').textContent = namaTersimpan || ('Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')');
     document.getElementById('locInfo').classList.add('ok');
     hitungDanTampilkan();
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
+    ambilNamaLokasi(coords.lat, coords.lng);
   }
 })();
+
+// ---------- Nama lokasi/wilayah (reverse geocoding, butuh internet; TV tanpa internet tetap tampil koordinat) ----------
+async function ambilNamaLokasi(lat, lng){
+  try{
+    const res=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lng+'&localityLanguage=id');
+    if(!res.ok) throw new Error('gagal ambil nama lokasi');
+    const data=await res.json();
+    const bagian=[];
+    if(data.locality) bagian.push(data.locality);
+    if(data.city && data.city!==data.locality) bagian.push(data.city);
+    if(data.principalSubdivision) bagian.push(data.principalSubdivision);
+    if(data.countryName) bagian.push(data.countryName);
+    const nama=bagian.filter(Boolean).join(', ');
+    if(nama){
+      savePref('lokasiNama', nama);
+      const info=document.getElementById('locInfo');
+      info.textContent=nama;
+      info.classList.add('ok');
+    }
+  }catch(e){
+    // Tidak ada internet atau diblokir pratinjau — tetap tampilkan koordinat seperti sebelumnya, tidak masalah.
+  }
+}
 
 // ---------- Volume ----------
 const volSlider=document.getElementById('volSlider');
