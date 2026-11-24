@@ -306,6 +306,17 @@ function tampilkanDetailShalat(key){
   btnTutupDetail.focus();
 }
 
+function tampilkanDetailIslami(label, targetJdn, statusText, penjelasan){
+  const g=jdnToGregorian(targetJdn);
+  const h=jdnToIslamic(targetJdn);
+  document.getElementById('detailTitle').textContent=label;
+  document.getElementById('detailJam').textContent=g.day+' '+BULAN_MASEHI[g.month-1]+' '+g.year;
+  document.getElementById('detailMetode').textContent=h.day+' '+BULAN_HIJRIAH[h.month-1]+' '+h.year+' H — '+statusText;
+  document.getElementById('detailDasar').textContent=penjelasan;
+  detailOverlay.classList.add('open');
+  btnTutupDetail.focus();
+}
+
 // ---------- Jam & tanggal ----------
 // ---------- Kalender Hijriah (hisab tabular, offline) ----------
 const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
@@ -369,10 +380,16 @@ function renderInfoIslami(h, jdn){
   if(!box) return;
   const items=[];
 
+  const PENJELASAN={
+    'Ramadhan':'Bulan ke-9 kalender Hijriah, bulan wajib berpuasa bagi umat Islam. Dihitung dengan hisab tabular (bukan rukyat/pengamatan hilal langsung), sehingga tanggal bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
+    'Idul Fitri':'Hari raya 1 Syawal, menandai berakhirnya bulan Ramadhan. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
+    'Idul Adha':'Hari raya 10 Dzulhijjah, bertepatan dengan puncak ibadah haji dan disunnahkan berkurban. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari penetapan resmi.'
+  };
+
   function buatItem(label, targetJdn, statusText){
     const g=jdnToGregorian(targetJdn);
     const tanggal=g.day+' '+BULAN_MASEHI[g.month-1]+' '+g.year;
-    return {label, tanggal, status:statusText};
+    return {label, tanggal, status:statusText, targetJdn};
   }
 
   if(h.month===9){
@@ -404,6 +421,14 @@ function renderInfoIslami(h, jdn){
     '<div style="font-size:0.95vw; color:var(--muted); margin:0.3vh 0;">'+it.tanggal+'</div>'+
     '<div class="ptime" style="font-size:1.3vw;">'+it.status+'</div></div>'
   ).join('');
+
+  Array.from(box.children).forEach((el, i)=>{
+    el.tabIndex=0;
+    el.addEventListener('click', ()=> tampilkanDetailIslami(items[i].label, items[i].targetJdn, items[i].status, PENJELASAN[items[i].label]));
+    el.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); tampilkanDetailIslami(items[i].label, items[i].targetJdn, items[i].status, PENJELASAN[items[i].label]); }
+    });
+  });
 }
 
 function tickClock(){
