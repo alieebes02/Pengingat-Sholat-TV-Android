@@ -56,7 +56,8 @@ public class PrayerTimes {
 
     public static long[] hitung(int year, int month, int day, double lat, double lng, double tzHours, String metode){
         double fajrAngle = 20, ishaAngle = 18;
-        if ("mwl".equals(metode)) { fajrAngle = 18; ishaAngle = 17; }
+        if ("muhammadiyah".equals(metode)) { fajrAngle = 18; ishaAngle = 18; }
+        else if ("mwl".equals(metode)) { fajrAngle = 18; ishaAngle = 17; }
         else if ("isna".equals(metode)) { fajrAngle = 15; ishaAngle = 15; }
 
         double jd = julian(year, month, day);
