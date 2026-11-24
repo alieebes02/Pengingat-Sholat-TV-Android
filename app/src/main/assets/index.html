@@ -469,6 +469,18 @@ volSlider.value=loadPref('volume','80');
 volSlider.addEventListener('input', ()=> savePref('volume', volSlider.value));
 function getVolume(){ return (parseInt(volSlider.value,10)||80)/100; }
 
+// Remote TV: slider menganggap SEMUA tombol panah sebagai pengatur nilai, sehingga navigasi terjebak.
+// Di sini atas/bawah dipakai untuk pindah fokus ke elemen lain, kiri/kanan tetap mengatur volume seperti biasa.
+volSlider.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowUp' || e.key==='ArrowDown'){
+    e.preventDefault();
+    const urutan=Array.from(document.querySelectorAll('button, select, input, [tabindex]'));
+    const idx=urutan.indexOf(volSlider);
+    const target=urutan[idx + (e.key==='ArrowUp' ? -1 : 1)];
+    if(target) target.focus();
+  }
+});
+
 // ---------- Nada & audio kustom per slot (subuh / lainnya) ----------
 let actx=null;
 function nadaCtx(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); return actx; }
