@@ -108,7 +108,8 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="status" style="color:var(--accent); font-weight:800;">Suara Subuh (biasanya berbeda dari waktu lain)</div>
     <div class="controls">
       <select id="selNada-subuh">
-        <option value="bawaan">Nada: Bawaan</option>
+        <option value="bawaan">Nada: Bawaan (Beep)</option>
+        <option value="adzan_fajr">Nada: Adzan Subuh (Bawaan)</option>
         <option value="custom">Nada: Audio Saya</option>
       </select>
       <button id="btnTest-subuh">🔔 Tes</button>
@@ -123,7 +124,8 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="status" style="color:var(--accent); font-weight:800;">Suara Dzuhur / Ashar / Maghrib / Isya</div>
     <div class="controls">
       <select id="selNada-lainnya">
-        <option value="bawaan">Nada: Bawaan</option>
+        <option value="bawaan">Nada: Bawaan (Beep)</option>
+        <option value="adzan_biasa">Nada: Adzan (Bawaan)</option>
         <option value="custom">Nada: Audio Saya</option>
       </select>
       <button id="btnTest-lainnya">🔔 Tes</button>
@@ -576,6 +578,10 @@ function mainkan(slot){
     } else {
       mainkanBeep();
     }
+  } else if(jenis==='adzan_biasa' || jenis==='adzan_fajr'){
+    const audio=new Audio(jenis+'.mp3');
+    audio.volume=getVolume();
+    audio.play().catch(()=>{ mainkanBeep(); });
   } else {
     mainkanBeep();
   }
