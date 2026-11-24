@@ -81,6 +81,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   </div>
 
   <div class="row" id="prayerRow"></div>
+  <div class="row" id="infoIslami" style="margin-top:0;"></div>
 
   <div class="controls">
     <button id="btnLoc">📍 Aktifkan Lokasi</button>
@@ -187,19 +188,54 @@ function tampilkanTanggalHijriah(){
   if(elH) elH.textContent=h.day+' '+BULAN_HIJRIAH[h.month-1]+' '+h.year+' H';
 
   const banner=document.getElementById('bannerHari');
-  if(!banner) return;
-  if(h.month===9){
-    banner.style.display='block';
-    banner.textContent='🌙 Bulan Ramadhan '+h.year+' H — Hari ke-'+h.day;
-  } else if(h.month===10 && h.day===1){
-    banner.style.display='block';
-    banner.textContent='🎉 Selamat Idul Fitri '+h.year+' H, Mohon Maaf Lahir dan Batin';
-  } else if(h.month===12 && h.day===10){
-    banner.style.display='block';
-    banner.textContent='🕌 Selamat Hari Raya Idul Adha '+h.year+' H';
-  } else {
-    banner.style.display='none';
+  if(banner){
+    if(h.month===9){
+      banner.style.display='block';
+      banner.textContent='🌙 Bulan Ramadhan '+h.year+' H — Hari ke-'+h.day;
+    } else if(h.month===10 && h.day===1){
+      banner.style.display='block';
+      banner.textContent='🎉 Selamat Idul Fitri '+h.year+' H, Mohon Maaf Lahir dan Batin';
+    } else if(h.month===12 && h.day===10){
+      banner.style.display='block';
+      banner.textContent='🕌 Selamat Hari Raya Idul Adha '+h.year+' H';
+    } else {
+      banner.style.display='none';
+    }
   }
+
+  renderInfoIslami(h, jdn);
+}
+
+function renderInfoIslami(h, jdn){
+  const box=document.getElementById('infoIslami');
+  if(!box) return;
+  const items=[];
+
+  if(h.month===9){
+    items.push({label:'Ramadhan', nilai:'Hari ke-'+h.day});
+  } else {
+    const tahun=h.year + (h.month>9 ? 1 : 0);
+    const target=islamicToJDN(tahun,9,1);
+    items.push({label:'Ramadhan', nilai:(target-jdn)+' hari lagi'});
+  }
+
+  if(h.month===10 && h.day===1){
+    items.push({label:'Idul Fitri', nilai:'Hari ini!'});
+  } else {
+    const tahun=h.year + ((h.month>10 || (h.month===10 && h.day>1)) ? 1 : 0);
+    const target=islamicToJDN(tahun,10,1);
+    items.push({label:'Idul Fitri', nilai:(target-jdn)+' hari lagi'});
+  }
+
+  if(h.month===12 && h.day===10){
+    items.push({label:'Idul Adha', nilai:'Hari ini!'});
+  } else {
+    const tahun=h.year + ((h.month===12 && h.day>10) ? 1 : 0);
+    const target=islamicToJDN(tahun,12,10);
+    items.push({label:'Idul Adha', nilai:(target-jdn)+' hari lagi'});
+  }
+
+  box.innerHTML = items.map(it=>'<div class="pcard"><div class="pname">'+it.label+'</div><div class="ptime" style="font-size:1.3vw;">'+it.nilai+'</div></div>').join('');
 }
 
 function tickClock(){
