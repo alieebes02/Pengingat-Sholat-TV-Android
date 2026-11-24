@@ -206,6 +206,18 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     </div>
   </div>
 
+  <div class="settings-overlay" id="detailOverlay">
+    <div class="settings-panel" style="max-width:600px;">
+      <div class="settings-header">
+        <h2 id="detailTitle">Shalat</h2>
+        <button id="btnTutupDetail">✕ Tutup</button>
+      </div>
+      <div style="text-align:center; font-family:'Manrope',sans-serif; font-weight:800; font-size:3vw; color:var(--accent);" id="detailJam">--:--</div>
+      <div class="status" id="detailMetode" style="font-weight:700;"></div>
+      <div class="status" id="detailDasar" style="text-align:left; line-height:1.6;"></div>
+    </div>
+  </div>
+
 <script>
 // ---------- Preferensi lokal (tanpa akun) ----------
 function loadPref(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
@@ -250,7 +262,49 @@ document.addEventListener('keydown', (e)=>{
     settingsOverlay.classList.remove('open');
     btnGear.focus();
   }
+  if(detailOverlay.classList.contains('open') && (e.key==='Escape' || e.key==='Backspace' || e.key==='GoBack')){
+    e.preventDefault();
+    detailOverlay.classList.remove('open');
+  }
 });
+
+// ---------- Detail waktu shalat (klik kartu jadwal) ----------
+const detailOverlay=document.getElementById('detailOverlay');
+const btnTutupDetail=document.getElementById('btnTutupDetail');
+btnTutupDetail.addEventListener('click', ()=> detailOverlay.classList.remove('open'));
+
+const KETERANGAN_METODE={
+  kemenag:'Kementerian Agama RI',
+  muhammadiyah:'HISABMU / KHGT Muhammadiyah',
+  mwl:'Muslim World League (MWL)',
+  isna:'Islamic Society of North America (ISNA)'
+};
+
+function tampilkanDetailShalat(key){
+  const item=jadwalCache.find(p=>p.key===key);
+  if(!item) return;
+  const metode=selMetode.value;
+  const namaMetode=KETERANGAN_METODE[metode] || metode;
+  const m=METHODS[metode] || METHODS.kemenag;
+  let dasar='';
+  if(key==='subuh'){
+    dasar='Dimulai saat posisi matahari berada pada sudut -'+m.fajr+'° di bawah ufuk timur (terbitnya fajar shadiq), menurut kriteria '+namaMetode+'.';
+  } else if(key==='dzuhur'){
+    dasar='Dimulai saat matahari tepat melewati titik kulminasi/meridian (tergelincir ke barat), ditambah 2 menit waktu ihtiyat (kehati-hatian). Waktu ini sama untuk semua metode.';
+  } else if(key==='ashar'){
+    dasar='Dimulai saat panjang bayangan suatu benda sama dengan panjang bendanya ditambah panjang bayangan saat tengah hari (kriteria mazhab Syafi\'i). Tidak dipengaruhi oleh pilihan metode di atas.';
+  } else if(key==='maghrib'){
+    dasar='Dimulai saat matahari terbenam penuh di ufuk barat, pada sudut -0.833° (memperhitungkan refraksi atmosfer dan jari-jari piringan matahari). Waktu ini sama untuk semua metode.';
+  } else if(key==='isya'){
+    dasar='Dimulai saat posisi matahari berada pada sudut -'+m.isha+'° di bawah ufuk barat (hilangnya cahaya senja merah), menurut kriteria '+namaMetode+'.';
+  }
+  document.getElementById('detailTitle').textContent=item.nama;
+  document.getElementById('detailJam').textContent=toHHMM(item.t);
+  document.getElementById('detailMetode').textContent='Metode aktif: '+namaMetode;
+  document.getElementById('detailDasar').textContent=dasar;
+  detailOverlay.classList.add('open');
+  btnTutupDetail.focus();
+}
 
 // ---------- Jam & tanggal ----------
 // ---------- Kalender Hijriah (hisab tabular, offline) ----------
@@ -453,6 +507,10 @@ function renderCards(){
     const div=document.createElement('div');
     div.className='pcard'; div.tabIndex=0; div.id='card-'+p.key;
     div.innerHTML='<div class="pname">'+p.nama+'</div><div class="ptime">'+toHHMM(p.t)+'</div>';
+    div.addEventListener('click', ()=> tampilkanDetailShalat(p.key));
+    div.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); tampilkanDetailShalat(p.key); }
+    });
     row.appendChild(div);
   });
 }
