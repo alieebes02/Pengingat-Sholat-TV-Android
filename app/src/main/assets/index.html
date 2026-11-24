@@ -206,36 +206,60 @@ function tampilkanTanggalHijriah(){
   renderInfoIslami(h, jdn);
 }
 
+function jdnToGregorian(jdn){
+  const a=jdn+32044;
+  const b=Math.floor((4*a+3)/146097);
+  const c=a-Math.floor((146097*b)/4);
+  const d=Math.floor((4*c+3)/1461);
+  const e=c-Math.floor((1461*d)/4);
+  const m=Math.floor((5*e+2)/153);
+  const day=e-Math.floor((153*m+2)/5)+1;
+  const month=m+3-12*Math.floor(m/10);
+  const year=100*b+d-4800+Math.floor(m/10);
+  return {year, month, day};
+}
+const BULAN_MASEHI=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
 function renderInfoIslami(h, jdn){
   const box=document.getElementById('infoIslami');
   if(!box) return;
   const items=[];
 
+  function buatItem(label, targetJdn, statusText){
+    const g=jdnToGregorian(targetJdn);
+    const tanggal=g.day+' '+BULAN_MASEHI[g.month-1]+' '+g.year;
+    return {label, tanggal, status:statusText};
+  }
+
   if(h.month===9){
-    items.push({label:'Ramadhan', nilai:'Hari ke-'+h.day});
+    items.push(buatItem('Ramadhan', jdn, 'Hari ke-'+h.day));
   } else {
     const tahun=h.year + (h.month>9 ? 1 : 0);
     const target=islamicToJDN(tahun,9,1);
-    items.push({label:'Ramadhan', nilai:(target-jdn)+' hari lagi'});
+    items.push(buatItem('Ramadhan', target, (target-jdn)+' hari lagi'));
   }
 
   if(h.month===10 && h.day===1){
-    items.push({label:'Idul Fitri', nilai:'Hari ini!'});
+    items.push(buatItem('Idul Fitri', jdn, 'Hari ini!'));
   } else {
     const tahun=h.year + ((h.month>10 || (h.month===10 && h.day>1)) ? 1 : 0);
     const target=islamicToJDN(tahun,10,1);
-    items.push({label:'Idul Fitri', nilai:(target-jdn)+' hari lagi'});
+    items.push(buatItem('Idul Fitri', target, (target-jdn)+' hari lagi'));
   }
 
   if(h.month===12 && h.day===10){
-    items.push({label:'Idul Adha', nilai:'Hari ini!'});
+    items.push(buatItem('Idul Adha', jdn, 'Hari ini!'));
   } else {
     const tahun=h.year + ((h.month===12 && h.day>10) ? 1 : 0);
     const target=islamicToJDN(tahun,12,10);
-    items.push({label:'Idul Adha', nilai:(target-jdn)+' hari lagi'});
+    items.push(buatItem('Idul Adha', target, (target-jdn)+' hari lagi'));
   }
 
-  box.innerHTML = items.map(it=>'<div class="pcard"><div class="pname">'+it.label+'</div><div class="ptime" style="font-size:1.3vw;">'+it.nilai+'</div></div>').join('');
+  box.innerHTML = items.map(it=>
+    '<div class="pcard"><div class="pname">'+it.label+'</div>'+
+    '<div style="font-size:0.95vw; color:var(--muted); margin:0.3vh 0;">'+it.tanggal+'</div>'+
+    '<div class="ptime" style="font-size:1.3vw;">'+it.status+'</div></div>'
+  ).join('');
 }
 
 function tickClock(){
