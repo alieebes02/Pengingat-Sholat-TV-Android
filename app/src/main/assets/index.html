@@ -487,6 +487,23 @@ function mainkanBeep(){
   beep(523,0,0.5); beep(523,0.6,0.5); beep(523,1.2,0.5);
 }
 
+// ---------- Kendali stop untuk pemutaran suara (tombol Tes jadi Stop) ----------
+let audioAktifSekarang=null;
+let tombolTesAktif=null;
+function resetTombolTes(){
+  if(tombolTesAktif){ tombolTesAktif.textContent='🔔 Tes'; tombolTesAktif=null; }
+}
+function hentikanSemuaAudio(){
+  if(audioAktifSekarang){
+    try{ audioAktifSekarang.pause(); audioAktifSekarang.currentTime=0; }catch(e){}
+    audioAktifSekarang=null;
+  }
+  if(typeof Native!=='undefined' && typeof Native.hentikanTes==='function'){
+    try{ Native.hentikanTes(); }catch(e){}
+  }
+  resetTombolTes();
+}
+
 const SLOTS={};
 function setupSlot(slot, labelNama){
   const sel=document.getElementById('selNada-'+slot);
@@ -553,7 +570,16 @@ function setupSlot(slot, labelNama){
     }
     document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' dihapus. Kembali ke nada bawaan.';
   });
-  btnTest.addEventListener('click', ()=> mainkan(slot));
+  btnTest.addEventListener('click', ()=>{
+    if(tombolTesAktif===btnTest){
+      hentikanSemuaAudio();
+    } else {
+      hentikanSemuaAudio();
+      tombolTesAktif=btnTest;
+      btnTest.textContent='⏹️ Stop';
+      mainkan(slot);
+    }
+  });
   if('Notification' in window && Notification.permission==='default'){
     btnTest.addEventListener('click', ()=>{ try{ Notification.requestPermission(); }catch(e){} }, {once:true});
   }
@@ -570,20 +596,25 @@ function mainkan(slot){
   const jenis=sel.value;
   if(jenis==='custom'){
     if(typeof Native!=='undefined' && typeof Native.mainkanTes==='function'){
-      try{ Native.mainkanTes(slot); }catch(e){ mainkanBeep(); }
+      try{ Native.mainkanTes(slot); }catch(e){ mainkanBeep(); setTimeout(resetTombolTes,1800); }
     } else if(state.data){
       const audio=new Audio(state.data);
       audio.volume=getVolume();
-      audio.play().catch(()=>{ document.getElementById('statusMsg').textContent='Tidak bisa memutar audio kustom otomatis di browser ini.'; });
+      audio.onended=()=>{ if(audioAktifSekarang===audio) audioAktifSekarang=null; resetTombolTes(); };
+      audioAktifSekarang=audio;
+      audio.play().catch(()=>{ document.getElementById('statusMsg').textContent='Tidak bisa memutar audio kustom otomatis di browser ini.'; resetTombolTes(); });
     } else {
-      mainkanBeep();
+      mainkanBeep(); setTimeout(resetTombolTes,1800);
     }
   } else if(jenis==='adzan_biasa' || jenis==='adzan_fajr'){
     const audio=new Audio(jenis+'.mp3');
     audio.volume=getVolume();
-    audio.play().catch(()=>{ mainkanBeep(); });
+    audio.onended=()=>{ if(audioAktifSekarang===audio) audioAktifSekarang=null; resetTombolTes(); };
+    audioAktifSekarang=audio;
+    audio.play().catch(()=>{ mainkanBeep(); setTimeout(resetTombolTes,1800); });
   } else {
     mainkanBeep();
+    setTimeout(resetTombolTes,1800);
   }
   document.getElementById('statusMsg').textContent='🔔 Waktu shalat telah tiba — nada pengingat diputar.';
   if('Notification' in window && Notification.permission==='granted'){
