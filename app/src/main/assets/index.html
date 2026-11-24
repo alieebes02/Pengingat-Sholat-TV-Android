@@ -9,22 +9,27 @@
 <style>
 :root{
   --bg:#0B1B2B; --bg2:#102738; --card:#142F43; --card-active:#1C3B52;
-  --accent:#D9A441; --accent-soft:#8A6A2C;
+  --accent:#D9A441; --accent-soft:#8A6A2C; --pattern-line:rgba(217,164,65,0.08);
   --text:#F2EDE4; --muted:#8FA8B8;
   color-scheme: dark;
 }
 :root[data-theme="senja"]{
   --bg:#231225; --bg2:#301A32; --card:#3A1F3E; --card-active:#4C2A4F;
-  --accent:#E8886B; --accent-soft:#8F4F3C; --text:#F7EEE8; --muted:#C19BAE;
+  --accent:#E8886B; --accent-soft:#8F4F3C; --pattern-line:rgba(232,136,107,0.08); --text:#F7EEE8; --muted:#C19BAE;
 }
 :root[data-theme="fajar"]{
   --bg:#0E2230; --bg2:#15344A; --card:#1C4260; --card-active:#245175;
-  --accent:#8FD8C8; --accent-soft:#4D8B7C; --text:#EAF6F2; --muted:#9FC2CE;
+  --accent:#8FD8C8; --accent-soft:#4D8B7C; --pattern-line:rgba(143,216,200,0.08); --text:#EAF6F2; --muted:#9FC2CE;
 }
 *{box-sizing:border-box;}
 html,body{height:100%;}
 body{
-  margin:0; background:radial-gradient(ellipse at 50% -10%, var(--bg2), var(--bg) 60%);
+  margin:0;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse at 50% -10%, var(--bg2), var(--bg) 60%),
+    repeating-linear-gradient(45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px),
+    repeating-linear-gradient(-45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px);
   color:var(--text); font-family:'Manrope',sans-serif;
   padding:4vh 5vw; padding-top:calc(4vh + env(safe-area-inset-top,0px));
   padding-bottom:calc(4vh + env(safe-area-inset-bottom,0px));
@@ -33,6 +38,8 @@ body{
 .topbar{display:flex; justify-content:space-between; align-items:flex-start; color:var(--muted); font-size:1.3vw; min-font-size:16px;}
 .topbar .date{font-size:1.4vw;}
 .topbar .clock{font-family:'Manrope',sans-serif; font-weight:800; font-size:2.2vw; color:var(--text); letter-spacing:0.02em;}
+.ornamen{display:flex; align-items:center; justify-content:center; gap:1vw; color:var(--accent); opacity:0.75; margin-bottom:0.3vh;}
+.ornamen .garis{height:1px; width:5vw; background:linear-gradient(90deg, transparent, var(--accent), transparent);}
 .hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:1vh;}
 .hero .label{color:var(--muted); font-size:1.4vw; letter-spacing:0.04em;}
 .hero .name{font-family:'Spectral',serif; font-weight:600; font-size:5.2vw; color:var(--accent); line-height:1.05;}
@@ -40,9 +47,15 @@ body{
 .hero .sub{color:var(--muted); font-size:1.3vw; margin-top:0.5vh;}
 .row{display:flex; gap:1.4vw; justify-content:center;}
 .pcard{
-  background:var(--card); border-radius:18px; padding:2.2vh 1.6vw; min-width:11vw;
+  position:relative; background:var(--card); border-radius:4px 4px 18px 18px; padding:2.6vh 1.6vw 2.2vh; min-width:11vw;
   text-align:center; border:2px solid transparent; transition:transform .25s, border-color .25s, background .25s;
 }
+.pcard::before{
+  content:''; position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+  width:60%; height:16px; border-radius:50% 50% 0 0; background:var(--card);
+  border:2px solid transparent; transition:background .25s;
+}
+.pcard.active::before{background:var(--card-active); border-color:var(--accent);}
 .pcard .pname{font-size:1.25vw; color:var(--muted); margin-bottom:0.6vh;}
 .pcard .ptime{font-size:2vw; font-weight:800; font-variant-numeric:tabular-nums;}
 .pcard.active{background:var(--card-active); border-color:var(--accent); transform:translateY(-6px);}
@@ -73,7 +86,8 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   overflow-y:auto; display:flex; flex-direction:column; gap:2vh; width:min(900px, 92vw);
 }
 .settings-header{display:flex; justify-content:space-between; align-items:center; gap:2vw;}
-.settings-header h2{margin:0; font-family:'Spectral',serif; font-size:1.8vw; color:var(--accent);}
+.settings-header h2{margin:0; font-family:'Spectral',serif; font-size:1.8vw; color:var(--accent); display:flex; align-items:center; gap:0.6vw;}
+.settings-panel{border-top:3px solid var(--accent);}
 @media (max-width:700px){
   .topbar{font-size:3.2vw;} .topbar .clock{font-size:5vw;}
   .hero .name{font-size:8vw;} .hero .countdown{font-size:11vw;} .hero .label,.hero .sub{font-size:3vw;}
@@ -94,6 +108,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   <div class="status" id="bannerHari" style="display:none; text-align:center; font-size:1.3vw; color:var(--accent); font-weight:800;"></div>
 
   <div class="hero">
+    <div class="ornamen"><span class="garis"></span><span>❖</span><span class="garis"></span></div>
     <div class="label">Waktu shalat berikutnya</div>
     <div class="name" id="nextName">Memuat…</div>
     <div class="countdown" id="countdown">--:--:--</div>
@@ -110,7 +125,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   <div class="settings-overlay" id="settingsOverlay">
     <div class="settings-panel">
       <div class="settings-header">
-        <h2>Pengaturan</h2>
+        <h2>☾ Pengaturan</h2>
         <button id="btnTutupSettings">✕ Tutup</button>
       </div>
 
