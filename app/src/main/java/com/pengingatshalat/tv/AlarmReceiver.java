@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
@@ -68,8 +69,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void mainkanNada(Context context, String slot){
         SharedPreferences prefs = context.getSharedPreferences("pengingat_shalat", Context.MODE_PRIVATE);
-    private void mainkanNada(Context context, String slot){
-        SharedPreferences prefs = context.getSharedPreferences("pengingat_shalat", Context.MODE_PRIVATE);
         String audioPath = prefs.getString("audio_path_" + slot, null);
         float vol = Math.max(0, Math.min(100, prefs.getInt("volume", 80))) / 100f;
 
@@ -93,7 +92,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         if ("adzan_biasa".equals(nada) || "adzan_fajr".equals(nada)) {
             String namaAset = "adzan_fajr".equals(nada) ? "adzan_fajr.mp3" : "adzan_biasa.mp3";
             try {
-                android.content.res.AssetFileDescriptor afd = context.getAssets().openFd(namaAset);
+                AssetFileDescriptor afd = context.getAssets().openFd(namaAset);
                 MediaPlayer mp = new MediaPlayer();
                 mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                 afd.close();
@@ -118,3 +117,4 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
         handler.postDelayed(tg::release, jeda[jeda.length - 1] + durasi + 300);
     }
+}
