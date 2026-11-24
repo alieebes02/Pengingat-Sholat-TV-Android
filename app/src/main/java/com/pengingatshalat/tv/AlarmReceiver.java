@@ -6,16 +6,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.ToneGenerator;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import androidx.core.app.NotificationCompat;
-import java.io.File;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -26,8 +18,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String slot = intent.getStringExtra("slot");
         if (slot == null) slot = "lainnya";
 
-        tampilkanNotifikasi(context, namaDariKey(slot));
-        mainkanNada(context, slot);
+        tampilkanPopupPenuh(context, slot);
         AlarmScheduler.scheduleAll(context);
     }
 
@@ -42,7 +33,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    private void tampilkanNotifikasi(Context context, String namaShalat){
+    private void tampilkanPopupPenuh(Context context, String slot){
+        Intent popupIntent = new Intent(context, AlarmPopupActivity.class);
+        popupIntent.putExtra("slot", slot);
+        popupIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        PendingIntent fullScreenPending = PendingIntent.getActivity(
+                context, 2000 + (slot.hashCode() & 0xFF), popupIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (nm == null) return;
         if (Build.VERSION.SDK_INT >= 26) {
@@ -51,70 +49,17 @@ public class AlarmReceiver extends BroadcastReceiver {
             channel.setDescription("Notifikasi waktu shalat");
             nm.createNotificationChannel(channel);
         }
-        Intent openApp = new Intent(context, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, openApp,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
+        String namaShalat = namaDariKey(slot);
         NotificationCompat.Builder b = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Waktu " + namaShalat)
                 .setContentText("Saatnya menunaikan shalat " + namaShalat + ".")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setAutoCancel(true)
-                .setContentIntent(contentIntent)
-                .setSmallIcon(android.R.drawable.ic_lock_idle_alarm);
+                .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+                .setFullScreenIntent(fullScreenPending, true);
         try {
             nm.notify(1001, b.build());
         } catch (SecurityException ignored) { }
-    }
-
-    private void mainkanNada(Context context, String slot){
-        SharedPreferences prefs = context.getSharedPreferences("pengingat_shalat", Context.MODE_PRIVATE);
-        String audioPath = prefs.getString("audio_path_" + slot, null);
-        float vol = Math.max(0, Math.min(100, prefs.getInt("volume", 80))) / 100f;
-
-        if (audioPath != null) {
-            File f = new File(audioPath);
-            if (f.exists()) {
-                try {
-                    MediaPlayer mp = new MediaPlayer();
-                    mp.setDataSource(audioPath);
-                    mp.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
-                    mp.setVolume(vol, vol);
-                    mp.setOnCompletionListener(MediaPlayer::release);
-                    mp.prepare();
-                    mp.start();
-                    return;
-                } catch (Exception ignored) { }
-            }
-        }
-
-        String nada = prefs.getString("nada_" + slot, "bawaan");
-        if ("adzan_biasa".equals(nada) || "adzan_fajr".equals(nada)) {
-            String namaAset = "adzan_fajr".equals(nada) ? "adzan_fajr.mp3" : "adzan_biasa.mp3";
-            try {
-                AssetFileDescriptor afd = context.getAssets().openFd(namaAset);
-                MediaPlayer mp = new MediaPlayer();
-                mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-                afd.close();
-                mp.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
-                mp.setVolume(vol, vol);
-                mp.setOnCompletionListener(MediaPlayer::release);
-                mp.prepare();
-                mp.start();
-                return;
-            } catch (Exception ignored) { }
-        }
-
-        int volume = (int) (vol * ToneGenerator.MAX_VOLUME);
-        final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, volume);
-        Handler handler = new Handler(Looper.getMainLooper());
-        final int durasi = 400;
-        int[] jeda = {0, 600, 1200};
-        for (int t : jeda) {
-            handler.postDelayed(() -> {
-                try { tg.startTone(ToneGenerator.TONE_PROP_BEEP, durasi); } catch (Exception ignored) { }
-            }, t);
-        }
-        handler.postDelayed(tg::release, jeda[jeda.length - 1] + durasi + 300);
     }
 }
