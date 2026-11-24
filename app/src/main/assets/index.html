@@ -56,12 +56,32 @@ button, select{
 button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft);}
 .status{font-size:1.05vw; color:var(--muted); text-align:center;}
 .status.ok{color:var(--accent);}
+.gear-btn{
+  position:fixed; left:4vw; bottom:4vh; z-index:20;
+  width:4.5vw; height:4.5vw; min-width:52px; min-height:52px;
+  border-radius:50%; background:var(--card); border:2px solid transparent;
+  display:flex; align-items:center; justify-content:center; font-size:2vw;
+  cursor:pointer; padding:0;
+}
+.settings-overlay{
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
+  z-index:30; align-items:center; justify-content:center; padding:4vh 4vw;
+}
+.settings-overlay.open{display:flex;}
+.settings-panel{
+  background:var(--bg2); border-radius:20px; padding:3vh 3vw; max-width:92vw; max-height:88vh;
+  overflow-y:auto; display:flex; flex-direction:column; gap:2vh; width:min(900px, 92vw);
+}
+.settings-header{display:flex; justify-content:space-between; align-items:center; gap:2vw;}
+.settings-header h2{margin:0; font-family:'Spectral',serif; font-size:1.8vw; color:var(--accent);}
 @media (max-width:700px){
   .topbar{font-size:3.2vw;} .topbar .clock{font-size:5vw;}
   .hero .name{font-size:8vw;} .hero .countdown{font-size:11vw;} .hero .label,.hero .sub{font-size:3vw;}
   .row{flex-wrap:wrap;} .pcard{min-width:26vw;} .pcard .pname{font-size:3vw;} .pcard .ptime{font-size:4.5vw;}
   button,select{font-size:3vw;}
   .status{font-size:3vw;}
+  .gear-btn{width:14vw; height:14vw; font-size:6vw;}
+  .settings-header h2{font-size:5vw;}
 }
 </style>
 </head>
@@ -83,60 +103,71 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   <div class="row" id="prayerRow"></div>
   <div class="row" id="infoIslami" style="margin-top:0;"></div>
 
-  <div class="controls">
-    <button id="btnLoc">📍 Aktifkan Lokasi</button>
-    <select id="selMetode">
-      <option value="kemenag">Metode: Kemenag RI</option>
-      <option value="muhammadiyah">Metode: HISABMU/KHGT Muhammadiyah</option>
-      <option value="mwl">Metode: MWL</option>
-      <option value="isna">Metode: ISNA</option>
-    </select>
-    <select id="selTema">
-      <option value="malam">Tema: Malam</option>
-      <option value="senja">Tema: Senja</option>
-      <option value="fajar">Tema: Fajar</option>
-    </select>
-  </div>
-  <div class="controls">
-    <label style="color:var(--muted); font-size:1.1vw; display:flex; align-items:center; gap:0.6vw;">
-      🔊 Volume
-      <input type="range" id="volSlider" min="0" max="100" value="80" style="width:12vw;">
-    </label>
-  </div>
-
-  <div class="controls" style="flex-direction:column; gap:0.8vh;">
-    <div class="status" style="color:var(--accent); font-weight:800;">Suara Subuh (biasanya berbeda dari waktu lain)</div>
-    <div class="controls">
-      <select id="selNada-subuh">
-        <option value="bawaan">Nada: Bawaan (Beep)</option>
-        <option value="adzan_fajr">Nada: Adzan Subuh (Bawaan)</option>
-        <option value="custom">Nada: Audio Saya</option>
-      </select>
-      <button id="btnTest-subuh">🔔 Tes</button>
-      <button id="btnUpload-subuh">📁 Unggah</button>
-      <button id="btnHapus-subuh" style="display:none;">🗑️ Hapus</button>
-      <input type="file" id="fileAdzan-subuh" accept="audio/*" style="display:none;">
-    </div>
-    <div class="status" id="fileNameLabel-subuh"></div>
-  </div>
-
-  <div class="controls" style="flex-direction:column; gap:0.8vh;">
-    <div class="status" style="color:var(--accent); font-weight:800;">Suara Dzuhur / Ashar / Maghrib / Isya</div>
-    <div class="controls">
-      <select id="selNada-lainnya">
-        <option value="bawaan">Nada: Bawaan (Beep)</option>
-        <option value="adzan_biasa">Nada: Adzan (Bawaan)</option>
-        <option value="custom">Nada: Audio Saya</option>
-      </select>
-      <button id="btnTest-lainnya">🔔 Tes</button>
-      <button id="btnUpload-lainnya">📁 Unggah</button>
-      <button id="btnHapus-lainnya" style="display:none;">🗑️ Hapus</button>
-      <input type="file" id="fileAdzan-lainnya" accept="audio/*" style="display:none;">
-    </div>
-    <div class="status" id="fileNameLabel-lainnya"></div>
-  </div>
-
   <div class="status" id="statusMsg">Tanpa login, tanpa registrasi — seluruh data tersimpan hanya di perangkat ini.</div>
+
+  <button id="btnGear" class="gear-btn" aria-label="Pengaturan" title="Pengaturan">⚙️</button>
+
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2>Pengaturan</h2>
+        <button id="btnTutupSettings">✕ Tutup</button>
+      </div>
+
+      <div class="controls">
+        <button id="btnLoc">📍 Aktifkan Lokasi</button>
+        <select id="selMetode">
+          <option value="kemenag">Metode: Kemenag RI</option>
+          <option value="muhammadiyah">Metode: HISABMU/KHGT Muhammadiyah</option>
+          <option value="mwl">Metode: MWL</option>
+          <option value="isna">Metode: ISNA</option>
+        </select>
+        <select id="selTema">
+          <option value="malam">Tema: Malam</option>
+          <option value="senja">Tema: Senja</option>
+          <option value="fajar">Tema: Fajar</option>
+        </select>
+      </div>
+      <div class="controls">
+        <label style="color:var(--muted); font-size:1.1vw; display:flex; align-items:center; gap:0.6vw;">
+          🔊 Volume
+          <input type="range" id="volSlider" min="0" max="100" value="80" style="width:12vw;">
+        </label>
+      </div>
+
+      <div class="controls" style="flex-direction:column; gap:0.8vh;">
+        <div class="status" style="color:var(--accent); font-weight:800;">Suara Subuh (biasanya berbeda dari waktu lain)</div>
+        <div class="controls">
+          <select id="selNada-subuh">
+            <option value="bawaan">Nada: Bawaan (Beep)</option>
+            <option value="adzan_fajr">Nada: Adzan Subuh (Bawaan)</option>
+            <option value="custom">Nada: Audio Saya</option>
+          </select>
+          <button id="btnTest-subuh">🔔 Tes</button>
+          <button id="btnUpload-subuh">📁 Unggah</button>
+          <button id="btnHapus-subuh" style="display:none;">🗑️ Hapus</button>
+          <input type="file" id="fileAdzan-subuh" accept="audio/*" style="display:none;">
+        </div>
+        <div class="status" id="fileNameLabel-subuh"></div>
+      </div>
+
+      <div class="controls" style="flex-direction:column; gap:0.8vh;">
+        <div class="status" style="color:var(--accent); font-weight:800;">Suara Dzuhur / Ashar / Maghrib / Isya</div>
+        <div class="controls">
+          <select id="selNada-lainnya">
+            <option value="bawaan">Nada: Bawaan (Beep)</option>
+            <option value="adzan_biasa">Nada: Adzan (Bawaan)</option>
+            <option value="custom">Nada: Audio Saya</option>
+          </select>
+          <button id="btnTest-lainnya">🔔 Tes</button>
+          <button id="btnUpload-lainnya">📁 Unggah</button>
+          <button id="btnHapus-lainnya" style="display:none;">🗑️ Hapus</button>
+          <input type="file" id="fileAdzan-lainnya" accept="audio/*" style="display:none;">
+        </div>
+        <div class="status" id="fileNameLabel-lainnya"></div>
+      </div>
+    </div>
+  </div>
 
 <script>
 // ---------- Preferensi lokal (tanpa akun) ----------
@@ -163,6 +194,26 @@ function syncNative(){
     Native.jadwalkanUlang();
   }catch(e){}
 }
+
+// ---------- Menu pengaturan (ikon gear, fullscreen bersih) ----------
+const settingsOverlay=document.getElementById('settingsOverlay');
+const btnGear=document.getElementById('btnGear');
+const btnTutupSettings=document.getElementById('btnTutupSettings');
+btnGear.addEventListener('click', ()=>{
+  settingsOverlay.classList.add('open');
+  btnTutupSettings.focus();
+});
+btnTutupSettings.addEventListener('click', ()=>{
+  settingsOverlay.classList.remove('open');
+  btnGear.focus();
+});
+document.addEventListener('keydown', (e)=>{
+  if(settingsOverlay.classList.contains('open') && (e.key==='Escape' || e.key==='Backspace' || e.key==='GoBack')){
+    e.preventDefault();
+    settingsOverlay.classList.remove('open');
+    btnGear.focus();
+  }
+});
 
 // ---------- Jam & tanggal ----------
 // ---------- Kalender Hijriah (hisab tabular, offline) ----------
