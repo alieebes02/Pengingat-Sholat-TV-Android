@@ -67,9 +67,11 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
 </head>
 <body>
   <div class="topbar">
-    <div><div class="date" id="tgl">—</div></div>
+    <div><div class="date" id="tgl">—</div><div class="date" id="tglHijriah" style="font-size:0.85em; opacity:0.85;">—</div></div>
     <div class="clock" id="jam">--:--:--</div>
   </div>
+
+  <div class="status" id="bannerHari" style="display:none; text-align:center; font-size:1.3vw; color:var(--accent); font-weight:800;"></div>
 
   <div class="hero">
     <div class="label">Waktu shalat berikutnya</div>
@@ -160,10 +162,51 @@ function syncNative(){
 }
 
 // ---------- Jam & tanggal ----------
+// ---------- Kalender Hijriah (hisab tabular, offline) ----------
+const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
+function gregorianToJDN(y,m,d){
+  const a=Math.floor((14-m)/12);
+  const y2=y+4800-a;
+  const m2=m+12*a-3;
+  return d+Math.floor((153*m2+2)/5)+365*y2+Math.floor(y2/4)-Math.floor(y2/100)+Math.floor(y2/400)-32045;
+}
+function islamicToJDN(year,month,day){
+  return day+Math.ceil(29.5*(month-1))+(year-1)*354+Math.floor((3+11*year)/30)+1948440-1;
+}
+function jdnToIslamic(jdn){
+  let year=Math.floor((30*(jdn-1948440)+10646)/10631);
+  let month=Math.min(12, Math.ceil((jdn-(29+islamicToJDN(year,1,1)))/29.5)+1);
+  let day=jdn-islamicToJDN(year,month,1)+1;
+  return {year,month,day};
+}
+function tampilkanTanggalHijriah(){
+  const now=new Date();
+  const jdn=gregorianToJDN(now.getFullYear(), now.getMonth()+1, now.getDate());
+  const h=jdnToIslamic(jdn);
+  const elH=document.getElementById('tglHijriah');
+  if(elH) elH.textContent=h.day+' '+BULAN_HIJRIAH[h.month-1]+' '+h.year+' H';
+
+  const banner=document.getElementById('bannerHari');
+  if(!banner) return;
+  if(h.month===9){
+    banner.style.display='block';
+    banner.textContent='🌙 Bulan Ramadhan '+h.year+' H — Hari ke-'+h.day;
+  } else if(h.month===10 && h.day===1){
+    banner.style.display='block';
+    banner.textContent='🎉 Selamat Idul Fitri '+h.year+' H, Mohon Maaf Lahir dan Batin';
+  } else if(h.month===12 && h.day===10){
+    banner.style.display='block';
+    banner.textContent='🕌 Selamat Hari Raya Idul Adha '+h.year+' H';
+  } else {
+    banner.style.display='none';
+  }
+}
+
 function tickClock(){
   const now=new Date();
   document.getElementById('jam').textContent=now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   document.getElementById('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  tampilkanTanggalHijriah();
 }
 setInterval(tickClock,1000); tickClock();
 
