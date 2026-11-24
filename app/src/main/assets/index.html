@@ -84,6 +84,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <button id="btnLoc">📍 Aktifkan Lokasi</button>
     <select id="selMetode">
       <option value="kemenag">Metode: Kemenag RI</option>
+      <option value="muhammadiyah">Metode: HISABMU/KHGT Muhammadiyah</option>
       <option value="mwl">Metode: MWL</option>
       <option value="isna">Metode: ISNA</option>
     </select>
@@ -169,6 +170,7 @@ setInterval(tickClock,1000); tickClock();
 // ---------- Perhitungan waktu shalat (metode astronomis, tanpa koneksi internet) ----------
 const METHODS={
   kemenag:{fajr:20, isha:18},
+  muhammadiyah:{fajr:18, isha:18},
   mwl:{fajr:18, isha:17},
   isna:{fajr:15, isha:15}
 };
