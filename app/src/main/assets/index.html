@@ -137,6 +137,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="sub" id="locInfo">Lokasi belum aktif</div>
   </div>
 
+  <div class="status" id="labelMetode" style="margin-top:-1vh;"></div>
   <div class="row" id="prayerRow"></div>
   <div class="row" id="infoIslami" style="margin-top:0;"></div>
 
@@ -520,6 +521,8 @@ function hitungWaktu(lat,lng,methodKey){
 let jadwalCache=[];
 function hitungDanTampilkan(){
   if(!coords) return;
+  const elLabel=document.getElementById('labelMetode');
+  if(elLabel) elLabel.textContent='Metode: '+(KETERANGAN_METODE[selMetode.value] || selMetode.value);
   jadwalCache=hitungWaktu(coords.lat, coords.lng, selMetode.value);
   renderCards();
   updateCountdown();
