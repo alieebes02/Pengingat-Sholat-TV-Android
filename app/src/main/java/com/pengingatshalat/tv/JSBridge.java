@@ -2,6 +2,8 @@ package com.pengingatshalat.tv;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
 import java.io.File;
@@ -9,6 +11,7 @@ import java.io.FileOutputStream;
 
 public class JSBridge {
     private final Context context;
+    private MediaPlayer testPlayer;
 
     public JSBridge(Context context){ this.context = context; }
 
@@ -24,10 +27,14 @@ public class JSBridge {
     public void simpanPengaturan(String metode, String nadaSubuh, String nadaLainnya, int volume){
         SharedPreferences.Editor e = prefs().edit();
         e.putString("metode", metode);
-        e.putString("nada_subuh", "custom".equals(nadaSubuh) ? "bawaan" : nadaSubuh);
-        e.putString("nada_lainnya", "custom".equals(nadaLainnya) ? "bawaan" : nadaLainnya);
+        e.putString("nada_subuh", normalisasiNada(nadaSubuh));
+        e.putString("nada_lainnya", normalisasiNada(nadaLainnya));
         e.putInt("volume", volume);
         e.apply();
+    }
+
+    private String normalisasiNada(String n){
+        return "custom".equals(n) ? "bawaan" : n;
     }
 
     @JavascriptInterface
@@ -68,20 +75,33 @@ public class JSBridge {
         e.apply();
     }
 
-        @JavascriptInterface
+    @JavascriptInterface
     public void mainkanTes(String slot){
+        hentikanTes();
         String path = prefs().getString("audio_path_" + slot, null);
         if (path == null) return;
-        java.io.File f = new java.io.File(path);
+        File f = new File(path);
         if (!f.exists()) return;
         try {
-            android.media.MediaPlayer mp = new android.media.MediaPlayer();
-            mp.setDataSource(path);
-            mp.setAudioStreamType(android.media.AudioManager.STREAM_NOTIFICATION);
-            mp.setOnCompletionListener(android.media.MediaPlayer::release);
-            mp.prepare();
-            mp.start();
+            testPlayer = new MediaPlayer();
+            testPlayer.setDataSource(path);
+            testPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+            testPlayer.setOnCompletionListener(mp -> {
+                mp.release();
+                if (testPlayer == mp) testPlayer = null;
+            });
+            testPlayer.prepare();
+            testPlayer.start();
         } catch (Exception ignored) { }
+    }
+
+    @JavascriptInterface
+    public void hentikanTes(){
+        if (testPlayer != null) {
+            try { if (testPlayer.isPlaying()) testPlayer.stop(); } catch (Exception ignored) { }
+            try { testPlayer.release(); } catch (Exception ignored) { }
+            testPlayer = null;
+        }
     }
 
     private SharedPreferences prefs(){
