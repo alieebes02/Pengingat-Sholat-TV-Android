@@ -47,15 +47,15 @@ body{
 .moon-watermark circle:last-child{fill:var(--bg);}
 .skyline{position:fixed; left:0; right:0; bottom:0; width:100%; height:20vh; z-index:-1; opacity:0.18; pointer-events:none;}
 .skyline rect, .skyline path, .skyline circle{fill:var(--accent);}
-.frame-border{position:fixed; inset:3vh 3vw; border:2px solid var(--accent); border-radius:6px; z-index:1; pointer-events:none; opacity:0.5;}
+.frame-border{position:fixed; inset:1.5vh 1.5vw; border:2px solid var(--accent); border-radius:6px; z-index:1; pointer-events:none; opacity:0.5;}
 .frame-border::before{content:''; position:absolute; inset:6px; border:1px solid var(--accent); border-radius:4px; opacity:0.6;}
 .frame-corner{position:fixed; width:4vw; height:4vw; min-width:38px; min-height:38px; z-index:2; pointer-events:none; opacity:0.8;}
 .frame-corner path{fill:none; stroke:var(--accent); stroke-width:2.5;}
 .frame-corner circle{fill:var(--accent);}
-.frame-corner.tl{top:2.2vh; left:2.2vw;}
-.frame-corner.tr{top:2.2vh; right:2.2vw; transform:rotate(90deg);}
-.frame-corner.br{bottom:2.2vh; right:2.2vw; transform:rotate(180deg);}
-.frame-corner.bl{bottom:2.2vh; left:2.2vw; transform:rotate(270deg);}
+.frame-corner.tl{top:1.3vh; left:1.3vw;}
+.frame-corner.tr{top:1.3vh; right:1.3vw; transform:rotate(90deg);}
+.frame-corner.br{bottom:1.3vh; right:1.3vw; transform:rotate(180deg);}
+.frame-corner.bl{bottom:1.3vh; left:1.3vw; transform:rotate(270deg);}
 .hero{flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:1vh;}
 .hero .label{color:var(--muted); font-size:1.4vw; letter-spacing:0.04em;}
 .hero .name{font-family:'Spectral',serif; font-weight:600; font-size:5.2vw; color:var(--accent); line-height:1.05;}
