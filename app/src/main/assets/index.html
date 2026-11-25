@@ -34,8 +34,8 @@ body{
   padding:5vh 5vw; padding-top:calc(5vh + env(safe-area-inset-top,0px));
   padding-bottom:calc(5vh + env(safe-area-inset-bottom,0px));
   box-sizing:border-box;
-  display:flex; flex-direction:column; height:100%; gap:2.2vh;
-  overflow:hidden;
+  display:flex; flex-direction:column; min-height:100%; gap:2vh;
+  overflow-x:hidden;
 }
 .topbar{display:flex; justify-content:space-between; align-items:flex-start; color:var(--muted); font-size:1.3vw; min-font-size:16px;}
 .topbar .date{font-size:1.4vw;}
@@ -56,11 +56,11 @@ body{
 .frame-corner.tr{top:1.3vh; right:1.3vw; transform:rotate(90deg);}
 .frame-corner.br{bottom:1.3vh; right:1.3vw; transform:rotate(180deg);}
 .frame-corner.bl{bottom:1.3vh; left:1.3vw; transform:rotate(270deg);}
-.hero{flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:1vh;}
+.hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:0.8vh;}
 .hero .label{color:var(--muted); font-size:1.4vw; letter-spacing:0.04em;}
-.hero .name{font-family:'Spectral',serif; font-weight:600; font-size:5.2vw; color:var(--accent); line-height:1.05;}
-.hero .countdown{font-family:'Manrope',sans-serif; font-weight:800; font-size:7vw; letter-spacing:0.03em; font-variant-numeric:tabular-nums;}
-.hero .sub{color:var(--muted); font-size:1.3vw; margin-top:0.5vh;}
+.hero .name{font-family:'Spectral',serif; font-weight:600; font-size:clamp(26px, 5.2vw, 8vh); color:var(--accent); line-height:1.05;}
+.hero .countdown{font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(34px, 7vw, 11vh); letter-spacing:0.03em; font-variant-numeric:tabular-nums;}
+.hero .sub{color:var(--muted); font-size:1.3vw; margin-top:0.3vh;}
 .row{display:flex; gap:1.4vw; justify-content:center;}
 .pcard{
   position:relative; background:var(--card); border-radius:4px 4px 18px 18px; padding:2.6vh 1.6vw 2.2vh; min-width:11vw;
@@ -170,7 +170,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="sub" id="locInfo">Lokasi belum aktif</div>
   </div>
 
-  <div class="status" id="labelMetode" style="margin-top:-1vh;"></div>
+  <div class="status" id="labelMetode" style="margin-top:-2vh;"></div>
   <div class="row" id="prayerRow"></div>
   <div class="row" id="infoIslami" style="margin-top:0;"></div>
 
