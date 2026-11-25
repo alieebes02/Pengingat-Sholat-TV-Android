@@ -463,11 +463,17 @@ function renderInfoIslami(h, jdn){
   });
 }
 
+let tanggalTerakhirHijriah=null;
 function tickClock(){
   const now=new Date();
   document.getElementById('jam').textContent=now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   document.getElementById('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  tampilkanTanggalHijriah();
+
+  const tglSkrg=now.toDateString();
+  if(tglSkrg!==tanggalTerakhirHijriah){
+    tanggalTerakhirHijriah=tglSkrg;
+    tampilkanTanggalHijriah();
+  }
 }
 setInterval(tickClock,1000); tickClock();
 
