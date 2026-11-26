@@ -847,5 +847,21 @@ function mainkan(slot){
   }
 }
 </script>
+  
+<script>
+function tutupMenuDariRemot() {
+    const semuaElemen = document.querySelectorAll('button, a, div, span');
+    for (let el of semuaElemen) {
+        if (el.textContent && el.textContent.trim().includes('Tutup')) {
+            if (el.offsetParent !== null) {
+                el.click();
+                return "closed";
+            }
+        }
+    }
+    return "exit";
+}
+</script>
+
 </body>
 </html>
