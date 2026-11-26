@@ -37,6 +37,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent popupIntent = new Intent(context, AlarmPopupActivity.class);
         popupIntent.putExtra("slot", slot);
         popupIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        
+        try {
+            context.startActivity(popupIntent);
+        } catch (Exception ignored) { }
+
         PendingIntent fullScreenPending = PendingIntent.getActivity(
                 context, 2000 + (slot.hashCode() & 0xFF), popupIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
