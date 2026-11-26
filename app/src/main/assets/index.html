@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pengingat Shalat — TV</title>
-<link rel="preconnect" href="https://googleapis.com">
-<link href="https://googleapis.com/css2?family=Spectral:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0B1B2B; --bg2:#102738; --card:#142F43; --card-active:#1C3B52;
@@ -183,3 +183,726 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   <div class="status" id="bannerHari" style="display:none; text-align:center; font-size:1.3vw; color:var(--accent); font-weight:800;"></div>
 
   <div class="hero">
+    <div class="ornamen"><span class="garis"></span><span>❖</span><span class="garis"></span></div>
+    <div class="label">Waktu shalat berikutnya</div>
+    <div class="name" id="nextName">Memuat…</div>
+    <div class="countdown" id="countdown">--:--:--</div>
+    <div class="sub" id="locInfo">Lokasi belum aktif</div>
+    <div class="status" id="labelMetode"></div>
+  </div>
+  <div class="row" id="prayerRow" style="margin-top:1vh;"></div>
+  <div class="row" id="infoIslami" style="margin-top:0;"></div>
+
+  <div class="status" id="statusMsg">Free for the Ummah, not for sale<br>By. Alie_Ebes ©2026</div>
+
+  <button id="btnGear" class="gear-btn" aria-label="Pengaturan" title="Pengaturan">⚙️</button>
+
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2>☾ Pengaturan</h2>
+        <button id="btnTutupSettings">✕ Tutup</button>
+      </div>
+
+      <div class="controls">
+        <button id="btnLoc">📍 Aktifkan Lokasi</button>
+        <select id="selMetode">
+          <option value="kemenag">Metode: Kemenag RI</option>
+          <option value="muhammadiyah">Metode: HISABMU/KHGT Muhammadiyah</option>
+          <option value="mwl">Metode: MWL</option>
+          <option value="isna">Metode: ISNA</option>
+        </select>
+        <select id="selTema">
+          <option value="malam">Tema: Malam</option>
+          <option value="senja">Tema: Senja</option>
+          <option value="fajar">Tema: Fajar</option>
+        </select>
+      </div>
+
+      <div class="controls">
+        <label style="color:var(--muted); font-size:1.1vw; display:flex; align-items:center; gap:0.6vw;">
+          🔊 Volume
+          <input type="range" id="volSlider" min="0" max="100" value="80" style="width:12vw;">
+        </label>
+      </div>
+
+      <div class="controls" style="flex-direction:column; gap:0.8vh;">
+        <div class="status" style="color:var(--accent); font-weight:800;">Suara Subuh (biasanya berbeda dari waktu lain)</div>
+        <div class="controls">
+          <select id="selNada-subuh">
+            <option value="bawaan">Nada: Bawaan (Beep)</option>
+            <option value="adzan_fajr">Nada: Adzan Subuh (Bawaan)</option>
+            <option value="custom">Nada: Audio Saya</option>
+          </select>
+          <button id="btnTest-subuh">🔔 Tes</button>
+          <button id="btnUpload-subuh">📁 Unggah</button>
+          <button id="btnHapus-subuh" style="display:none;">🗑️ Hapus</button>
+          <input type="file" id="fileAdzan-subuh" accept="audio/*" style="display:none;">
+        </div>
+        <div class="status" id="fileNameLabel-subuh"></div>
+      </div>
+
+      <div class="controls" style="flex-direction:column; gap:0.8vh;">
+        <div class="status" style="color:var(--accent); font-weight:800;">Suara Dzuhur / Ashar / Maghrib / Isya</div>
+        <div class="controls">
+          <select id="selNada-lainnya">
+            <option value="bawaan">Nada: Bawaan (Beep)</option>
+            <option value="adzan_biasa">Nada: Adzan (Bawaan)</option>
+            <option value="custom">Nada: Audio Saya</option>
+          </select>
+          <button id="btnTest-lainnya">🔔 Tes</button>
+          <button id="btnUpload-lainnya">📁 Unggah</button>
+          <button id="btnHapus-lainnya" style="display:none;">🗑️ Hapus</button>
+          <input type="file" id="fileAdzan-lainnya" accept="audio/*" style="display:none;">
+        </div>
+        <div class="status" id="fileNameLabel-lainnya"></div>
+      </div>
+
+      <div class="controls" style="flex-direction:column; gap:0.8vh; border-top:1px solid rgba(217,164,65,0.2); padding-top:1.4vh;">
+        <div class="status" style="color:var(--accent); font-weight:800;">Uji Tampilan &amp; Suara Layar Penuh TV</div>
+        <div class="controls">
+          <button id="btnPopupSubuh">🕌 Tes Pop-up Subuh</button>
+          <button id="btnPopupDzuhur">🕌 Tes Pop-up Dzuhur</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-overlay" id="detailOverlay">
+    <div class="settings-panel" style="max-width:600px;">
+      <div class="settings-header">
+        <h2 id="detailTitle">Shalat</h2>
+        <button id="btnTutupDetail">✕ Tutup</button>
+      </div>
+      <div style="text-align:center; font-family:'Manrope',sans-serif; font-weight:800; font-size:3vw; color:var(--accent);" id="detailJam">--:--</div>
+      <div class="status" id="detailMetode" style="font-weight:700;"></div>
+      <div class="status" id="detailDasar" style="text-align:left; line-height:1.6;"></div>
+    </div>
+  </div>
+
+<script>
+// ---------- Preferensi lokal (tanpa akun) ----------
+function loadPref(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
+function savePref(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+
+const root=document.documentElement;
+const selTema=document.getElementById('selTema');
+const selMetode=document.getElementById('selMetode');
+selTema.value=loadPref('tema','malam');
+selMetode.value=loadPref('metode','kemenag');
+root.setAttribute('data-theme', selTema.value);
+
+selTema.addEventListener('change',()=>{ root.setAttribute('data-theme',selTema.value); savePref('tema',selTema.value); });
+selMetode.addEventListener('change',()=>{ savePref('metode',selMetode.value); hitungDanTampilkan(); syncNative(); });
+
+function syncNative(){
+  if(typeof Native==='undefined') return;
+  try{
+    const nadaSubuh=document.getElementById('selNada-subuh') ? document.getElementById('selNada-subuh').value : 'bawaan';
+    const nadaLainnya=document.getElementById('selNada-lainnya') ? document.getElementById('selNada-lainnya').value : 'bawaan';
+    const vol=document.getElementById('volSlider') ? parseInt(document.getElementById('volSlider').value,10)||80 : 80;
+    Native.simpanPengaturan(selMetode.value, nadaSubuh, nadaLainnya, vol);
+    Native.jadwalkanUlang();
+  }catch(e){}
+}
+
+// ---------- Menu pengaturan & tombol Back remot TV ----------
+const settingsOverlay=document.getElementById('settingsOverlay');
+const detailOverlay=document.getElementById('detailOverlay');
+const btnGear=document.getElementById('btnGear');
+const btnTutupSettings=document.getElementById('btnTutupSettings');
+const btnTutupDetail=document.getElementById('btnTutupDetail');
+
+btnGear.addEventListener('click', ()=>{
+  settingsOverlay.classList.add('open');
+  btnTutupSettings.focus();
+});
+btnTutupSettings.addEventListener('click', ()=>{
+  hentikanSemuaAudio();
+  settingsOverlay.classList.remove('open');
+  btnGear.focus();
+});
+btnTutupDetail.addEventListener('click', ()=> detailOverlay.classList.remove('open'));
+
+function tutupMenuDariRemot() {
+  if (detailOverlay.classList.contains('open')) {
+    detailOverlay.classList.remove('open');
+    return "closed";
+  }
+  if (settingsOverlay.classList.contains('open')) {
+    hentikanSemuaAudio();
+    settingsOverlay.classList.remove('open');
+    btnGear.focus();
+    return "closed";
+  }
+  return "exit";
+}
+
+document.addEventListener('keydown', (e)=>{
+  if(settingsOverlay.classList.contains('open') && (e.key==='Escape' || e.key==='Backspace' || e.key==='GoBack')){
+    e.preventDefault();
+    hentikanSemuaAudio();
+    settingsOverlay.classList.remove('open');
+    btnGear.focus();
+  }
+  if(detailOverlay.classList.contains('open') && (e.key==='Escape' || e.key==='Backspace' || e.key==='GoBack')){
+    e.preventDefault();
+    detailOverlay.classList.remove('open');
+  }
+});
+
+// ---------- Tombol Tes Pop-up Layar Penuh ----------
+document.getElementById('btnPopupSubuh').addEventListener('click', ()=>{
+  if(typeof Native!=='undefined' && typeof Native.tesPopupAdzan==='function'){
+    Native.tesPopupAdzan('subuh');
+  }
+});
+document.getElementById('btnPopupDzuhur').addEventListener('click', ()=>{
+  if(typeof Native!=='undefined' && typeof Native.tesPopupAdzan==='function'){
+    Native.tesPopupAdzan('dzuhur');
+  }
+});
+
+// ---------- Detail waktu shalat (klik kartu jadwal) ----------
+const KETERANGAN_METODE={
+  kemenag:'Kementerian Agama RI',
+  muhammadiyah:'HISABMU / KHGT Muhammadiyah',
+  mwl:'Muslim World League (MWL)',
+  isna:'Islamic Society of North America (ISNA)'
+};
+
+function tampilkanDetailShalat(key){
+  const item=jadwalCache.find(p=>p.key===key);
+  if(!item) return;
+  const metode=selMetode.value;
+  const namaMetode=KETERANGAN_METODE[metode] || metode;
+  const m=METHODS[metode] || METHODS.kemenag;
+  let dasar='';
+  if(key==='subuh'){
+    dasar='Dimulai saat posisi matahari berada pada sudut -'+m.fajr+'° di bawah ufuk timur (terbitnya fajar shadiq), menurut kriteria '+namaMetode+'.';
+  } else if(key==='dzuhur'){
+    dasar='Dimulai saat matahari tepat melewati titik kulminasi/meridian (tergelincir ke barat), ditambah 2 menit waktu ihtiyat (kehati-hatian). Waktu ini sama untuk semua metode.';
+  } else if(key==='ashar'){
+    dasar='Dimulai saat panjang bayangan suatu benda sama dengan panjang bendanya ditambah panjang bayangan saat tengah hari (kriteria mazhab Syafi\'i). Tidak dipengaruhi oleh pilihan metode di atas.';
+  } else if(key==='maghrib'){
+    dasar='Dimulai saat matahari terbenam penuh di ufuk barat, pada sudut -0.833° (memperhitungkan refraksi atmosfer dan jari-jari piringan matahari). Waktu ini sama untuk semua metode.';
+  } else if(key==='isya'){
+    dasar='Dimulai saat posisi matahari berada pada sudut -'+m.isha+'° di bawah ufuk barat (hilangnya cahaya senja merah), menurut kriteria '+namaMetode+'.';
+  }
+  document.getElementById('detailTitle').textContent=item.nama;
+  document.getElementById('detailJam').textContent=toHHMM(item.t);
+  document.getElementById('detailMetode').textContent='Metode aktif: '+namaMetode;
+  document.getElementById('detailDasar').textContent=dasar;
+  detailOverlay.classList.add('open');
+  btnTutupDetail.focus();
+}
+
+function tampilkanDetailIslami(label, targetJdn, statusText, penjelasan){
+  const g=jdnToGregorian(targetJdn);
+  const h=jdnToIslamic(targetJdn);
+  document.getElementById('detailTitle').textContent=label;
+  document.getElementById('detailJam').textContent=g.day+' '+BULAN_MASEHI[g.month-1]+' '+g.year;
+  document.getElementById('detailMetode').textContent=h.day+' '+BULAN_HIJRIAH[h.month-1]+' '+h.year+' H — '+statusText;
+  document.getElementById('detailDasar').textContent=penjelasan;
+  detailOverlay.classList.add('open');
+  btnTutupDetail.focus();
+}
+
+// ---------- Kalender Hijriah (hisab tabular, offline) ----------
+const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
+function gregorianToJDN(y,m,d){
+  const a=Math.floor((14-m)/12);
+  const y2=y+4800-a;
+  const m2=m+12*a-3;
+  return d+Math.floor((153*m2+2)/5)+365*y2+Math.floor(y2/4)-Math.floor(y2/100)+Math.floor(y2/400)-32045;
+}
+function islamicToJDN(year,month,day){
+  return day+Math.ceil(29.5*(month-1))+(year-1)*354+Math.floor((3+11*year)/30)+1948440-1;
+}
+function jdnToIslamic(jdn){
+  let year=Math.floor((30*(jdn-1948440)+10646)/10631);
+  let month=Math.min(12, Math.ceil((jdn-(29+islamicToJDN(year,1,1)))/29.5)+1);
+  let day=jdn-islamicToJDN(year,month,1)+1;
+  return {year,month,day};
+}
+function tampilkanTanggalHijriah(){
+  const now=new Date();
+  const jdn=gregorianToJDN(now.getFullYear(), now.getMonth()+1, now.getDate());
+  const h=jdnToIslamic(jdn);
+  const elH=document.getElementById('tglHijriah');
+  if(elH) elH.textContent=h.day+' '+BULAN_HIJRIAH[h.month-1]+' '+h.year+' H';
+
+  const banner=document.getElementById('bannerHari');
+  if(banner){
+    if(h.month===9){
+      banner.style.display='block';
+      banner.textContent='🌙 Bulan Ramadhan '+h.year+' H — Hari ke-'+h.day;
+    } else if(h.month===10 && h.day===1){
+      banner.style.display='block';
+      banner.textContent='🎉 Selamat Idul Fitri '+h.year+' H, Mohon Maaf Lahir dan Batin';
+    } else if(h.month===12 && h.day===10){
+      banner.style.display='block';
+      banner.textContent='🕌 Selamat Hari Raya Idul Adha '+h.year+' H';
+    } else {
+      banner.style.display='none';
+    }
+  }
+
+  renderInfoIslami(h, jdn);
+}
+
+function jdnToGregorian(jdn){
+  const a=jdn+32044;
+  const b=Math.floor((4*a+3)/146097);
+  const c=a-Math.floor((146097*b)/4);
+  const d=Math.floor((4*c+3)/1461);
+  const e=c-Math.floor((1461*d)/4);
+  const m=Math.floor((5*e+2)/153);
+  const day=e-Math.floor((153*m+2)/5)+1;
+  const month=m+3-12*Math.floor(m/10);
+  const year=100*b+d-4800+Math.floor(m/10);
+  return {year, month, day};
+}
+const BULAN_MASEHI=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+function renderInfoIslami(h, jdn){
+  const box=document.getElementById('infoIslami');
+  if(!box) return;
+  const items=[];
+
+  const PENJELASAN={
+    'Ramadhan':'Bulan ke-9 kalender Hijriah, bulan wajib berpuasa bagi umat Islam. Dihitung dengan hisab tabular (bukan rukyat/pengamatan hilal langsung), sehingga tanggal bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
+    'Idul Fitri':'Hari raya 1 Syawal, menandai berakhirnya bulan Ramadhan. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
+    'Idul Adha':'Hari raya 10 Dzulhijjah, bertepatan dengan puncak ibadah haji dan disunnahkan berkurban. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari penetapan resmi.'
+  };
+
+  function buatItem(label, targetJdn, statusText){
+    const g=jdnToGregorian(targetJdn);
+    const tanggal=g.day+' '+BULAN_MASEHI[g.month-1]+' '+g.year;
+    return {label, tanggal, status:statusText, targetJdn};
+  }
+
+  if(h.month===9){
+    items.push(buatItem('Ramadhan', jdn, 'Hari ke-'+h.day));
+  } else {
+    const tahun=h.year + (h.month>9 ? 1 : 0);
+    const target=islamicToJDN(tahun,9,1);
+    items.push(buatItem('Ramadhan', target, (target-jdn)+' hari lagi'));
+  }
+
+  if(h.month===10 && h.day===1){
+    items.push(buatItem('Idul Fitri', jdn, 'Hari ini!'));
+  } else {
+    const tahun=h.year + ((h.month>10 || (h.month===10 && h.day>1)) ? 1 : 0);
+    const target=islamicToJDN(tahun,10,1);
+    items.push(buatItem('Idul Fitri', target, (target-jdn)+' hari lagi'));
+  }
+
+  if(h.month===12 && h.day===10){
+    items.push(buatItem('Idul Adha', jdn, 'Hari ini!'));
+  } else {
+    const tahun=h.year + ((h.month===12 && h.day>10) ? 1 : 0);
+    const target=islamicToJDN(tahun,12,10);
+    items.push(buatItem('Idul Adha', target, (target-jdn)+' hari lagi'));
+  }
+
+  box.innerHTML = items.map(it=>
+    '<div class="pcard"><div class="pname">'+it.label+'</div>'+
+    '<div style="font-size:0.95vw; color:var(--muted); margin:0.2vh 0;">'+it.tanggal+'</div>'+
+    '<div class="ptime" style="font-size:1.3vw;">'+it.status+'</div></div>'
+  ).join('');
+
+  Array.from(box.children).forEach((el, i)=>{
+    el.tabIndex=0;
+    el.addEventListener('click', ()=> tampilkanDetailIslami(items[i].label, items[i].targetJdn, items[i].status, PENJELASAN[items[i].label]));
+    el.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); tampilkanDetailIslami(items[i].label, items[i].targetJdn, items[i].status, PENJELASAN[items[i].label]); }
+    });
+  });
+}
+
+let tanggalTerakhirHijriah=null;
+function tickClock(){
+  const now=new Date();
+  document.getElementById('jam').textContent=now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  const tglSkrg=now.toDateString();
+  if(tglSkrg!==tanggalTerakhirHijriah){
+    tanggalTerakhirHijriah=tglSkrg;
+    tampilkanTanggalHijriah();
+  }
+}
+setInterval(tickClock,1000); tickClock();
+
+// ---------- Perhitungan waktu shalat (metode astronomis, tanpa koneksi internet) ----------
+const METHODS={
+  kemenag:{fajr:20, isha:18},
+  muhammadiyah:{fajr:18, isha:18},
+  mwl:{fajr:18, isha:17},
+  isna:{fajr:15, isha:15}
+};
+const dtr=d=>d*Math.PI/180, rtd=r=>r*180/Math.PI;
+function fixAngle(a){ a=a-360*Math.floor(a/360); return a<0?a+360:a; }
+function fixHour(h){ h=h-24*Math.floor(h/24); return h<0?h+24:h; }
+
+function julian(y,m,d){
+  if(m<=2){ y-=1; m+=12; }
+  const A=Math.floor(y/100), B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5;
+}
+function sunPosition(jd){
+  const D=jd-2451545.0;
+  const g=fixAngle(357.529+0.98560028*D);
+  const q=fixAngle(280.459+0.98564736*D);
+  const L=fixAngle(q+1.915*Math.sin(dtr(g))+0.020*Math.sin(dtr(2*g)));
+  const e=23.439-0.00000036*D;
+  const dec=rtd(Math.asin(Math.sin(dtr(e))*Math.sin(dtr(L))));
+  let RA=rtd(Math.atan2(Math.cos(dtr(e))*Math.sin(dtr(L)),Math.cos(dtr(L))))/15;
+  RA=fixHour(RA);
+  const eqt=q/15-RA;
+  return {dec:dec, eqt:eqt};
+}
+function sunAngleTime(jd, angle, lat, lng, tz, dir){
+  const {dec,eqt}=sunPosition(jd+ (12-0)/24 );
+  const noon=12-lng/15-eqt+tz;
+  const num=-Math.sin(dtr(angle))-Math.sin(dtr(lat))*Math.sin(dtr(dec));
+  const den=Math.cos(dtr(lat))*Math.cos(dtr(dec));
+  const ratio=num/den;
+  if(Math.abs(ratio)>1) return null;
+  const t=rtd(Math.acos(ratio))/15;
+  return noon + (dir==='ccw'?-t:t);
+}
+function asrTime(jd, lat, lng, tz, factor){
+  const {dec,eqt}=sunPosition(jd+0.5);
+  const noon=12-lng/15-eqt+tz;
+  const a=rtd(Math.atan(1/(factor+Math.tan(dtr(Math.abs(lat-dec))))));
+  const num=Math.sin(dtr(a))-Math.sin(dtr(lat))*Math.sin(dtr(dec));
+  const den=Math.cos(dtr(lat))*Math.cos(dtr(dec));
+  const t=rtd(Math.acos(num/den))/15;
+  return noon+t;
+}
+function toHHMM(t){
+  if(t===null||isNaN(t)) return '--:--';
+  t=fixHour(t);
+  const h=Math.floor(t); const m=Math.round((t-h)*60);
+  const hh=(m===60? h+1:h), mm=(m===60?0:m);
+  return String(fixHour(hh)).padStart(2,'0').slice(0,2)+':'+String(mm).padStart(2,'0');
+}
+
+let coords=null;
+let timezoneOffset=-new Date().getTimezoneOffset()/60;
+
+function hitungWaktu(lat,lng,methodKey){
+  const m=METHODS[methodKey]||METHODS.kemenag;
+  const now=new Date();
+  const jd=julian(now.getFullYear(), now.getMonth()+1, now.getDate());
+  const fajr=sunAngleTime(jd, m.fajr, lat, lng, timezoneOffset, 'ccw');
+  const {eqt}=sunPosition(jd+0.5);
+  const dzuhur=12-lng/15-eqt+timezoneOffset+ (2/60);
+  const ashar=asrTime(jd, lat, lng, timezoneOffset, 1);
+  const maghrib=sunAngleTime(jd, 0.833, lat, lng, timezoneOffset, 'cw');
+  const isya=sunAngleTime(jd, m.isha, lat, lng, timezoneOffset, 'cw');
+  return [
+    {key:'subuh', nama:'Subuh', t:fajr},
+    {key:'dzuhur', nama:'Dzuhur', t:dzuhur},
+    {key:'ashar', nama:'Ashar', t:ashar},
+    {key:'maghrib', nama:'Maghrib', t:maghrib},
+    {key:'isya', nama:'Isya', t:isya},
+  ];
+}
+
+let jadwalCache=[];
+function hitungDanTampilkan(){
+  if(!coords) return;
+  const elLabel=document.getElementById('labelMetode');
+  if(elLabel) elLabel.textContent='Metode: '+(KETERANGAN_METODE[selMetode.value] || selMetode.value);
+  jadwalCache=hitungWaktu(coords.lat, coords.lng, selMetode.value);
+  renderCards();
+  updateCountdown();
+}
+
+function renderCards(){
+  const row=document.getElementById('prayerRow');
+  row.innerHTML='';
+  jadwalCache.forEach(p=>{
+    const div=document.createElement('div');
+    div.className='pcard'; div.tabIndex=0; div.id='card-'+p.key;
+    div.innerHTML='<div class="pname">'+p.nama+'</div><div class="ptime">'+toHHMM(p.t)+'</div>';
+    div.addEventListener('click', ()=> tampilkanDetailShalat(p.key));
+    div.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); tampilkanDetailShalat(p.key); }
+    });
+    row.appendChild(div);
+  });
+}
+
+function timeToDate(t){
+  const now=new Date();
+  const h=Math.floor(fixHour(t)); const m=Math.round((fixHour(t)-h)*60);
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+}
+
+let lastNotified='';
+function updateCountdown(){
+  if(!jadwalCache.length) return;
+  const now=new Date();
+  let next=null, nextDate=null;
+  for(const p of jadwalCache){
+    if(p.t===null) continue;
+    const d=timeToDate(p.t);
+    if(d>now){ next=p; nextDate=d; break; }
+  }
+  if(!next){
+    next=jadwalCache[0];
+    nextDate=timeToDate(next.t); nextDate.setDate(nextDate.getDate()+1);
+  }
+  document.getElementById('nextName').textContent=next.nama;
+  const diff=Math.max(0, nextDate-now);
+  const hh=String(Math.floor(diff/3600000)).padStart(2,'0');
+  const mm=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  const ss=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  document.getElementById('countdown').textContent=hh+':'+mm+':'+ss;
+
+  document.querySelectorAll('.pcard').forEach(c=>c.classList.remove('active'));
+  const el=document.getElementById('card-'+next.key);
+  if(el) el.classList.add('active');
+
+  if(diff<1000 && lastNotified!==next.key+now.toDateString()){
+    lastNotified=next.key+now.toDateString();
+    mainkan(next.key==='subuh' ? 'subuh' : 'lainnya');
+  }
+}
+setInterval(updateCountdown,1000);
+
+// ---------- Lokasi via GPS browser ----------
+function rapikanTeksLokasi(teks){
+  if(!teks) return teks;
+  return teks.replace(/,\s*Jawa,\s*Indonesia/i, ', Pekalongan, Jawa Tengah, Indonesia')
+             .replace(/,\s*Jawa,/i, ', Jawa Tengah,');
+}
+
+document.getElementById('btnLoc').addEventListener('click', aktifkanLokasi);
+function aktifkanLokasi(){
+  const info=document.getElementById('locInfo');
+  if(!('geolocation' in navigator)){ info.textContent='Perangkat tidak mendukung lokasi otomatis.'; return; }
+  info.textContent='Meminta izin lokasi…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    coords={lat:pos.coords.latitude, lng:pos.coords.longitude};
+    savePref('lat', coords.lat); savePref('lng', coords.lng);
+    info.textContent='Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
+    info.classList.add('ok');
+    hitungDanTampilkan();
+    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
+    ambilNamaLokasi(coords.lat, coords.lng);
+  }, err=>{
+    info.textContent='Izin lokasi ditolak/gagal. Gunakan menu remote TV untuk mengizinkan akses lokasi.';
+  }, {enableHighAccuracy:false, timeout:10000});
+}
+
+(function initLoc(){
+  const lat=loadPref('lat',null), lng=loadPref('lng',null);
+  if(lat && lng){
+    coords={lat:parseFloat(lat), lng:parseFloat(lng)};
+    const namaTersimpan=rapikanTeksLokasi(loadPref('lokasiNama', null));
+    document.getElementById('locInfo').textContent = namaTersimpan || ('Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')');
+    document.getElementById('locInfo').classList.add('ok');
+    hitungDanTampilkan();
+    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
+    ambilNamaLokasi(coords.lat, coords.lng);
+  }
+})();
+
+async function ambilNamaLokasi(lat, lng){
+  try{
+    const res=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lng+'&localityLanguage=id');
+    if(!res.ok) throw new Error('gagal ambil nama lokasi');
+    const data=await res.json();
+    const bagian=[];
+    if(data.locality) bagian.push(data.locality);
+    if(data.city && data.city!==data.locality) bagian.push(data.city);
+    if(data.principalSubdivision){
+      const prov = data.principalSubdivision === 'Jawa' ? 'Jawa Tengah' : data.principalSubdivision;
+      bagian.push(prov);
+    }
+    if(data.countryName) bagian.push(data.countryName);
+    const nama=rapikanTeksLokasi(bagian.filter(Boolean).join(', '));
+    if(nama){
+      savePref('lokasiNama', nama);
+      const info=document.getElementById('locInfo');
+      info.textContent=nama;
+      info.classList.add('ok');
+    }
+  }catch(e){}
+}
+
+// ---------- Volume ----------
+const volSlider=document.getElementById('volSlider');
+volSlider.value=loadPref('volume','80');
+volSlider.addEventListener('input', ()=> savePref('volume', volSlider.value));
+function getVolume(){ return (parseInt(volSlider.value,10)||80)/100; }
+
+volSlider.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowUp' || e.key==='ArrowDown'){
+    e.preventDefault();
+    const urutan=Array.from(document.querySelectorAll('button, select, input, [tabindex]'));
+    const idx=urutan.indexOf(volSlider);
+    const target=urutan[idx + (e.key==='ArrowUp' ? -1 : 1)];
+    if(target) target.focus();
+  }
+});
+
+// ---------- Nada & audio kustom per slot (subuh / lainnya) ----------
+let actx=null;
+function nadaCtx(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); return actx; }
+function beep(freq, start, dur, type){
+  const ctx=nadaCtx();
+  const osc=ctx.createOscillator(); const gain=ctx.createGain();
+  osc.type=type||'sine'; osc.frequency.value=freq;
+  const vol=0.25*getVolume();
+  gain.gain.setValueAtTime(0.0001, ctx.currentTime+start);
+  gain.gain.exponentialRampToValueAtTime(Math.max(vol,0.0001), ctx.currentTime+start+0.05);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+start+dur);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(ctx.currentTime+start); osc.stop(ctx.currentTime+start+dur+0.05);
+}
+function mainkanBeep(){
+  beep(523,0,0.5); beep(523,0.6,0.5); beep(523,1.2,0.5);
+}
+
+let audioAktifSekarang=null;
+let tombolTesAktif=null;
+function resetTombolTes(){
+  if(tombolTesAktif){ tombolTesAktif.textContent='🔔 Tes'; tombolTesAktif=null; }
+}
+function hentikanSemuaAudio(){
+  if(audioAktifSekarang){
+    try{ audioAktifSekarang.pause(); audioAktifSekarang.currentTime=0; }catch(e){}
+    audioAktifSekarang=null;
+  }
+  if(typeof Native!=='undefined' && typeof Native.hentikanTes==='function'){
+    try{ Native.hentikanTes(); }catch(e){}
+  }
+  resetTombolTes();
+}
+
+const SLOTS={};
+function setupSlot(slot, labelNama){
+  const sel=document.getElementById('selNada-'+slot);
+  const btnTest=document.getElementById('btnTest-'+slot);
+  const btnUpload=document.getElementById('btnUpload-'+slot);
+  const btnHapus=document.getElementById('btnHapus-'+slot);
+  const fileInput=document.getElementById('fileAdzan-'+slot);
+  const fileNameLabel=document.getElementById('fileNameLabel-'+slot);
+  const state={ data: loadPref('customAdzan-'+slot+'-data', null), name: loadPref('customAdzan-'+slot+'-name','') };
+  sel.value=loadPref('nada-'+slot,'bawaan');
+
+  function refresh(){
+    const adaFile = loadPref('customAdzan-'+slot+'-hasfile', null)==='true';
+    if(adaFile){
+      fileNameLabel.textContent='🎵 '+labelNama+': '+(loadPref('customAdzan-'+slot+'-name','') || 'audio kustom');
+      btnHapus.style.display='inline-block';
+    } else {
+      fileNameLabel.textContent='';
+      btnHapus.style.display='none';
+      if(sel.value==='custom'){ sel.value='bawaan'; savePref('nada-'+slot,'bawaan'); }
+    }
+  }
+  refresh();
+
+  sel.addEventListener('change', ()=>{ savePref('nada-'+slot, sel.value); syncNative(); });
+  btnUpload.addEventListener('click', ()=> fileInput.click());
+  fileInput.addEventListener('change', (e)=>{
+    const f=e.target.files && e.target.files[0];
+    if(!f) return;
+    if(f.size>3*1024*1024){
+      document.getElementById('statusMsg').textContent='File terlalu besar (maks sekitar 3MB). Pilih audio yang lebih pendek.';
+      return;
+    }
+    const hasNative = typeof Native!=='undefined' && typeof Native.simpanAudioBase64==='function';
+    const reader=new FileReader();
+    reader.onload=()=>{
+      try{
+        if(!hasNative){ savePref('customAdzan-'+slot+'-data', reader.result); state.data=reader.result; }
+        savePref('customAdzan-'+slot+'-name', f.name);
+        savePref('customAdzan-'+slot+'-hasfile', 'true');
+        state.name=f.name;
+        sel.value='custom'; savePref('nada-'+slot,'custom');
+        refresh();
+        if(hasNative){
+          try{ Native.simpanAudioBase64(slot, reader.result, f.name); }catch(e){}
+        }
+        document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' berhasil diunggah dan tersimpan di perangkat ini.';
+      }catch(err){
+        document.getElementById('statusMsg').textContent='Gagal menyimpan audio (penyimpanan perangkat mungkin penuh). Coba file yang lebih kecil.';
+      }
+    };
+    reader.readAsDataURL(f);
+  });
+  btnHapus.addEventListener('click', ()=>{
+    try{
+      localStorage.removeItem('customAdzan-'+slot+'-data');
+      localStorage.removeItem('customAdzan-'+slot+'-name');
+      localStorage.removeItem('customAdzan-'+slot+'-hasfile');
+    }catch(e){}
+    state.data=null; state.name='';
+    refresh();
+    if(typeof Native!=='undefined' && typeof Native.hapusAudioNative==='function'){
+      try{ Native.hapusAudioNative(slot); }catch(e){}
+    }
+    document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' dihapus. Kembali ke nada bawaan.';
+  });
+  btnTest.addEventListener('click', ()=>{
+    if(tombolTesAktif===btnTest){
+      hentikanSemuaAudio();
+    } else {
+      hentikanSemuaAudio();
+      tombolTesAktif=btnTest;
+      btnTest.textContent='⏹️ Stop';
+      mainkan(slot);
+    }
+  });
+  if('Notification' in window && Notification.permission==='default'){
+    btnTest.addEventListener('click', ()=>{ try{ Notification.requestPermission(); }catch(e){} }, {once:true});
+  }
+
+  SLOTS[slot]={ sel, state };
+}
+setupSlot('subuh','Suara Subuh');
+setupSlot('lainnya','Suara Lainnya');
+volSlider.addEventListener('input', syncNative);
+syncNative();
+
+function mainkan(slot){
+  const { sel, state }=SLOTS[slot];
+  const jenis=sel.value;
+  if(jenis==='custom'){
+    if(typeof Native!=='undefined' && typeof Native.mainkanTes==='function'){
+      try{ Native.mainkanTes(slot); }catch(e){ mainkanBeep(); setTimeout(resetTombolTes,1800); }
+    } else if(state.data){
+      const audio=new Audio(state.data);
+      audio.volume=getVolume();
+      audio.onended=()=>{ if(audioAktifSekarang===audio) audioAktifSekarang=null; resetTombolTes(); };
+      audioAktifSekarang=audio;
+      audio.play().catch(()=>{ document.getElementById('statusMsg').textContent='Tidak bisa memutar audio kustom otomatis di browser ini.'; resetTombolTes(); });
+    } else {
+      mainkanBeep(); setTimeout(resetTombolTes,1800);
+    }
+  } else if(jenis==='adzan_biasa' || jenis==='adzan_fajr'){
+    const audio=new Audio(jenis+'.mp3');
+    audio.volume=getVolume();
+    audio.onended=()=>{ if(audioAktifSekarang===audio) audioAktifSekarang=null; resetTombolTes(); };
+    audioAktifSekarang=audio;
+    audio.play().catch(()=>{ mainkanBeep(); setTimeout(resetTombolTes,1800); });
+  } else {
+    mainkanBeep();
+    setTimeout(resetTombolTes,1800);
+  }
+  document.getElementById('statusMsg').textContent='🔔 Waktu shalat telah tiba — nada pengingat diputar.';
+  if('Notification' in window && Notification.permission==='granted'){
+    try{ new Notification('Waktu Shalat', {body:'Saatnya shalat.'}); }catch(e){}
+  }
+}
+</script>
+</body>
+</html>
