@@ -103,6 +103,14 @@ public class JSBridge {
             testPlayer = null;
         }
     }
+    
+    @JavascriptInterface
+    public void tesPopupAdzan(String slot){
+        android.content.Intent intent = new android.content.Intent(context, AlarmPopupActivity.class);
+        intent.putExtra("slot", slot);
+        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
     private SharedPreferences prefs(){
         return context.getSharedPreferences("pengingat_shalat", Context.MODE_PRIVATE);
