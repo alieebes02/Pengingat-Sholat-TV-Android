@@ -85,7 +85,7 @@ public class JSBridge {
         try {
             testPlayer = new MediaPlayer();
             testPlayer.setDataSource(path);
-            testPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+            testPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             testPlayer.setOnCompletionListener(mp -> {
                 mp.release();
                 if (testPlayer == mp) testPlayer = null;
