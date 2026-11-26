@@ -109,6 +109,9 @@ public class AlarmPopupActivity extends Activity {
     private void mainkanDanTutupOtomatis(String slot){
         SharedPreferences prefs = getSharedPreferences("pengingat_shalat", MODE_PRIVATE);
         String audioPath = prefs.getString("audio_path_" + slot, null);
+        if (audioPath == null && !"subuh".equals(slot)) {
+            audioPath = prefs.getString("audio_path_lainnya", null);
+        }
         float vol = Math.max(0, Math.min(100, prefs.getInt("volume", 80))) / 100f;
 
         if (audioPath != null) {
@@ -117,7 +120,7 @@ public class AlarmPopupActivity extends Activity {
                 try {
                     mediaPlayer = new MediaPlayer();
                     mediaPlayer.setDataSource(audioPath);
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     mediaPlayer.setVolume(vol, vol);
                     mediaPlayer.setOnCompletionListener(mp -> finish());
                     mediaPlayer.prepare();
@@ -127,7 +130,8 @@ public class AlarmPopupActivity extends Activity {
             }
         }
 
-        String nada = prefs.getString("nada_" + slot, "bawaan");
+        String defaultKey = "subuh".equals(slot) ? "nada_subuh" : "nada_lainnya";
+        String nada = prefs.getString("nada_" + slot, prefs.getString(defaultKey, "adzan_biasa"));
         if ("adzan_biasa".equals(nada) || "adzan_fajr".equals(nada)) {
             String namaAset = "adzan_fajr".equals(nada) ? "adzan_fajr.mp3" : "adzan_biasa.mp3";
             try {
@@ -135,7 +139,7 @@ public class AlarmPopupActivity extends Activity {
                 mediaPlayer = new MediaPlayer();
                 mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                 afd.close();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mediaPlayer.setVolume(vol, vol);
                 mediaPlayer.setOnCompletionListener(mp -> finish());
                 mediaPlayer.prepare();
@@ -145,7 +149,7 @@ public class AlarmPopupActivity extends Activity {
         }
 
         int volume = (int) (vol * ToneGenerator.MAX_VOLUME);
-        toneGenerator = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, volume);
+        toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, volume);
         int durasi = 400;
         int[] jeda = {0, 600, 1200};
         for (int t : jeda) {
