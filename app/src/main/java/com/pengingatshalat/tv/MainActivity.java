@@ -16,6 +16,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQ_FILE_CHOOSER = 1002;
     private WebView webView;
     private ValueCallback<Uri[]> filePathCallback;
+    private long waktuTekanKembali = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +138,13 @@ public class MainActivity extends AppCompatActivity {
                     if (webView.canGoBack()) {
                         webView.goBack();
                     } else {
-                        finish();
+                        long sekarang = System.currentTimeMillis();
+                        if (sekarang - waktuTekanKembali < 2000) {
+                            finish();
+                        } else {
+                            waktuTekanKembali = sekarang;
+                            Toast.makeText(MainActivity.this, "Tekan kembali sekali lagi untuk keluar", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
