@@ -31,27 +31,35 @@ body{
     repeating-linear-gradient(45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px),
     repeating-linear-gradient(-45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px);
   color:var(--text); font-family:'Manrope',sans-serif;
-  padding:5vh 5vw; padding-top:calc(5vh + env(safe-area-inset-top,0px));
-  padding-bottom:calc(5vh + env(safe-area-inset-bottom,0px));
+  padding:4.5vh 5vw; padding-top:calc(4.5vh + env(safe-area-inset-top,0px));
+  padding-bottom:calc(4.5vh + env(safe-area-inset-bottom,0px));
   box-sizing:border-box;
-  display:flex; flex-direction:column; min-height:100%; gap:2vh;
+  display:flex; flex-direction:column; min-height:100%; gap:1.8vh;
   overflow-x:hidden;
 }
-.topbar{display:flex; justify-content:space-between; align-items:flex-start; color:var(--muted); font-size:1.3vw; min-font-size:16px;}
-.topbar .date{font-size:1.4vw;}
-.clock-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:0.5vh;}
-.topbar .clock{font-family:'Manrope',sans-serif; font-weight:800; font-size:2.2vw; color:var(--text); letter-spacing:0.02em; line-height:1;}
+.topbar{display:flex; justify-content:space-between; align-items:flex-start; color:var(--muted); font-size:1.3vw;}
+.topbar .date{font-size:1.45vw; font-weight:600; color:var(--text);}
+.topbar .hijri-date{font-size:1.15vw; color:var(--accent); opacity:0.9; margin-top:0.2vh;}
+.clock-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:0.6vh;}
+.topbar .clock{
+  font-family:'Manrope',sans-serif; font-weight:800; font-size:2.6vw;
+  color:var(--text); letter-spacing:0.03em; line-height:1;
+  font-variant-numeric:tabular-nums;
+  display:flex; align-items:baseline;
+}
+.topbar .clock .sep{color:var(--accent); margin:0 0.12vw; opacity:0.85;}
+.topbar .clock .sec{font-size:1.75vw; color:var(--accent); font-weight:700; margin-left:0.15vw;}
 .adzan-badge{
   font-size:0.95vw; color:var(--accent);
   background:rgba(217,164,65,0.12); border:1px solid rgba(217,164,65,0.35);
-  border-radius:999px; padding:0.3vh 0.9vw; letter-spacing:0.02em;
+  border-radius:999px; padding:0.35vh 0.95vw; letter-spacing:0.02em;
 }
-.ornamen{display:flex; align-items:center; justify-content:center; gap:1vw; color:var(--accent); opacity:0.75; margin-bottom:0.3vh;}
+.ornamen{display:flex; align-items:center; justify-content:center; gap:1vw; color:var(--accent); opacity:0.75; margin-bottom:0.2vh;}
 .ornamen .garis{height:1px; width:5vw; background:linear-gradient(90deg, transparent, var(--accent), transparent);}
 .moon-watermark{position:fixed; top:-7vw; right:-7vw; width:34vw; height:34vw; z-index:-1; opacity:0.14; pointer-events:none;}
 .moon-watermark circle:first-child{fill:var(--accent);}
 .moon-watermark circle:last-child{fill:var(--bg);}
-.skyline{position:fixed; left:0; right:0; bottom:0; width:100%; height:20vh; z-index:-1; opacity:0.18; pointer-events:none;}
+.skyline{position:fixed; left:0; right:0; bottom:0; width:100%; height:20vh; z-index:-1; opacity:0.16; pointer-events:none;}
 .skyline rect, .skyline path, .skyline circle{fill:var(--accent);}
 .frame-border{position:fixed; inset:1.5vh 1.5vw; border:2px solid var(--accent); border-radius:6px; z-index:1; pointer-events:none; opacity:0.5;}
 .frame-border::before{content:''; position:absolute; inset:6px; border:1px solid var(--accent); border-radius:4px; opacity:0.6;}
@@ -62,32 +70,79 @@ body{
 .frame-corner.tr{top:1.3vh; right:1.3vw; transform:rotate(90deg);}
 .frame-corner.br{bottom:1.3vh; right:1.3vw; transform:rotate(180deg);}
 .frame-corner.bl{bottom:1.3vh; left:1.3vw; transform:rotate(270deg);}
-.hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:0.8vh;}
-.hero .label{color:var(--muted); font-size:1.4vw; letter-spacing:0.04em;}
-.hero .name{font-family:'Spectral',serif; font-weight:600; font-size:clamp(26px, 5.2vw, 8vh); color:var(--accent); line-height:1.05;}
-.hero .countdown{font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(34px, 7vw, 11vh); letter-spacing:0.03em; font-variant-numeric:tabular-nums;}
-.hero .sub{color:var(--muted); font-size:1.3vw; margin-top:0;}
-.hero #labelMetode{font-size:1.05vw; margin-top:0.2vh;}
+
+.hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:0.7vh;}
+.hero .label{color:var(--muted); font-size:1.35vw; letter-spacing:0.04em;}
+.hero .name{font-family:'Spectral',serif; font-weight:600; font-size:clamp(26px, 5vw, 7.6vh); color:var(--accent); line-height:1.05;}
+.hero .countdown{font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(34px, 6.8vw, 10.5vh); letter-spacing:0.03em; font-variant-numeric:tabular-nums; line-height:1.05;}
+
+/* Progress bar hitung mundur */
+.progress-wrap{
+  width:min(36vw, 480px); height:0.7vh; min-height:5px;
+  background:rgba(255,255,255,0.1); border-radius:999px;
+  overflow:hidden; margin:0.4vh 0 0.6vh;
+  border:1px solid rgba(217,164,65,0.25);
+}
+.progress-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg, var(--accent-soft), var(--accent));
+  border-radius:999px;
+  box-shadow:0 0 10px var(--accent);
+  transition:width 0.8s ease;
+}
+
+/* Kapsul lokasi */
+.loc-capsule{
+  display:inline-flex; align-items:center; gap:0.5vw;
+  background:rgba(20, 47, 67, 0.85);
+  border:1px solid rgba(217, 164, 65, 0.35);
+  border-radius:999px;
+  padding:0.5vh 1.3vw;
+  color:var(--text);
+  font-size:1.15vw; font-weight:600;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+.hero #labelMetode{font-size:1vw; margin-top:0.2vh;}
+
 .row{display:flex; gap:1.4vw; justify-content:center;}
 .pcard{
-  position:relative; background:var(--card); border-radius:4px 4px 18px 18px; padding:2.6vh 1.6vw 2.2vh; min-width:11vw;
-  text-align:center; border:2px solid transparent; transition:transform .25s, border-color .25s, background .25s;
+  position:relative; background:var(--card); border-radius:4px 4px 18px 18px; padding:2.4vh 1.6vw 2vh; min-width:11.5vw;
+  text-align:center; border:2px solid transparent; transition:transform .25s, border-color .25s, background .25s, box-shadow .25s;
 }
 .pcard::before{
   content:''; position:absolute; top:-9px; left:50%; transform:translateX(-50%);
   width:60%; height:16px; border-radius:50% 50% 0 0; background:var(--card);
-  border:2px solid transparent; transition:background .25s;
+  border:2px solid transparent; transition:background .25s, border-color .25s;
 }
 .pcard.active::before{background:var(--card-active); border-color:var(--accent);}
-.pcard .pname{font-size:1.25vw; color:var(--muted); margin-bottom:0.6vh;}
-.pcard .ptime{font-size:2vw; font-weight:800; font-variant-numeric:tabular-nums;}
-.pcard.active{background:var(--card-active); border-color:var(--accent); transform:translateY(-6px);}
-.pcard.active .pname{color:var(--accent);}
+.pcard .pname{font-size:1.25vw; color:var(--muted); margin-bottom:0.5vh;}
+.pcard .ptime{font-size:2.05vw; font-weight:800; font-variant-numeric:tabular-nums;}
+.pcard.active{
+  background:var(--card-active); border-color:var(--accent); transform:translateY(-6px);
+  box-shadow:0 8px 24px rgba(217, 164, 65, 0.28), inset 0 0 14px rgba(217, 164, 65, 0.12);
+}
+.pcard.active .pname{color:var(--accent); font-weight:700;}
+
+/* Lencana BERIKUTNYA pada kartu shalat aktif */
+.next-pill{
+  display:inline-block;
+  margin-top:0.6vh;
+  padding:0.25vh 0.75vw;
+  font-size:0.78vw;
+  font-weight:800;
+  letter-spacing:0.08em;
+  color:var(--bg);
+  background:var(--accent);
+  border-radius:999px;
+  text-transform:uppercase;
+}
+
 #infoIslami .pcard{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:2.8vh 1.6vw 1.8vh; gap:0.35vh;
+  padding:2.6vh 1.6vw 1.7vh; gap:0.35vh;
 }
 #infoIslami .pcard .pname{margin-bottom:0;}
+
 .controls{display:flex; gap:1.4vw; flex-wrap:wrap; justify-content:center;}
 button, select{
   font-family:'Manrope',sans-serif; font-size:1.15vw; color:var(--text);
@@ -97,6 +152,7 @@ button, select{
 button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft);}
 .status{font-size:1.05vw; color:var(--muted); text-align:center;}
 .status.ok{color:var(--accent);}
+
 .gear-btn{
   position:fixed; left:4vw; bottom:4vh; z-index:20;
   width:4.6vw; height:4.6vw; min-width:54px; min-height:54px;
@@ -109,6 +165,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   background:var(--card-active); border:3px solid var(--accent);
   box-shadow:0 0 18px rgba(217,164,65,0.85); transform:scale(1.15);
 }
+
 .settings-overlay{
   display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
   z-index:30; align-items:center; justify-content:center; padding:4vh 4vw;
@@ -117,14 +174,18 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
 .settings-panel{
   background:var(--bg2); border-radius:20px; padding:3vh 3vw; max-width:92vw; max-height:88vh;
   overflow-y:auto; display:flex; flex-direction:column; gap:2vh; width:min(900px, 92vw);
+  border-top:3px solid var(--accent);
 }
 .settings-header{display:flex; justify-content:space-between; align-items:center; gap:2vw;}
 .settings-header h2{margin:0; font-family:'Spectral',serif; font-size:1.8vw; color:var(--accent); display:flex; align-items:center; gap:0.6vw;}
-.settings-panel{border-top:3px solid var(--accent);}
+
 @media (max-width:700px){
-  .topbar{font-size:3.2vw;} .topbar .clock{font-size:5vw;} .adzan-badge{font-size:2.4vw;}
-  .hero .name{font-size:8vw;} .hero .countdown{font-size:11vw;} .hero .label,.hero .sub{font-size:3vw;}
+  .topbar{font-size:3.2vw;} .topbar .date{font-size:3.4vw;} .topbar .hijri-date{font-size:2.8vw;}
+  .topbar .clock{font-size:5.5vw;} .topbar .clock .sec{font-size:3.8vw;} .adzan-badge{font-size:2.4vw;}
+  .hero .name{font-size:8vw;} .hero .countdown{font-size:11vw;} .hero .label{font-size:3vw;}
+  .progress-wrap{width:70vw;} .loc-capsule{font-size:2.8vw; padding:0.7vh 3vw;}
   .row{flex-wrap:wrap;} .pcard{min-width:26vw;} .pcard .pname{font-size:3vw;} .pcard .ptime{font-size:4.5vw;}
+  .next-pill{font-size:2vw; padding:0.3vh 2vw;}
   button,select{font-size:3vw;}
   .status{font-size:3vw;}
   .gear-btn{width:14vw; height:14vw; font-size:6vw;}
@@ -173,9 +234,12 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   </svg>
 
   <div class="topbar">
-    <div><div class="date" id="tgl">—</div><div class="date" id="tglHijriah" style="font-size:0.85em; opacity:0.85;">—</div></div>
+    <div>
+      <div class="date" id="tgl">—</div>
+      <div class="hijri-date" id="tglHijriah">—</div>
+    </div>
     <div class="clock-wrap">
-      <div class="clock" id="jam">--:--:--</div>
+      <div class="clock" id="jam">--<span class="sep">:</span>--<span class="sec">--</span></div>
       <div class="adzan-badge">🔔 Adzan Otomatis Aktif</div>
     </div>
   </div>
@@ -187,10 +251,11 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="label">Waktu shalat berikutnya</div>
     <div class="name" id="nextName">Memuat…</div>
     <div class="countdown" id="countdown">--:--:--</div>
-    <div class="sub" id="locInfo">Lokasi belum aktif</div>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="loc-capsule"><span>📍</span><span id="locInfo">Lokasi belum aktif</span></div>
     <div class="status" id="labelMetode"></div>
   </div>
-  <div class="row" id="prayerRow" style="margin-top:1vh;"></div>
+  <div class="row" id="prayerRow" style="margin-top:0.5vh;"></div>
   <div class="row" id="infoIslami" style="margin-top:0;"></div>
 
   <div class="status" id="statusMsg">Free for the Ummah, not for sale<br>By. Alie_Ebes ©2026</div>
@@ -218,7 +283,6 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
           <option value="fajar">Tema: Fajar</option>
         </select>
       </div>
-
       <div class="controls">
         <label style="color:var(--muted); font-size:1.1vw; display:flex; align-items:center; gap:0.6vw;">
           🔊 Volume
@@ -281,7 +345,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   </div>
 
 <script>
-// ---------- Preferensi lokal (tanpa akun) ----------
+// ---------- Preferensi lokal ----------
 function loadPref(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
 function savePref(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 
@@ -363,7 +427,7 @@ document.getElementById('btnPopupDzuhur').addEventListener('click', ()=>{
   }
 });
 
-// ---------- Detail waktu shalat (klik kartu jadwal) ----------
+// ---------- Detail waktu shalat ----------
 const KETERANGAN_METODE={
   kemenag:'Kementerian Agama RI',
   muhammadiyah:'HISABMU / KHGT Muhammadiyah',
@@ -408,7 +472,7 @@ function tampilkanDetailIslami(label, targetJdn, statusText, penjelasan){
   btnTutupDetail.focus();
 }
 
-// ---------- Kalender Hijriah (hisab tabular, offline) ----------
+// ---------- Kalender Hijriah ----------
 const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
 function gregorianToJDN(y,m,d){
   const a=Math.floor((14-m)/12);
@@ -524,7 +588,10 @@ function renderInfoIslami(h, jdn){
 let tanggalTerakhirHijriah=null;
 function tickClock(){
   const now=new Date();
-  document.getElementById('jam').textContent=now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  const ss=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('jam').innerHTML=hh+'<span class="sep">:</span>'+mm+'<span class="sec">'+ss+'</span>';
   document.getElementById('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
   const tglSkrg=now.toDateString();
@@ -535,7 +602,7 @@ function tickClock(){
 }
 setInterval(tickClock,1000); tickClock();
 
-// ---------- Perhitungan waktu shalat (metode astronomis, tanpa koneksi internet) ----------
+// ---------- Perhitungan waktu shalat ----------
 const METHODS={
   kemenag:{fajr:20, isha:18},
   muhammadiyah:{fajr:18, isha:18},
@@ -647,16 +714,30 @@ let lastNotified='';
 function updateCountdown(){
   if(!jadwalCache.length) return;
   const now=new Date();
-  let next=null, nextDate=null;
-  for(const p of jadwalCache){
+  let next=null, nextDate=null, prevDate=null;
+
+  for(let i=0; i<jadwalCache.length; i++){
+    const p=jadwalCache[i];
     if(p.t===null) continue;
     const d=timeToDate(p.t);
-    if(d>now){ next=p; nextDate=d; break; }
+    if(d>now){
+      next=p;
+      nextDate=d;
+      if(i>0){
+        prevDate=timeToDate(jadwalCache[i-1].t);
+      } else {
+        prevDate=timeToDate(jadwalCache[jadwalCache.length-1].t);
+        prevDate.setDate(prevDate.getDate()-1);
+      }
+      break;
+    }
   }
   if(!next){
     next=jadwalCache[0];
     nextDate=timeToDate(next.t); nextDate.setDate(nextDate.getDate()+1);
+    prevDate=timeToDate(jadwalCache[jadwalCache.length-1].t);
   }
+
   document.getElementById('nextName').textContent=next.nama;
   const diff=Math.max(0, nextDate-now);
   const hh=String(Math.floor(diff/3600000)).padStart(2,'0');
@@ -664,9 +745,29 @@ function updateCountdown(){
   const ss=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   document.getElementById('countdown').textContent=hh+':'+mm+':'+ss;
 
-  document.querySelectorAll('.pcard').forEach(c=>c.classList.remove('active'));
+  // Update progress bar
+  const fill=document.getElementById('progressFill');
+  if(fill && prevDate && nextDate){
+    const total=nextDate - prevDate;
+    const elapsed=now - prevDate;
+    const pct=Math.max(2, Math.min(100, (elapsed / total) * 100));
+    fill.style.width=pct.toFixed(1)+'%';
+  }
+
+  // Tandai kartu aktif & tambahkan lencana BERIKUTNYA
+  document.querySelectorAll('#prayerRow .pcard').forEach(c=>{
+    c.classList.remove('active');
+    const oldPill=c.querySelector('.next-pill');
+    if(oldPill) oldPill.remove();
+  });
   const el=document.getElementById('card-'+next.key);
-  if(el) el.classList.add('active');
+  if(el){
+    el.classList.add('active');
+    const pill=document.createElement('div');
+    pill.className='next-pill';
+    pill.textContent='Berikutnya';
+    el.appendChild(pill);
+  }
 
   if(diff<1000 && lastNotified!==next.key+now.toDateString()){
     lastNotified=next.key+now.toDateString();
@@ -691,7 +792,6 @@ function aktifkanLokasi(){
     coords={lat:pos.coords.latitude, lng:pos.coords.longitude};
     savePref('lat', coords.lat); savePref('lng', coords.lng);
     info.textContent='Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
-    info.classList.add('ok');
     hitungDanTampilkan();
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
     ambilNamaLokasi(coords.lat, coords.lng);
@@ -706,7 +806,6 @@ function aktifkanLokasi(){
     coords={lat:parseFloat(lat), lng:parseFloat(lng)};
     const namaTersimpan=rapikanTeksLokasi(loadPref('lokasiNama', null));
     document.getElementById('locInfo').textContent = namaTersimpan || ('Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')');
-    document.getElementById('locInfo').classList.add('ok');
     hitungDanTampilkan();
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
     ambilNamaLokasi(coords.lat, coords.lng);
@@ -729,9 +828,7 @@ async function ambilNamaLokasi(lat, lng){
     const nama=rapikanTeksLokasi(bagian.filter(Boolean).join(', '));
     if(nama){
       savePref('lokasiNama', nama);
-      const info=document.getElementById('locInfo');
-      info.textContent=nama;
-      info.classList.add('ok');
+      document.getElementById('locInfo').textContent=nama;
     }
   }catch(e){}
 }
@@ -752,7 +849,7 @@ volSlider.addEventListener('keydown', (e)=>{
   }
 });
 
-// ---------- Nada & audio kustom per slot (subuh / lainnya) ----------
+// ---------- Nada & audio kustom ----------
 let actx=null;
 function nadaCtx(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); return actx; }
 function beep(freq, start, dur, type){
