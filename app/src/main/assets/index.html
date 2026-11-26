@@ -867,6 +867,34 @@ function tutupMenuDariRemot() {
     }
     return "exit";
 }
+  window.addEventListener('DOMContentLoaded', function() {
+    const semuaBtn = Array.from(document.querySelectorAll('button'));
+    const btnHapusTerakhir = semuaBtn.reverse().find(b => b.textContent && b.textContent.includes('Hapus'));
+    
+    if (btnHapusTerakhir && btnHapusTerakhir.parentElement) {
+        const wadah = document.createElement('div');
+        wadah.style.marginTop = '16px';
+        wadah.style.display = 'flex';
+        wadah.style.gap = '10px';
+
+        const btnTesSubuh = document.createElement('button');
+        btnTesSubuh.textContent = '🕌 Tes Pop-up Subuh';
+        btnTesSubuh.onclick = function() {
+            if (window.Native && Native.tesPopupAdzan) Native.tesPopupAdzan('subuh');
+        };
+
+        const btnTesDzuhur = document.createElement('button');
+        btnTesDzuhur.textContent = '🕌 Tes Pop-up Dzuhur';
+        btnTesDzuhur.onclick = function() {
+            if (window.Native && Native.tesPopupAdzan) Native.tesPopupAdzan('dzuhur');
+        };
+
+        wadah.appendChild(btnTesSubuh);
+        wadah.appendChild(btnTesDzuhur);
+        btnHapusTerakhir.parentElement.parentElement.appendChild(wadah);
+    }
+});
+
 </script>
 
 </body>
