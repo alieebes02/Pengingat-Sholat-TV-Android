@@ -850,11 +850,17 @@ function mainkan(slot){
   
 <script>
 function tutupMenuDariRemot() {
-    const semuaElemen = document.querySelectorAll('button, a, div, span');
+    // 1. Cari semua elemen (termasuk header/title) yang punya tulisan "Tutup"
+    const semuaElemen = Array.from(document.querySelectorAll('*'));
     for (let el of semuaElemen) {
-        if (el.textContent && el.textContent.trim().includes('Tutup')) {
-            if (el.offsetParent !== null) {
+        // Ambil elemen terdalam yang berisi teks "Tutup" (bukan pembungkus besar)
+        if (el.children.length === 0 && el.textContent && el.textContent.includes('Tutup')) {
+            const gaya = window.getComputedStyle(el);
+            // Cek apakah elemen benar-benar terlihat di layar
+            if (gaya.display !== 'none' && gaya.visibility !== 'hidden' && el.offsetWidth > 0) {
                 el.click();
+                // Jika tombol aslinya adalah pembungkus <button> di atasnya, klik juga induknya
+                if (el.parentElement) el.parentElement.click();
                 return "closed";
             }
         }
