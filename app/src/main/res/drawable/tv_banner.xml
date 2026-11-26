@@ -5,15 +5,23 @@
             <solid android:color="#0B1B2B" />
         </shape>
     </item>
-    <item android:gravity="center" android:width="60dp" android:height="60dp">
+    <item android:gravity="center" android:width="110dp" android:height="110dp">
         <vector
-            android:width="60dp"
-            android:height="60dp"
+            android:width="110dp"
+            android:height="110dp"
             android:viewportWidth="108"
             android:viewportHeight="108">
-            <path
-                android:fillColor="#D9A441"
-                android:pathData="M64,30 C50,30 38.5,41.5 38.5,55.5 C38.5,69.5 50,81 64,81 C68,81 71.8,80.1 75.2,78.5 C66.6,75.4 60.5,67.1 60.5,57.3 C60.5,47.5 66.6,39.2 75.2,36.1 C71.8,32.5 68,30 64,30 Z" />
+            <group
+                android:scaleX="1.6"
+                android:scaleY="1.6"
+                android:pivotX="56.5"
+                android:pivotY="55.5"
+                android:translateX="-2.5"
+                android:translateY="-1.5">
+                <path
+                    android:fillColor="#D9A441"
+                    android:pathData="M64,30 C50,30 38.5,41.5 38.5,55.5 C38.5,69.5 50,81 64,81 C68,81 71.8,80.1 75.2,78.5 C66.6,75.4 60.5,67.1 60.5,57.3 C60.5,47.5 66.6,39.2 75.2,36.1 C71.8,32.5 68,30 64,30 Z" />
+            </group>
         </vector>
     </item>
 </layer-list>
