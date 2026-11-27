@@ -17,352 +17,328 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 35%, #16334B 0%, #0D2030 65%, #081520 100%);
-    color: #F2EDE4;
+    background: radial-gradient(circle at 50% 35%, #16334B 0%, #0D2033 55%, #071320 100%);
+    color: #F4EFE6;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 
-  /* Dekorasi Bulan Sabit Samar */
-  .bg-crescent {
-    position: fixed;
-    top: 10vh;
-    right: 12vw;
-    width: 18vh;
-    height: 18vh;
-    border-radius: 50%;
-    box-shadow: -2.8vh 1.2vh 0 0 rgba(217, 164, 65, 0.08);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Bingkai Emas Utama di Atas Running Text */
+  /* Bingkai Emas TV - Berakhir rapi di atas running text */
   .tv-frame {
     position: fixed;
-    top: 2.2vh;
+    top: 1.8vh;
     left: 1.5vw;
     right: 1.5vw;
-    bottom: 6.2vh;
-    border: 2px solid rgba(217, 164, 65, 0.45);
+    bottom: 6.4vh;
+    border: 2px solid rgba(217, 164, 65, 0.55);
     border-radius: 22px;
     pointer-events: none;
     z-index: 5;
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0 0 35px rgba(217, 164, 65, 0.08);
   }
 
-  /* Container Utama */
+  /* Area Konten Utama */
   .main-container {
     position: fixed;
-    top: 2.2vh;
+    top: 1.8vh;
     left: 1.5vw;
     right: 1.5vw;
-    bottom: 6.2vh;
-    padding: 3.5vh 3.8vw 2.2vh 3.8vw;
+    bottom: 6.4vh;
+    padding: 3.2vh 3.5vw;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     z-index: 10;
   }
 
-  /* Baris Atas: Tanggal & Jam */
-  .top-bar {
+  /* Header Kiri & Kanan */
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
 
-  .date-section .gregorian-date {
-    font-size: 3.2vh;
+  .date-box .masehi {
+    font-size: 2.3vw;
     font-weight: 700;
-    color: #F5F2EB;
+    color: #FFFFFF;
     letter-spacing: 0.3px;
   }
 
-  .date-section .hijri-date {
-    font-size: 2.1vh;
+  .date-box .hijriah {
+    font-size: 1.35vw;
     color: #D9A441;
     margin-top: 0.4vh;
     font-weight: 500;
   }
 
-  .clock-section {
+  .clock-box {
     text-align: right;
   }
 
-  .clock-section .digital-clock {
-    font-size: 5.2vh;
-    font-weight: 800;
-    color: #F5F2EB;
+  .clock-time {
+    font-size: 3.4vw;
+    font-weight: 700;
+    color: #FFFFFF;
     line-height: 1;
-    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
   }
 
-  .clock-section .digital-clock span.sec {
-    font-size: 3vh;
+  .clock-time span.sec {
+    font-size: 1.9vw;
     color: #D9A441;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .status-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.5vw;
+    gap: 6px;
     margin-top: 0.8vh;
-    padding: 0.4vh 1vw;
+    padding: 0.45vh 1.1vw;
+    border-radius: 999px;
     background: rgba(217, 164, 65, 0.14);
-    border: 1px solid rgba(217, 164, 65, 0.4);
-    border-radius: 20px;
-    font-size: 1.6vh;
-    color: #E8C068;
+    border: 1px solid rgba(217, 164, 65, 0.45);
+    color: #F3D18A;
+    font-size: 0.95vw;
     font-weight: 600;
   }
 
-  /* Bagian Tengah: Hitung Mundur */
-  .center-countdown {
-    text-align: center;
+  /* Bagian Tengah: Countdown, Lokasi, Metode */
+  .center-hero {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     margin-top: -1vh;
   }
 
   .next-label {
-    font-size: 1.7vh;
+    font-size: 1.05vw;
     letter-spacing: 3.5px;
-    color: #9FB3C8;
+    color: #A8BDD0;
     text-transform: uppercase;
     font-weight: 600;
   }
 
-  .next-prayer-name {
-    font-size: 3.4vh;
+  .next-name {
+    font-size: 2.5vw;
     font-weight: 700;
-    color: #D9A441;
+    color: #E2B14C;
     margin-top: 0.3vh;
   }
 
   .countdown-timer {
-    font-size: 7.2vh;
+    font-size: 4.5vw;
     font-weight: 800;
     color: #FFFFFF;
-    letter-spacing: 2px;
     line-height: 1.05;
-    margin: 0.3vh 0 1.2vh 0;
-    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    letter-spacing: 2px;
+    margin-top: 0.2vh;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
   }
 
   .progress-wrap {
     width: 34vw;
-    height: 0.65vh;
+    height: 7px;
     background: rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
+    border-radius: 999px;
     overflow: hidden;
+    margin-top: 1.3vh;
   }
 
-  .progress-bar {
+  .progress-fill {
     height: 100%;
-    width: 45%;
-    background: linear-gradient(90deg, #B8862D, #F2C96B);
-    border-radius: 10px;
-    transition: width 1s linear;
+    width: 65%;
+    background: linear-gradient(90deg, #C78E2C, #F2C96B);
+    border-radius: 999px;
+    transition: width 0.5s linear;
   }
 
-  .info-badges {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1vh;
+  .location-pill {
     margin-top: 1.4vh;
+    padding: 0.55vh 1.4vw;
+    border-radius: 999px;
+    background: rgba(15, 36, 56, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #E5ECF2;
+    font-size: 1.05vw;
+    font-weight: 500;
   }
 
-  .badge-item {
-    padding: 0.5vh 1.4vw;
-    background: rgba(12, 29, 44, 0.78);
-    border: 1px solid rgba(217, 164, 65, 0.28);
-    border-radius: 20px;
-    font-size: 1.75vh;
-    color: #D9E2EC;
+  .method-pill {
+    margin-top: 1.1vh;
+    padding: 0.45vh 1.2vw;
+    border-radius: 999px;
+    background: rgba(217, 164, 65, 0.1);
+    border: 1px solid rgba(217, 164, 65, 0.35);
+    color: #D9B773;
+    font-size: 0.92vw;
+    font-weight: 500;
   }
 
-  .badge-item.method {
-    color: #E5B95C;
-    font-size: 1.65vh;
-  }
-
-  /* Grid 5 Waktu Shalat */
+  /* Baris 5 Waktu Shalat */
   .prayer-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 1.6vw;
+    gap: 1.4vw;
     width: 100%;
-    margin-top: 1vh;
+    margin-top: 1.5vh;
   }
 
   .prayer-card {
     position: relative;
-    background: rgba(15, 35, 53, 0.72);
+    background: rgba(17, 40, 62, 0.72);
     border: 1.5px solid rgba(255, 255, 255, 0.14);
     border-radius: 16px;
-    padding: 2vh 1vw;
+    padding: 1.7vh 1vw;
     text-align: center;
     cursor: pointer;
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
     outline: none;
   }
 
   .prayer-card.active-next {
-    border-color: rgba(217, 164, 65, 0.75);
-    background: rgba(25, 52, 76, 0.85);
+    border-color: rgba(217, 164, 65, 0.65);
+    background: rgba(28, 59, 88, 0.82);
   }
 
-  .next-tag {
+  .badge-next {
     position: absolute;
-    top: -1.3vh;
+    top: -1.1vh;
     left: 50%;
     transform: translateX(-50%);
-    background: #D9A441;
+    background: linear-gradient(90deg, #D9A441, #F0C465);
     color: #0B1B2B;
-    font-size: 1.25vh;
+    font-size: 0.72vw;
     font-weight: 800;
-    padding: 0.25vh 0.9vw;
-    border-radius: 10px;
+    padding: 0.2vh 0.85vw;
+    border-radius: 999px;
     letter-spacing: 0.8px;
-    display: none;
-  }
-
-  .prayer-card.active-next .next-tag {
-    display: block;
+    white-space: nowrap;
   }
 
   .prayer-card .p-name {
-    font-size: 2.1vh;
-    color: #BCCCDC;
+    font-size: 1.25vw;
     font-weight: 600;
-    margin-bottom: 0.6vh;
-  }
-
-  .prayer-card.active-next .p-name {
-    color: #F2C96B;
+    color: #D7C49E;
   }
 
   .prayer-card .p-time {
-    font-size: 3.5vh;
-    font-weight: 800;
+    font-size: 2.25vw;
+    font-weight: 700;
     color: #FFFFFF;
+    margin-top: 0.4vh;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* Kartu Hari Besar Islam */
-  .events-row {
-    display: flex;
-    justify-content: center;
-    gap: 1.6vw;
-    margin-top: 1vh;
+  /* Baris Hari Besar Islam */
+  .holiday-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4vw;
+    width: 48vw;
+    margin: 1.2vh auto 0 auto;
   }
 
-  .event-card {
-    width: 16vw;
-    background: rgba(15, 35, 53, 0.68);
-    border: 1.5px solid rgba(255, 255, 255, 0.14);
+  .holiday-card {
+    background: rgba(15, 35, 55, 0.72);
+    border: 1.5px solid rgba(255, 255, 255, 0.13);
     border-radius: 14px;
-    padding: 1.3vh 1vw;
+    padding: 1.1vh 1vw;
     text-align: center;
     cursor: pointer;
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     outline: none;
   }
 
-  .event-card .e-title {
-    font-size: 1.8vh;
+  .holiday-card .h-title {
+    font-size: 1.05vw;
     font-weight: 700;
-    color: #D9A441;
+    color: #E2B14C;
   }
 
-  .event-card .e-date {
-    font-size: 1.45vh;
-    color: #9FB3C8;
-    margin: 0.25vh 0;
+  .holiday-card .h-date {
+    font-size: 0.82vw;
+    color: #9FB4C7;
+    margin-top: 0.2vh;
   }
 
-  .event-card .e-days {
-    font-size: 1.9vh;
+  .holiday-card .h-days {
+    font-size: 1.15vw;
     font-weight: 700;
-    color: #F5F2EB;
+    color: #FFFFFF;
+    margin-top: 0.25vh;
   }
 
-  /* Footer Kredit */
-  .footer-credit {
-    text-align: center;
-    font-size: 1.4vh;
-    color: rgba(188, 204, 220, 0.45);
-    margin-top: 0.4vh;
-  }
-
-  /* Tombol Pengaturan (Gear) di Pojok Kiri Bawah dalam Bingkai */
-  .settings-btn {
+  /* Tombol Pengaturan (Gear) - Di dalam bingkai pojok kiri bawah */
+  .btn-settings {
     position: fixed;
     left: 3.2vw;
-    bottom: 8.2vh;
-    width: 5.4vh;
-    height: 5.4vh;
+    bottom: 8.6vh;
+    width: 3.6vw;
+    height: 3.6vw;
+    min-width: 44px;
+    min-height: 44px;
     border-radius: 50%;
-    background: rgba(20, 47, 67, 0.92);
-    border: 2px solid rgba(217, 164, 65, 0.55);
-    color: #D9A441;
-    font-size: 2.8vh;
+    background: rgba(20, 47, 71, 0.92);
+    border: 1.5px solid rgba(217, 164, 65, 0.55);
+    color: #E2B14C;
+    font-size: 1.6vw;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 25;
     outline: none;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   }
 
-  /* Efek Sorotan Fokus Remote TV (D-Pad) */
-  .tv-focusable:focus,
-  .tv-focusable.focused {
+  /* Efek Fokus Remote TV (D-Pad) yang Sangat Jelas */
+  .tv-focus:focus,
+  .tv-focus.focused {
     border-color: #FFD166 !important;
     box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.45), 0 8px 22px rgba(0, 0, 0, 0.5) !important;
     transform: scale(1.04);
-    background: rgba(30, 64, 92, 0.95) !important;
+    background: rgba(34, 72, 106, 0.95) !important;
   }
 
-  .settings-btn:focus,
-  .settings-btn.focused {
-    transform: scale(1.14);
-    background: #D9A441 !important;
-    color: #0B1B2B !important;
-    border-color: #FFF3B0 !important;
-    box-shadow: 0 0 0 4px rgba(217, 164, 65, 0.45), 0 0 20px rgba(217, 164, 65, 0.7) !important;
+  .footer-credit {
+    text-align: center;
+    font-size: 0.78vw;
+    color: rgba(180, 198, 214, 0.55);
+    margin-top: 0.6vh;
   }
 
-  /* Bilah Running Text Mutiara Hadits di Bawah Bingkai */
-  .hadith-ticker {
+  /* Running Text Mutiara Hadits di Bawah Bingkai */
+  .ticker-wrap {
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 4.8vh;
-    background: #08131D;
-    border-top: 1px solid rgba(217, 164, 65, 0.35);
+    left: 1.5vw;
+    right: 1.5vw;
+    bottom: 1.3vh;
+    height: 4.1vh;
+    background: rgba(11, 27, 43, 0.95);
+    border: 1.5px solid rgba(217, 164, 65, 0.5);
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    z-index: 15;
     overflow: hidden;
+    z-index: 15;
   }
 
   .ticker-badge {
-    background: linear-gradient(135deg, #D9A441, #B8862D);
-    color: #08131D;
+    background: linear-gradient(90deg, #D9A441, #F0C465);
+    color: #0B1B2B;
     font-weight: 800;
-    font-size: 1.65vh;
-    padding: 0 1.4vw;
+    font-size: 0.9vw;
+    padding: 0 1.2vw;
     height: 100%;
     display: flex;
     align-items: center;
     white-space: nowrap;
     letter-spacing: 0.6px;
+    flex-shrink: 0;
     z-index: 2;
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.45);
   }
 
   .ticker-marquee {
@@ -375,714 +351,735 @@
   .ticker-text {
     display: inline-block;
     padding-left: 100%;
-    font-size: 1.85vh;
+    font-size: 0.98vw;
     color: #F2EDE4;
-    animation: scrollHadith 48s linear infinite;
+    animation: jalanHadits 42s linear infinite;
   }
 
-  @keyframes scrollHadith {
+  @keyframes jalanHadits {
     0% { transform: translateX(0); }
     100% { transform: translateX(-100%); }
   }
 
-  /* Modal Overlay (Detail & Pengaturan) */
+  /* Modal / Popup Pengaturan & Detail */
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(5, 13, 21, 0.84);
+    background: rgba(5, 14, 24, 0.84);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 100;
+    pointer-events: none;
   }
 
   .modal-backdrop.open {
     display: flex;
+    pointer-events: auto;
   }
 
   .modal-box {
     width: 64vw;
     max-height: 84vh;
     overflow-y: auto;
-    background: #102638;
+    background: #12293E;
     border: 2px solid #D9A441;
     border-radius: 20px;
-    padding: 3vh 3vw;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    padding: 3vh 2.8vw;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
   }
 
   .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(217, 164, 65, 0.25);
+    border-bottom: 1px solid rgba(217, 164, 65, 0.3);
     padding-bottom: 1.5vh;
     margin-bottom: 2vh;
   }
 
-  .modal-header h2 {
-    font-size: 2.8vh;
-    color: #D9A441;
-  }
-
-  .setting-group {
-    margin-bottom: 2vh;
-    background: rgba(11, 27, 43, 0.65);
-    padding: 1.8vh 1.6vw;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .setting-group label {
-    display: block;
-    font-size: 1.9vh;
-    color: #D9A441;
+  .modal-title {
+    font-size: 1.7vw;
     font-weight: 700;
-    margin-bottom: 1vh;
+    color: #F2C96B;
   }
 
-  .btn-row {
+  .setting-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1vw;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4vh 1.2vw;
+    margin-bottom: 1.2vh;
+    background: rgba(11, 27, 43, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
   }
 
-  .tv-btn {
-    padding: 1.1vh 1.6vw;
-    background: #1A3A54;
-    border: 1.5px solid rgba(217, 164, 65, 0.4);
-    border-radius: 10px;
-    color: #F2EDE4;
-    font-size: 1.8vh;
+  .setting-label {
+    font-size: 1.15vw;
     font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .setting-desc {
+    font-size: 0.9vw;
+    color: #9FB4C7;
+    margin-top: 0.3vh;
+  }
+
+  .btn-action {
+    padding: 1vh 1.6vw;
+    border-radius: 10px;
+    border: 1.5px solid #D9A441;
+    background: rgba(217, 164, 65, 0.18);
+    color: #FFE099;
+    font-size: 1.05vw;
+    font-weight: 700;
     cursor: pointer;
     outline: none;
   }
 
-  .tv-btn.selected {
+  .btn-close {
+    padding: 1vh 1.8vw;
+    border-radius: 10px;
+    border: none;
     background: #D9A441;
     color: #0B1B2B;
+    font-size: 1.05vw;
     font-weight: 800;
+    cursor: pointer;
+    outline: none;
   }
 
-  .tv-btn:focus,
-  .tv-btn.focused {
-    border-color: #FFFFFF !important;
-    box-shadow: 0 0 0 3px rgba(217, 164, 65, 0.65) !important;
-    transform: scale(1.04);
-  }
-
-  .detail-body {
-    text-align: center;
-    padding: 1.5vh 0;
-  }
-
-  .detail-body .big-val {
-    font-size: 4.8vh;
-    font-weight: 800;
-    color: #FFFFFF;
-    margin: 1vh 0;
-  }
-
-  .detail-body p {
-    font-size: 2vh;
-    color: #BCCCDC;
-    margin-bottom: 2vh;
+  .test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1vw;
+    margin-top: 1.2vh;
   }
 </style>
 </head>
 <body>
 
-  <div class="bg-crescent"></div>
   <div class="tv-frame"></div>
 
   <div class="main-container">
-    <!-- Baris Atas -->
-    <div class="top-bar">
-      <div class="date-section">
-        <div class="gregorian-date" id="gregorianDate">Memuat tanggal...</div>
-        <div class="hijri-date" id="hijriDate">--</div>
+    <!-- Header -->
+    <div class="header">
+      <div class="date-box">
+        <div class="masehi" id="tglMasehi">Memuat tanggal...</div>
+        <div class="hijriah" id="tglHijriah">1448 H</div>
       </div>
-      <div class="clock-section">
-        <div class="digital-clock" id="digitalClock">00:00<span class="sec">:00</span></div>
+      <div class="clock-box">
+        <div class="clock-time" id="jamUtama">00:00<span class="sec">:00</span></div>
         <div class="status-pill">&#128276; Adzan Otomatis Aktif</div>
       </div>
     </div>
 
-    <!-- Hitung Mundur Tengah -->
-    <div class="center-countdown">
+    <!-- Hero Countdown -->
+    <div class="center-hero">
       <div class="next-label">WAKTU SHALAT BERIKUTNYA</div>
-      <div class="next-prayer-name" id="nextPrayerName">-</div>
-      <div class="countdown-timer" id="countdownTimer">00:00:00</div>
+      <div class="next-name" id="nextPrayerName">Subuh</div>
+      <div class="countdown-timer" id="countdownText">00:00:00</div>
       <div class="progress-wrap">
-        <div class="progress-bar" id="progressBar"></div>
+        <div class="progress-fill" id="progressFill"></div>
       </div>
-      <div class="info-badges">
-        <div class="badge-item" id="locationBadge">&#128205; Memuat lokasi...</div>
-        <div class="badge-item method" id="methodBadge">&#129517; Metode: Kemenag RI</div>
-      </div>
+      <div class="location-pill" id="lokasiText">&#128205; Memuat lokasi...</div>
+      <div class="method-pill" id="metodeText">&#129517; Metode: Kemenag RI</div>
     </div>
 
-    <!-- 5 Kartu Waktu Shalat -->
-    <div class="prayer-grid" id="prayerGrid">
-      <div class="prayer-card tv-focusable" tabindex="0" data-slot="subuh" data-nav="prayer-0">
-        <div class="next-tag">BERIKUTNYA</div>
-        <div class="p-name">Subuh</div>
-        <div class="p-time" id="time-subuh">--:--</div>
+    <!-- 5 Waktu Shalat -->
+    <div>
+      <div class="prayer-grid" id="prayerGrid">
+        <button type="button" class="prayer-card tv-focus" id="card-subuh" data-slot="subuh" data-row="0" data-col="0">
+          <div class="badge-next" id="badge-subuh" style="display:none;">BERIKUTNYA</div>
+          <div class="p-name">Subuh</div>
+          <div class="p-time" id="time-subuh">--:--</div>
+        </button>
+        <button type="button" class="prayer-card tv-focus" id="card-dzuhur" data-slot="dzuhur" data-row="0" data-col="1">
+          <div class="badge-next" id="badge-dzuhur" style="display:none;">BERIKUTNYA</div>
+          <div class="p-name">Dzuhur</div>
+          <div class="p-time" id="time-dzuhur">--:--</div>
+        </button>
+        <button type="button" class="prayer-card tv-focus" id="card-ashar" data-slot="ashar" data-row="0" data-col="2">
+          <div class="badge-next" id="badge-ashar" style="display:none;">BERIKUTNYA</div>
+          <div class="p-name">Ashar</div>
+          <div class="p-time" id="time-ashar">--:--</div>
+        </button>
+        <button type="button" class="prayer-card tv-focus" id="card-maghrib" data-slot="maghrib" data-row="0" data-col="3">
+          <div class="badge-next" id="badge-maghrib" style="display:none;">BERIKUTNYA</div>
+          <div class="p-name">Maghrib</div>
+          <div class="p-time" id="time-maghrib">--:--</div>
+        </button>
+        <button type="button" class="prayer-card tv-focus" id="card-isya" data-slot="isya" data-row="0" data-col="4">
+          <div class="badge-next" id="badge-isya" style="display:none;">BERIKUTNYA</div>
+          <div class="p-name">Isya</div>
+          <div class="p-time" id="time-isya">--:--</div>
+        </button>
       </div>
-      <div class="prayer-card tv-focusable" tabindex="0" data-slot="dzuhur" data-nav="prayer-1">
-        <div class="next-tag">BERIKUTNYA</div>
-        <div class="p-name">Dzuhur</div>
-        <div class="p-time" id="time-dzuhur">--:--</div>
-      </div>
-      <div class="prayer-card tv-focusable" tabindex="0" data-slot="ashar" data-nav="prayer-2">
-        <div class="next-tag">BERIKUTNYA</div>
-        <div class="p-name">Ashar</div>
-        <div class="p-time" id="time-ashar">--:--</div>
-      </div>
-      <div class="prayer-card tv-focusable" tabindex="0" data-slot="maghrib" data-nav="prayer-3">
-        <div class="next-tag">BERIKUTNYA</div>
-        <div class="p-name">Maghrib</div>
-        <div class="p-time" id="time-maghrib">--:--</div>
-      </div>
-      <div class="prayer-card tv-focusable" tabindex="0" data-slot="isya" data-nav="prayer-4">
-        <div class="next-tag">BERIKUTNYA</div>
-        <div class="p-name">Isya</div>
-        <div class="p-time" id="time-isya">--:--</div>
-      </div>
-    </div>
 
-    <!-- 3 Kartu Hari Besar Islam -->
-    <div class="events-row" id="eventsRow">
-      <div class="event-card tv-focusable" tabindex="0" data-event="ramadhan" data-nav="event-0">
-        <div class="e-title">Ramadhan</div>
-        <div class="e-date" id="date-ramadhan">-</div>
-        <div class="e-days" id="days-ramadhan">- hari lagi</div>
+      <!-- 3 Hari Besar Islam -->
+      <div class="holiday-grid">
+        <button type="button" class="holiday-card tv-focus" id="card-ramadhan" data-holiday="ramadhan" data-row="1" data-col="1">
+          <div class="h-title">Ramadhan</div>
+          <div class="h-date" id="date-ramadhan">8 Februari 2027</div>
+          <div class="h-days" id="days-ramadhan">-- hari lagi</div>
+        </button>
+        <button type="button" class="holiday-card tv-focus" id="card-idulfitri" data-holiday="idulfitri" data-row="1" data-col="2">
+          <div class="h-title">Idul Fitri</div>
+          <div class="h-date" id="date-idulfitri">9 Maret 2027</div>
+          <div class="h-days" id="days-idulfitri">-- hari lagi</div>
+        </button>
+        <button type="button" class="holiday-card tv-focus" id="card-iduladha" data-holiday="iduladha" data-row="1" data-col="3">
+          <div class="h-title">Idul Adha</div>
+          <div class="h-date" id="date-iduladha">16 Mei 2027</div>
+          <div class="h-days" id="days-iduladha">-- hari lagi</div>
+        </button>
       </div>
-      <div class="event-card tv-focusable" tabindex="0" data-event="idulfitri" data-nav="event-1">
-        <div class="e-title">Idul Fitri</div>
-        <div class="e-date" id="date-idulfitri">-</div>
-        <div class="e-days" id="days-idulfitri">- hari lagi</div>
-      </div>
-      <div class="event-card tv-focusable" tabindex="0" data-event="iduladha" data-nav="event-2">
-        <div class="e-title">Idul Adha</div>
-        <div class="e-date" id="date-iduladha">-</div>
-        <div class="e-days" id="days-iduladha">- hari lagi</div>
-      </div>
-    </div>
 
-    <div class="footer-credit">Free for the Ummah, not for sale &middot; By Alie_Ebes &copy;2026</div>
+      <div class="footer-credit">Free for the Ummah, not for sale &bull; Pengingat Shalat TV</div>
+    </div>
   </div>
 
   <!-- Tombol Pengaturan (Gear) -->
-  <button class="settings-btn tv-focusable" id="btnSettings" tabindex="0" data-nav="settings" title="Pengaturan">&#9881;</button>
+  <button type="button" class="btn-settings tv-focus" id="btnSettings" data-row="1" data-col="0" title="Pengaturan">&#9881;</button>
 
   <!-- Running Text Mutiara Hadits -->
-  <div class="hadith-ticker">
+  <div class="ticker-wrap">
     <div class="ticker-badge">&#10022; MUTIARA HADITS</div>
     <div class="ticker-marquee">
       <div class="ticker-text">
-        &#10022; "Shalat berjamaah lebih utama dua puluh tujuh derajat dibandingkan shalat sendirian." (HR. Bukhari &amp; Muslim) &nbsp;&nbsp;&nbsp;&nbsp;
-        &#10022; "Dirikanlah shalat untuk mengingat-Ku." (QS. Thaha: 14) &nbsp;&nbsp;&nbsp;&nbsp;
-        &#10022; "Amalan yang pertama kali dihisab dari seorang hamba pada hari kiamat adalah shalatnya." (HR. Tirmidzi) &nbsp;&nbsp;&nbsp;&nbsp;
-        &#10022; "Sesungguhnya shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45) &nbsp;&nbsp;&nbsp;&nbsp;
-        &#10022; "Jadikanlah sabar dan shalat sebagai penolongmu." (QS. Al-Baqarah: 45)
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Detail Kartu (Shalat / Hari Besar) -->
-  <div class="modal-backdrop" id="detailModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h2 id="detailTitle">Detail Jadwal</h2>
-        <button class="tv-btn modal-focusable" id="btnCloseDetail" tabindex="0">Tutup</button>
-      </div>
-      <div class="detail-body">
-        <div class="big-val" id="detailBigVal">00:00</div>
-        <p id="detailDesc">Keterangan jadwal.</p>
-        <div class="btn-row" style="justify-content:center;" id="detailActions"></div>
+        "Shalat berjamaah lebih utama dua puluh tujuh derajat dibandingkan shalat sendirian." (HR. Bukhari &amp; Muslim) &nbsp;&nbsp;&#10022;&nbsp;&nbsp;
+        "Dirikanlah shalat untuk mengingat-Ku." (QS. Thaha: 14) &nbsp;&nbsp;&#10022;&nbsp;&nbsp;
+        "Perjanjian antara kami dan mereka adalah shalat; barangsiapa meninggalkannya maka sungguh ia telah kafir." (HR. Tirmidzi) &nbsp;&nbsp;&#10022;&nbsp;&nbsp;
+        "Jadikanlah sabar dan shalat sebagai penolongmu." (QS. Al-Baqarah: 45)
       </div>
     </div>
   </div>
 
   <!-- Modal Pengaturan -->
-  <div class="modal-backdrop" id="settingsModal">
+  <div class="modal-backdrop" id="modalSettings">
     <div class="modal-box">
       <div class="modal-header">
-        <h2>&#9881; Pengaturan Jadwal Shalat TV</h2>
-        <button class="tv-btn modal-focusable" id="btnCloseSettings" tabindex="0">Simpan &amp; Tutup</button>
+        <div class="modal-title">&#9881; Pengaturan Jadwal &amp; Adzan</div>
+        <button type="button" class="btn-close modal-focus" id="btnCloseSettings">Tutup</button>
       </div>
 
-      <div class="setting-group">
-        <label>1. Metode Perhitungan Waktu Shalat</label>
-        <div class="btn-row">
-          <button class="tv-btn modal-focusable" id="optKemenag" tabindex="0" onclick="pilihMetode('kemenag')">Kemenag RI</button>
-          <button class="tv-btn modal-focusable" id="optMuhammadiyah" tabindex="0" onclick="pilihMetode('muhammadiyah')">HISABMU / Muhammadiyah</button>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Metode Perhitungan Hisab</div>
+          <div class="setting-desc" id="descMetode">Saat ini: Kemenag RI (20&deg; / 18&deg;)</div>
         </div>
+        <button type="button" class="btn-action modal-focus" id="btnToggleMetode">Ganti Metode</button>
       </div>
 
-      <div class="setting-group">
-        <label>2. Lokasi Wilayah</label>
-        <div class="btn-row">
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="deteksiLokasiOtomatis()">&#128205; Deteksi Lokasi Otomatis (GPS/Jaringan)</button>
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="setLokasiDefault()">Set Pekalongan, Jawa Tengah</button>
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="setLokasiJakarta()">Set DKI Jakarta</button>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Perbarui Lokasi Otomatis (GPS / Jaringan)</div>
+          <div class="setting-desc" id="descLokasi">Deteksi koordinat kota saat ini</div>
         </div>
-        <div id="settingLocInfo" style="margin-top:1vh; font-size:1.7vh; color:#9FB3C8;"></div>
+        <button type="button" class="btn-action modal-focus" id="btnUpdateLokasi">Deteksi Ulang</button>
       </div>
 
-      <div class="setting-group">
-        <label>3. Suara &amp; Tes Pop-up Adzan</label>
-        <div class="btn-row">
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="tesPopup('subuh')">&#128266; Tes Pop-up Subuh</button>
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="tesPopup('dzuhur')">&#128266; Tes Pop-up Dzuhur</button>
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="tesPopup('maghrib')">&#128266; Tes Pop-up Maghrib</button>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">Volume Suara Adzan</div>
+          <div class="setting-desc" id="descVolume">Volume saat ini: 80%</div>
         </div>
+        <button type="button" class="btn-action modal-focus" id="btnCycleVolume">Ubah Volume</button>
       </div>
 
-      <div class="setting-group">
-        <label>4. Volume Suara Adzan: <span id="volLabel">80%</span></label>
-        <div class="btn-row">
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="ubahVolume(-10)">- Kurangi Volume</button>
-          <button class="tv-btn modal-focusable" tabindex="0" onclick="ubahVolume(10)">+ Tambah Volume</button>
+      <div class="setting-row" style="flex-direction: column; align-items: stretch;">
+        <div class="setting-label">Uji Coba Pop-up &amp; Suara Adzan</div>
+        <div class="setting-desc">Tekan salah satu tombol di bawah untuk menguji tampilan dan suara adzan di TV</div>
+        <div class="test-grid">
+          <button type="button" class="btn-action modal-focus" data-test="subuh">Tes Pop-up Subuh</button>
+          <button type="button" class="btn-action modal-focus" data-test="dzuhur">Tes Pop-up Dzuhur</button>
+          <button type="button" class="btn-action modal-focus" data-test="maghrib">Tes Pop-up Maghrib</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Modal Detail Waktu Shalat / Hari Besar -->
+  <div class="modal-backdrop" id="modalDetail">
+    <div class="modal-box" style="width: 46vw; text-align: center;">
+      <div class="modal-header">
+        <div class="modal-title" id="detailTitle">Detail Waktu</div>
+        <button type="button" class="btn-close modal-focus" id="btnCloseDetail">Tutup</button>
+      </div>
+      <div id="detailBody" style="font-size: 1.3vw; line-height: 1.6; color: #F2EDE4; margin-bottom: 2.5vh;"></div>
+      <div style="display: flex; gap: 1vw; justify-content: center;">
+        <button type="button" class="btn-action modal-focus" id="btnDetailTestAdzan" style="display:none;">Tes Suara Adzan</button>
+        <button type="button" class="btn-close modal-focus" id="btnDetailOk">Selesai</button>
+      </div>
+    </div>
+  </div>
+
 <script>
-  // State Aplikasi
-  var state = {
-    lat: parseFloat(localStorage.getItem('lat')) || -6.8898,
-    lng: parseFloat(localStorage.getItem('lng')) || 109.6746,
-    cityName: localStorage.getItem('cityName') || 'Kab. Pekalongan, Jawa Tengah',
-    metode: localStorage.getItem('metode') || 'kemenag',
-    volume: parseInt(localStorage.getItem('volume') || '80', 10),
-    todayTimes: {}
+  const HARI = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const BULAN = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  const HIJRI_BULAN = ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"];
+
+  let state = {
+    lat: parseFloat(localStorage.getItem("lat")) || -6.8898,
+    lng: parseFloat(localStorage.getItem("lng")) || 109.6746,
+    kota: localStorage.getItem("kota") || "Kab. Pekalongan, Jawa Tengah",
+    metode: localStorage.getItem("metode") || "kemenag",
+    volume: parseInt(localStorage.getItem("volume") || "80", 10),
+    jadwal: { subuh: "03:53", dzuhur: "11:33", ashar: "14:56", maghrib: "17:46", isya: "19:01" }
   };
 
-  var NAMA_HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-  var NAMA_BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-  var NAMA_HIJRI = ['Muharram', 'Safar', 'Rabiul Awal', 'Rabiul Akhir', 'Jumadil Awal', 'Jumadil Akhir', 'Rajab', 'Syaban', 'Ramadhan', 'Syawal', 'Dzulqaidah', 'Dzulhijjah'];
+  function simpanKeNative() {
+    try {
+      if (window.Native && typeof window.Native.simpanPengaturan === "function") {
+        window.Native.simpanPengaturan(
+          String(state.lat),
+          String(state.lng),
+          state.metode,
+          String(state.volume)
+        );
+      }
+    } catch (e) {}
+  }
 
-  // Perhitungan Astronomis Waktu Shalat
-  function hitungWaktuShalat(date, lat, lng, metode) {
-    var rad = Math.PI / 180;
-    var deg = 180 / Math.PI;
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    var day = date.getDate();
-    var tz = -date.getTimezoneOffset() / 60;
+  // Perhitungan Waktu Shalat Astronomis Akurat
+  function hitungJadwalShalat(date, lat, lng, metode) {
+    const tz = -date.getTimezoneOffset() / 60;
+    const rad = Math.PI / 180;
+    const deg = 180 / Math.PI;
 
-    if (month <= 2) { year -= 1; month += 12; }
-    var A = Math.floor(year / 100);
-    var B = 2 - A + Math.floor(A / 4);
-    var jd = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
-    var d = jd - 2451545.0;
+    const Y = date.getFullYear();
+    const M = date.getMonth() + 1;
+    const D = date.getDate();
+    const A = Math.floor(Y / 100);
+    const B = 2 - A + Math.floor(A / 4);
+    const JD = Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + D + B - 1524.5;
+    const d = JD - 2451545.0;
 
-    var g = (357.529 + 0.98560028 * d) % 360;
-    var q = (280.459 + 0.98564736 * d) % 360;
-    var L = (q + 1.915 * Math.sin(g * rad) + 0.020 * Math.sin(2 * g * rad)) % 360;
-    var e = 23.439 - 0.00000036 * d;
-    var decl = Math.asin(Math.sin(e * rad) * Math.sin(L * rad)) * deg;
-    var ra = Math.atan2(Math.cos(e * rad) * Math.sin(L * rad), Math.cos(L * rad)) * deg / 15;
-    var eqTime = (q / 15) - ((ra + 360) % 24);
-    if (eqTime > 12) eqTime -= 24;
-    if (eqTime < -12) eqTime += 24;
+    const g = (357.529 + 0.98560028 * d) % 360;
+    const q = (280.459 + 0.98564736 * d) % 360;
+    const L = (q + 1.915 * Math.sin(g * rad) + 0.020 * Math.sin(2 * g * rad)) % 360;
+    const e = 23.439 - 0.00000036 * d;
+    const decl = Math.asin(Math.sin(e * rad) * Math.sin(L * rad)) * deg;
+    const RA = Math.atan2(Math.cos(e * rad) * Math.sin(L * rad), Math.cos(L * rad)) * deg / 15;
+    const EoT = (q / 15) - ((RA + 24) % 24);
 
-    var transit = 12 + tz - (lng / 15) - eqTime;
+    const transit = 12 + tz - (lng / 15) - EoT;
 
     function hourAngle(angle) {
-      var cosH = (Math.sin(angle * rad) - Math.sin(lat * rad) * Math.sin(decl * rad)) / (Math.cos(lat * rad) * Math.cos(decl * rad));
-      if (cosH > 1) cosH = 1;
-      if (cosH < -1) cosH = -1;
+      const cosH = (Math.sin(angle * rad) - Math.sin(lat * rad) * Math.sin(decl * rad)) /
+                   (Math.cos(lat * rad) * Math.cos(decl * rad));
+      if (cosH > 1) return 0;
+      if (cosH < -1) return 12;
       return Math.acos(cosH) * deg / 15;
     }
 
-    var fajrAngle = (metode === 'muhammadiyah') ? -18.0 : -20.0;
-    var ishaAngle = -18.0;
+    const fajrAngle = metode === "muhammadiyah" ? -18 : -20;
+    const ishaAngle = -18;
 
-    var subuh = transit - hourAngle(fajrAngle) + (2 / 60);
-    var dzuhur = transit + (2 / 60);
-    var asharShadow = 1 + Math.tan(Math.abs(lat - decl) * rad);
-    var asharAngle = Math.atan(1 / asharShadow) * deg;
-    var ashar = transit + hourAngle(asharAngle) + (2 / 60);
-    var maghrib = transit + hourAngle(-0.833) + (2 / 60);
-    var isya = transit + hourAngle(ishaAngle) + (2 / 60);
+    const subuh = transit - hourAngle(fajrAngle) + (2 / 60);
+    const dzuhur = transit + (2 / 60);
 
-    function toDateObj(hoursFloat) {
-      var h = Math.floor(hoursFloat);
-      var m = Math.round((hoursFloat - h) * 60);
-      if (m >= 60) { h += 1; m -= 60; }
-      var res = new Date(date.getFullYear(), date.getMonth(), date.getDate(), h, m, 0);
-      return res;
+    const asharCot = 1 + Math.tan(Math.abs(lat - decl) * rad);
+    const asharAngle = Math.atan(1 / asharCot) * deg;
+    const ashar = transit + hourAngle(asharAngle) + (2 / 60);
+
+    const maghrib = transit + hourAngle(-0.8333) + (2 / 60);
+    const isya = transit + hourAngle(ishaAngle) + (2 / 60);
+
+    function fmt(h) {
+      h = (h + 24) % 24;
+      let jam = Math.floor(h);
+      let mnt = Math.round((h - jam) * 60);
+      if (mnt === 60) { jam = (jam + 1) % 24; mnt = 0; }
+      return String(jam).padStart(2, "0") + ":" + String(mnt).padStart(2, "0");
     }
 
     return {
-      subuh: toDateObj(subuh),
-      dzuhur: toDateObj(dzuhur),
-      ashar: toDateObj(ashar),
-      maghrib: toDateObj(maghrib),
-      isya: toDateObj(isya)
+      subuh: fmt(subuh),
+      dzuhur: fmt(dzuhur),
+      ashar: fmt(ashar),
+      maghrib: fmt(maghrib),
+      isya: fmt(isya)
     };
   }
 
-  function formatJam(d) {
-    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  // Konversi Tanggal Hijriah (Kuwaiti Algorithm)
+  function getHijriDate(date) {
+    let day = date.getDate();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+
+    let m = month + 1;
+    let y = year;
+    if (m < 3) { y -= 1; m += 12; }
+
+    let a = Math.floor(y / 100);
+    let b = 2 - a + Math.floor(a / 4);
+    if (y < 1583) b = 0;
+    if (y === 1582) {
+      if (m > 10) b = -10;
+      if (m === 10) {
+        b = 0;
+        if (day > 4) b = -10;
+      }
+    }
+
+    let jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524;
+    let iyear = 10631 / 30;
+    let epochastro = 1948084;
+    let shift1 = 8.01 / 60;
+
+    let z = jd - epochastro;
+    let cyc = Math.floor(z / 10631);
+    z = z - 10631 * cyc;
+    let j = Math.floor((z - shift1) / iyear);
+    let iy = 30 * cyc + j;
+    z = z - Math.floor(j * iyear + shift1);
+    let im = Math.floor((z + 28.5001) / 29.5);
+    if (im === 13) im = 12;
+    let id = z - Math.floor(29.5001 * im - 29);
+
+    return `${Math.max(1, Math.round(id))} ${HIJRI_BULAN[im - 1]} ${iy} H`;
   }
 
-  // Konversi Tanggal Hijriah Akurat
-  function hitungHijriah(date) {
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    if (month < 3) { year -= 1; month += 12; }
-    var a = Math.floor(year / 100);
-    var b = 2 - a + Math.floor(a / 4);
-    var jd = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524;
-    var l = jd - 1948440 + 10632;
-    var n = Math.floor((l - 1) / 10631);
-    l = l - 10631 * n + 354;
-    var j = (Math.floor((10985 - l) / 5316)) * (Math.floor((50 * l) / 17719)) + (Math.floor(l / 5670)) * (Math.floor((43 * l) / 15238));
-    l = l - (Math.floor((30 - j) / 15)) * (Math.floor((17719 * j) / 50)) - (Math.floor(j / 16)) * (Math.floor((15238 * j) / 43)) + 29;
-    var hMonth = Math.floor((24 * l) / 709);
-    var hDay = l - Math.floor((709 * hMonth) / 24);
-    var hYear = 30 * n + j - 30;
-    return hDay + ' ' + NAMA_HIJRI[(hMonth - 1 + 12) % 12] + ' ' + hYear + ' H';
-  }
-
-  function perbaruiHariBesar(now) {
-    var events = [
-      { id: 'ramadhan', target: new Date(2027, 1, 8), label: '8 Februari 2027' },
-      { id: 'idulfitri', target: new Date(2027, 2, 9), label: '9 Maret 2027' },
-      { id: 'iduladha', target: new Date(2027, 4, 16), label: '16 Mei 2027' }
+  function updateHariBesar(now) {
+    const events = [
+      { id: "ramadhan", target: new Date(2027, 1, 8), label: "8 Februari 2027" },
+      { id: "idulfitri", target: new Date(2027, 2, 9), label: "9 Maret 2027" },
+      { id: "iduladha", target: new Date(2027, 4, 16), label: "16 Mei 2027" }
     ];
-    events.forEach(function(ev) {
-      var diff = Math.ceil((ev.target - now) / (1000 * 60 * 60 * 24));
-      if (diff < 0) diff = 0;
-      document.getElementById('date-' + ev.id).textContent = ev.label;
-      document.getElementById('days-' + ev.id).textContent = diff + ' hari lagi';
+    const todayZero = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    events.forEach(ev => {
+      const diff = Math.ceil((ev.target - todayZero) / (1000 * 60 * 60 * 24));
+      document.getElementById("date-" + ev.id).textContent = ev.label;
+      document.getElementById("days-" + ev.id).textContent = diff > 0 ? `${diff} hari lagi` : "Hari Ini";
     });
   }
 
-  function perbaruiTampilan() {
-    var now = new Date();
-    document.getElementById('gregorianDate').textContent =
-      NAMA_HARI[now.getDay()] + ', ' + now.getDate() + ' ' + NAMA_BULAN[now.getMonth()] + ' ' + now.getFullYear();
-    document.getElementById('hijriDate').textContent = hitungHijriah(now);
+  function perbaruiUI() {
+    const now = new Date();
+    document.getElementById("tglMasehi").textContent =
+      `${HARI[now.getDay()]}, ${now.getDate()} ${BULAN[now.getMonth()]} ${now.getFullYear()}`;
+    document.getElementById("tglHijriah").textContent = getHijriDate(now);
 
-    var hh = String(now.getHours()).padStart(2, '0');
-    var mm = String(now.getMinutes()).padStart(2, '0');
-    var ss = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('digitalClock').innerHTML = hh + ':' + mm + '<span class="sec">:' + ss + '</span>';
+    const hh = String(now.getHours()).padStart(2, "0");
+    const mm = String(now.getMinutes()).padStart(2, "0");
+    const ss = String(now.getSeconds()).padStart(2, "0");
+    document.getElementById("jamUtama").innerHTML = `${hh}:${mm}<span class="sec">:${ss}</span>`;
 
-    document.getElementById('locationBadge').innerHTML = '&#128205; ' + state.cityName;
-    document.getElementById('methodBadge').innerHTML = '&#129517; Metode: ' + (state.metode === 'muhammadiyah' ? 'HISABMU / Muhammadiyah' : 'Kemenag RI');
+    state.jadwal = hitungJadwalShalat(now, state.lat, state.lng, state.metode);
+    const keys = ["subuh", "dzuhur", "ashar", "maghrib", "isya"];
+    const labels = { subuh: "Subuh", dzuhur: "Dzuhur", ashar: "Ashar", maghrib: "Maghrib", isya: "Isya" };
 
-    var times = hitungWaktuShalat(now, state.lat, state.lng, state.metode);
-    state.todayTimes = times;
-
-    var slots = ['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'];
-    var labels = { subuh: 'Subuh', dzuhur: 'Dzuhur', ashar: 'Ashar', maghrib: 'Maghrib', isya: 'Isya' };
-
-    slots.forEach(function(s) {
-      document.getElementById('time-' + s).textContent = formatJam(times[s]);
+    keys.forEach(k => {
+      document.getElementById("time-" + k).textContent = state.jadwal[k];
+      document.getElementById("card-" + k).classList.remove("active-next");
+      document.getElementById("badge-" + k).style.display = "none";
     });
 
-    var nextSlot = null;
-    var nextTime = null;
-    var prevTime = null;
+    document.getElementById("lokasiText").innerHTML = `&#128205; ${state.kota}`;
+    const namaMetode = state.metode === "muhammadiyah" ? "HISABMU / KHGT Muhammadiyah" : "Kemenag RI";
+    document.getElementById("metodeText").innerHTML = `&#129517; Metode: ${namaMetode}`;
+    document.getElementById("descMetode").textContent = `Saat ini: ${namaMetode}`;
+    document.getElementById("descVolume").textContent = `Volume saat ini: ${state.volume}%`;
 
-    for (var i = 0; i < slots.length; i++) {
-      var s = slots[i];
-      if (times[s] > now) {
-        nextSlot = s;
-        nextTime = times[s];
-        prevTime = (i > 0) ? times[slots[i - 1]] : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    // Hitung waktu shalat berikutnya
+    let nextKey = "subuh";
+    let targetTime = null;
+    let prevTime = null;
+
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i];
+      const [jh, jm] = state.jadwal[k].split(":").map(Number);
+      const cand = new Date(now.getFullYear(), now.getMonth(), now.getDate(), jh, jm, 0);
+      if (cand > now) {
+        nextKey = k;
+        targetTime = cand;
+        if (i > 0) {
+          const [ph, pm] = state.jadwal[keys[i - 1]].split(":").map(Number);
+          prevTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ph, pm, 0);
+        } else {
+          const [ih, im] = state.jadwal.isya.split(":").map(Number);
+          prevTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, ih, im, 0);
+        }
         break;
       }
     }
 
-    if (!nextSlot) {
-      var tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-      var tomTimes = hitungWaktuShalat(tomorrow, state.lat, state.lng, state.metode);
-      nextSlot = 'subuh';
-      nextTime = tomTimes.subuh;
-      prevTime = times.isya;
+    if (!targetTime) {
+      nextKey = "subuh";
+      const besok = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const jadwalBesok = hitungJadwalShalat(besok, state.lat, state.lng, state.metode);
+      const [sh, sm] = jadwalBesok.subuh.split(":").map(Number);
+      targetTime = new Date(besok.getFullYear(), besok.getMonth(), besok.getDate(), sh, sm, 0);
+      const [ih, im] = state.jadwal.isya.split(":").map(Number);
+      prevTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ih, im, 0);
     }
 
-    document.querySelectorAll('.prayer-card').forEach(function(card) {
-      card.classList.toggle('active-next', card.getAttribute('data-slot') === nextSlot);
-    });
+    document.getElementById("nextPrayerName").textContent = labels[nextKey];
+    document.getElementById("card-" + nextKey).classList.add("active-next");
+    document.getElementById("badge-" + nextKey).style.display = "block";
 
-    document.getElementById('nextPrayerName').textContent = labels[nextSlot];
+    const diffSec = Math.max(0, Math.floor((targetTime - now) / 1000));
+    const ch = String(Math.floor(diffSec / 3600)).padStart(2, "0");
+    const cm = String(Math.floor((diffSec % 3600) / 60)).padStart(2, "0");
+    const cs = String(diffSec % 60).padStart(2, "0");
+    document.getElementById("countdownText").textContent = `${ch}:${cm}:${cs}`;
 
-    var sisaMs = Math.max(0, nextTime - now);
-    var totalSec = Math.floor(sisaMs / 1000);
-    var ch = String(Math.floor(totalSec / 3600)).padStart(2, '0');
-    var cm = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
-    var cs = String(totalSec % 60).padStart(2, '0');
-    document.getElementById('countdownTimer').textContent = ch + ':' + cm + ':' + cs;
+    const totalSpan = Math.max(1, targetTime - prevTime);
+    const elapsed = Math.max(0, now - prevTime);
+    const pct = Math.min(100, Math.max(4, (elapsed / totalSpan) * 100));
+    document.getElementById("progressFill").style.width = pct.toFixed(1) + "%";
 
-    var totalInterval = Math.max(1, nextTime - prevTime);
-    var elapsed = Math.max(0, now - prevTime);
-    var pct = Math.min(100, Math.max(5, (elapsed / totalInterval) * 100));
-    document.getElementById('progressBar').style.width = pct + '%';
-
-    perbaruiHariBesar(now);
-  }
-
-  // Simpan & Sinkron ke Native Android
-  function simpanKeNative() {
-    localStorage.setItem('lat', state.lat);
-    localStorage.setItem('lng', state.lng);
-    localStorage.setItem('cityName', state.cityName);
-    localStorage.setItem('metode', state.metode);
-    localStorage.setItem('volume', state.volume);
-
-    if (window.Native) {
-      try {
-        if (Native.setLocation) Native.setLocation(state.lat, state.lng);
-        if (Native.setMetode) Native.setMetode(state.metode);
-        if (Native.setVolume) Native.setVolume(state.volume);
-      } catch (e) {}
-    }
-    perbaruiTampilan();
-  }
-
-  // Fungsi Pengaturan
-  function pilihMetode(m) {
-    state.metode = m;
-    document.getElementById('optKemenag').classList.toggle('selected', m === 'kemenag');
-    document.getElementById('optMuhammadiyah').classList.toggle('selected', m === 'muhammadiyah');
-    simpanKeNative();
-  }
-
-  function setLokasiDefault() {
-    state.lat = -6.8898;
-    state.lng = 109.6746;
-    state.cityName = 'Kab. Pekalongan, Jawa Tengah';
-    document.getElementById('settingLocInfo').textContent = 'Lokasi diatur ke: ' + state.cityName;
-    simpanKeNative();
-  }
-
-  function setLokasiJakarta() {
-    state.lat = -6.2088;
-    state.lng = 106.8456;
-    state.cityName = 'DKI Jakarta';
-    document.getElementById('settingLocInfo').textContent = 'Lokasi diatur ke: ' + state.cityName;
-    simpanKeNative();
+    updateHariBesar(now);
   }
 
   function deteksiLokasiOtomatis() {
-    document.getElementById('settingLocInfo').textContent = 'Mendeteksi lokasi...';
+    document.getElementById("descLokasi").textContent = "Mendeteksi lokasi...";
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(pos) {
-        state.lat = pos.coords.latitude;
-        state.lng = pos.coords.longitude;
-        fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + state.lat + '&longitude=' + state.lng + '&localityLanguage=id')
-          .then(function(r) { return r.json(); })
-          .then(function(data) {
-            var kota = data.city || data.locality || 'Lokasi Terdeteksi';
-            var prov = data.principalSubdivision || '';
-            state.cityName = prov ? (kota + ', ' + prov) : kota;
-            document.getElementById('settingLocInfo').textContent = 'Lokasi berhasil diperbarui: ' + state.cityName;
-            simpanKeNative();
-          })
-          .catch(function() {
-            state.cityName = state.lat.toFixed(3) + ', ' + state.lng.toFixed(3);
-            document.getElementById('settingLocInfo').textContent = 'Koordinat diperbarui: ' + state.cityName;
-            simpanKeNative();
-          });
-      }, function() {
-        document.getElementById('settingLocInfo').textContent = 'Gagal mendeteksi GPS. Gunakan pilihan kota manual.';
-      });
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          state.lat = pos.coords.latitude;
+          state.lng = pos.coords.longitude;
+          localStorage.setItem("lat", state.lat);
+          localStorage.setItem("lng", state.lng);
+          fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${state.lat}&longitude=${state.lng}&localityLanguage=id`)
+            .then(r => r.json())
+            .then(d => {
+              const kota = d.city || d.locality || d.principalSubdivision || "Lokasi Terdeteksi";
+              const prov = d.principalSubdivision || "";
+              state.kota = prov && kota !== prov ? `${kota}, ${prov}` : kota;
+              localStorage.setItem("kota", state.kota);
+              document.getElementById("descLokasi").textContent = `Lokasi: ${state.kota}`;
+              simpanKeNative();
+              perbaruiUI();
+            })
+            .catch(() => {
+              state.kota = `${state.lat.toFixed(3)}, ${state.lng.toFixed(3)}`;
+              localStorage.setItem("kota", state.kota);
+              simpanKeNative();
+              perbaruiUI();
+            });
+        },
+        () => {
+          document.getElementById("descLokasi").textContent = "Menggunakan lokasi tersimpan";
+        },
+        { timeout: 8000 }
+      );
     }
   }
 
-  function ubahVolume(delta) {
-    state.volume = Math.max(0, Math.min(100, state.volume + delta));
-    document.getElementById('volLabel').textContent = state.volume + '%';
-    simpanKeNative();
+  // Sistem Fokus & Klik Remote TV (Anti-Stuck)
+  let activeModal = null;
+  let modalIndex = 0;
+  let mainFocusEl = null;
+
+  function setMainFocus(el) {
+    if (!el) return;
+    document.querySelectorAll(".tv-focus").forEach(item => item.classList.remove("focused"));
+    mainFocusEl = el;
+    el.classList.add("focused");
+    el.focus({ preventScroll: true });
   }
 
-  function tesPopup(slot) {
-    if (window.Native && Native.testAlarm) {
-      Native.testAlarm(slot);
-    } else {
-      alert('Tes Pop-up Adzan ' + slot.toUpperCase());
-    }
+  function getModalButtons() {
+    if (!activeModal) return [];
+    return Array.from(activeModal.querySelectorAll(".modal-focus")).filter(b => b.style.display !== "none");
   }
 
-  // Buka/Tutup Modal
-  var lastMainFocus = null;
-
-  function bukaDetailShalat(slot) {
-    var labels = { subuh: 'Subuh', dzuhur: 'Dzuhur', ashar: 'Ashar', maghrib: 'Maghrib', isya: 'Isya' };
-    var jam = state.todayTimes[slot] ? formatJam(state.todayTimes[slot]) : '--:--';
-    document.getElementById('detailTitle').textContent = 'Jadwal Shalat ' + labels[slot];
-    document.getElementById('detailBigVal').textContent = jam + ' WIB';
-    document.getElementById('detailDesc').textContent = 'Pengingat adzan otomatis aktif untuk waktu ' + labels[slot] + ' (' + state.cityName + ').';
-    document.getElementById('detailActions').innerHTML =
-      '<button class="tv-btn modal-focusable" tabindex="0" onclick="tesPopup('' + slot + '')">&#128266; Tes Suara &amp; Pop-up ' + labels[slot] + '</button>';
-    document.getElementById('detailModal').classList.add('open');
-    setTimeout(function() {
-      var btn = document.querySelector('#detailModal .modal-focusable');
-      if (btn) btn.focus();
-    }, 50);
+  function setModalFocus(idx) {
+    const btns = getModalButtons();
+    if (!btns.length) return;
+    modalIndex = (idx + btns.length) % btns.length;
+    btns.forEach(b => b.classList.remove("focused"));
+    btns[modalIndex].classList.add("focused");
+    btns[modalIndex].focus({ preventScroll: true });
   }
 
-  function bukaDetailEvent(evKey) {
-    var info = {
-      ramadhan: { title: 'Awal Ramadhan 1448 H', date: document.getElementById('date-ramadhan').textContent, days: document.getElementById('days-ramadhan').textContent, desc: 'Perkiraan awal bulan suci Ramadhan 1448 Hijriah.' },
-      idulfitri: { title: 'Hari Raya Idul Fitri 1448 H', date: document.getElementById('date-idulfitri').textContent, days: document.getElementById('days-idulfitri').textContent, desc: 'Perkiraan 1 Syawal 1448 Hijriah.' },
-      iduladha: { title: 'Hari Raya Idul Adha 1448 H', date: document.getElementById('date-iduladha').textContent, days: document.getElementById('days-iduladha').textContent, desc: 'Perkiraan 10 Dzulhijjah 1448 Hijriah.' }
-    }[evKey];
-    if (!info) return;
-    document.getElementById('detailTitle').textContent = info.title;
-    document.getElementById('detailBigVal').textContent = info.days;
-    document.getElementById('detailDesc').textContent = 'Jatuh pada tanggal ' + info.date + '. ' + info.desc;
-    document.getElementById('detailActions').innerHTML = '';
-    document.getElementById('detailModal').classList.add('open');
-    setTimeout(function() {
-      document.getElementById('btnCloseDetail').focus();
-    }, 50);
-  }
-
-  function bukaPengaturan() {
-    document.getElementById('optKemenag').classList.toggle('selected', state.metode === 'kemenag');
-    document.getElementById('optMuhammadiyah').classList.toggle('selected', state.metode === 'muhammadiyah');
-    document.getElementById('volLabel').textContent = state.volume + '%';
-    document.getElementById('settingLocInfo').textContent = 'Lokasi saat ini: ' + state.cityName;
-    document.getElementById('settingsModal').classList.add('open');
-    setTimeout(function() {
-      document.getElementById('btnCloseSettings').focus();
-    }, 50);
+  function bukaModal(modalEl) {
+    tutupSemuaModal();
+    activeModal = modalEl;
+    modalEl.classList.add("open");
+    setTimeout(() => setModalFocus(0), 30);
   }
 
   function tutupSemuaModal() {
-    document.getElementById('detailModal').classList.remove('open');
-    document.getElementById('settingsModal').classList.remove('open');
-    if (lastMainFocus) {
-      lastMainFocus.focus();
-    } else {
-      setMainFocus('prayer-0');
-    }
+    document.querySelectorAll(".modal-backdrop").forEach(m => m.classList.remove("open"));
+    activeModal = null;
+    setTimeout(() => {
+      setMainFocus(mainFocusEl || document.getElementById("card-subuh"));
+    }, 30);
   }
 
+  // Dipanggil dari MainActivity saat tombol Back di remote ditekan
   window.tutupMenuDariRemot = function() {
-    if (document.getElementById('detailModal').classList.contains('open') ||
-        document.getElementById('settingsModal').classList.contains('open')) {
+    if (activeModal) {
       tutupSemuaModal();
-      return 'closed';
+      return "closed";
     }
-    return 'exit';
+    return "exit";
   };
 
-  // Sistem Navigasi Remote TV (D-Pad 2D Presisi)
-  var currentNavId = 'prayer-0';
-
-  function setMainFocus(navId) {
-    var el = document.querySelector('[data-nav="' + navId + '"]');
+  function jalankanAksiElemen(el) {
     if (!el) return;
-    currentNavId = navId;
-    lastMainFocus = el;
-    document.querySelectorAll('.tv-focusable').forEach(function(item) {
-      item.classList.remove('focused');
-    });
-    el.classList.add('focused');
-    el.focus();
+
+    if (el.id === "btnSettings") {
+      bukaModal(document.getElementById("modalSettings"));
+      return;
+    }
+    if (el.id === "btnCloseSettings" || el.id === "btnCloseDetail" || el.id === "btnDetailOk") {
+      tutupSemuaModal();
+      return;
+    }
+    if (el.id === "btnToggleMetode") {
+      state.metode = state.metode === "kemenag" ? "muhammadiyah" : "kemenag";
+      localStorage.setItem("metode", state.metode);
+      simpanKeNative();
+      perbaruiUI();
+      return;
+    }
+    if (el.id === "btnUpdateLokasi") {
+      deteksiLokasiOtomatis();
+      return;
+    }
+    if (el.id === "btnCycleVolume") {
+      const steps = [40, 60, 80, 100];
+      const nextIdx = (steps.indexOf(state.volume) + 1) % steps.length;
+      state.volume = steps[nextIdx];
+      localStorage.setItem("volume", String(state.volume));
+      simpanKeNative();
+      perbaruiUI();
+      return;
+    }
+    if (el.dataset.test) {
+      try {
+        if (window.Native && typeof window.Native.tesPopup === "function") {
+          window.Native.tesPopup(el.dataset.test);
+        }
+      } catch (e) {}
+      return;
+    }
+    if (el.dataset.slot) {
+      const slot = el.dataset.slot;
+      const nama = slot.charAt(0).toUpperCase() + slot.slice(1);
+      const jam = state.jadwal[slot];
+      document.getElementById("detailTitle").textContent = "Waktu Shalat " + nama;
+      document.getElementById("detailBody").innerHTML =
+        `Jadwal Shalat <b>${nama}</b> hari ini untuk wilayah <b>${state.kota}</b> adalah pukul <b style="color:#F2C96B; font-size:1.7vw;">${jam}</b>.`;
+      const btnTes = document.getElementById("btnDetailTestAdzan");
+      btnTes.style.display = "inline-block";
+      btnTes.dataset.test = slot;
+      bukaModal(document.getElementById("modalDetail"));
+      return;
+    }
+    if (el.dataset.holiday) {
+      const h = el.dataset.holiday;
+      const info = {
+        ramadhan: { title: "1 Ramadhan 1448 H", text: "Perkiraan awal bulan suci Ramadhan jatuh pada <b>8 Februari 2027</b> (" + document.getElementById("days-ramadhan").textContent + ")." },
+        idulfitri: { title: "1 Syawal 1448 H (Idul Fitri)", text: "Perkiraan Hari Raya Idul Fitri jatuh pada <b>9 Maret 2027</b> (" + document.getElementById("days-idulfitri").textContent + ")." },
+        iduladha: { title: "10 Dzulhijjah 1448 H (Idul Adha)", text: "Perkiraan Hari Raya Idul Adha jatuh pada <b>16 Mei 2027</b> (" + document.getElementById("days-iduladha").textContent + ")." }
+      }[h];
+      document.getElementById("detailTitle").textContent = info.title;
+      document.getElementById("detailBody").innerHTML = info.text;
+      document.getElementById("btnDetailTestAdzan").style.display = "none";
+      bukaModal(document.getElementById("modalDetail"));
+    }
   }
 
-  // Peta Navigasi D-Pad agar tombol Gear (pojok kiri bawah) mudah dijangkau dari mana saja
-  var NAV_MAP = {
-    'prayer-0': { left: 'settings', right: 'prayer-1', down: 'event-0', up: 'settings' },
-    'prayer-1': { left: 'prayer-0', right: 'prayer-2', down: 'event-0', up: 'prayer-1' },
-    'prayer-2': { left: 'prayer-1', right: 'prayer-3', down: 'event-1', up: 'prayer-2' },
-    'prayer-3': { left: 'prayer-2', right: 'prayer-4', down: 'event-2', up: 'prayer-3' },
-    'prayer-4': { left: 'prayer-3', right: 'prayer-4', down: 'event-2', up: 'prayer-4' },
+  // Pasang event click untuk mouse / sentuhan / klik otomatis WebView
+  document.querySelectorAll(".tv-focus, .modal-focus").forEach(el => {
+    el.addEventListener("click", function(e) {
+      e.stopPropagation();
+      jalankanAksiElemen(this);
+    });
+  });
 
-    'event-0':  { left: 'settings', right: 'event-1', up: 'prayer-1', down: 'settings' },
-    'event-1':  { left: 'event-0',  right: 'event-2', up: 'prayer-2', down: 'settings' },
-    'event-2':  { left: 'event-1',  right: 'event-2', up: 'prayer-3', down: 'settings' },
+  // Navigasi D-Pad Remote TV
+  document.addEventListener("keydown", function(e) {
+    const key = e.key;
+    const code = e.keyCode || e.which;
 
-    'settings': { up: 'prayer-0', right: 'event-0', left: 'settings', down: 'settings' }
-  };
+    const isUp = key === "ArrowUp" || code === 19;
+    const isDown = key === "ArrowDown" || code === 20;
+    const isLeft = key === "ArrowLeft" || code === 21;
+    const isRight = key === "ArrowRight" || code === 22;
+    const isOk = key === "Enter" || key === " " || code === 23 || code === 66;
+    const isBack = key === "Escape" || key === "Backspace" || code === 4;
 
-  document.addEventListener('keydown', function(e) {
-    var isModalOpen = document.getElementById('detailModal').classList.contains('open') ||
-                      document.getElementById('settingsModal').classList.contains('open');
+    if (isBack && activeModal) {
+      e.preventDefault();
+      tutupSemuaModal();
+      return;
+    }
 
-    if (isModalOpen) {
-      var activeModal = document.getElementById('detailModal').classList.contains('open')
-        ? document.getElementById('detailModal')
-        : document.getElementById('settingsModal');
-      var items = Array.prototype.slice.call(activeModal.querySelectorAll('.modal-focusable'));
-      var idx = items.indexOf(document.activeElement);
-
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+    if (activeModal) {
+      if (isUp || isLeft) {
         e.preventDefault();
-        var next = items[(idx + 1) % items.length];
-        if (next) next.focus();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        setModalFocus(modalIndex - 1);
+      } else if (isDown || isRight) {
         e.preventDefault();
-        var prev = items[(idx - 1 + items.length) % items.length];
-        if (prev) prev.focus();
-      } else if (e.key === 'Escape' || e.key === 'Backspace') {
+        setModalFocus(modalIndex + 1);
+      } else if (isOk) {
         e.preventDefault();
-        tutupSemuaModal();
+        const btns = getModalButtons();
+        if (btns[modalIndex]) jalankanAksiElemen(btns[modalIndex]);
       }
       return;
     }
 
-    // Navigasi Layar Utama
-    var dir = null;
-    if (e.key === 'ArrowLeft') dir = 'left';
-    else if (e.key === 'ArrowRight') dir = 'right';
-    else if (e.key === 'ArrowUp') dir = 'up';
-    else if (e.key === 'ArrowDown') dir = 'down';
+    if (!mainFocusEl) {
+      setMainFocus(document.getElementById("card-subuh"));
+    }
 
-    if (dir && NAV_MAP[currentNavId]) {
+    const row = parseInt(mainFocusEl.dataset.row || "0", 10);
+    const col = parseInt(mainFocusEl.dataset.col || "0", 10);
+
+    function cariTarget(r, c) {
+      return document.querySelector(`.tv-focus[data-row="${r}"][data-col="${c}"]`);
+    }
+
+    if (isLeft) {
       e.preventDefault();
-      var targetId = NAV_MAP[currentNavId][dir];
-      if (targetId) setMainFocus(targetId);
-    } else if (e.key === 'Enter' || e.key === ' ') {
+      if (row === 0) {
+        setMainFocus(col > 0 ? cariTarget(0, col - 1) : document.getElementById("btnSettings"));
+      } else {
+        setMainFocus(col > 0 ? cariTarget(1, col - 1) : cariTarget(1, 3));
+      }
+    } else if (isRight) {
       e.preventDefault();
-      var activeEl = document.querySelector('[data-nav="' + currentNavId + '"]');
-      if (activeEl) activeEl.click();
+      if (row === 0) {
+        setMainFocus(col < 4 ? cariTarget(0, col + 1) : cariTarget(0, 0));
+      } else {
+        setMainFocus(col < 3 ? cariTarget(1, col + 1) : cariTarget(1, 0));
+      }
+    } else if (isDown) {
+      e.preventDefault();
+      if (row === 0) {
+        if (col === 0) setMainFocus(document.getElementById("btnSettings"));
+        else if (col === 1) setMainFocus(document.getElementById("card-ramadhan"));
+        else if (col === 2) setMainFocus(document.getElementById("card-idulfitri"));
+        else setMainFocus(document.getElementById("card-iduladha"));
+      }
+    } else if (isUp) {
+      e.preventDefault();
+      if (row === 1) {
+        if (col === 0) setMainFocus(document.getElementById("card-subuh"));
+        else if (col === 1) setMainFocus(document.getElementById("card-dzuhur"));
+        else if (col === 2) setMainFocus(document.getElementById("card-ashar"));
+        else setMainFocus(document.getElementById("card-maghrib"));
+      }
+    } else if (isOk) {
+      e.preventDefault();
+      jalankanAksiElemen(mainFocusEl);
     }
   });
 
-  // Event Klik / OK pada Setiap Elemen
-  document.querySelectorAll('.prayer-card').forEach(function(card) {
-    card.addEventListener('click', function() {
-      setMainFocus(card.getAttribute('data-nav'));
-      bukaDetailShalat(card.getAttribute('data-slot'));
-    });
-  });
-
-  document.querySelectorAll('.event-card').forEach(function(card) {
-    card.addEventListener('click', function() {
-      setMainFocus(card.getAttribute('data-nav'));
-      bukaDetailEvent(card.getAttribute('data-event'));
-    });
-  });
-
-  document.getElementById('btnSettings').addEventListener('click', function() {
-    setMainFocus('settings');
-    bukaPengaturan();
-  });
-
-  document.getElementById('btnCloseDetail').addEventListener('click', tutupSemuaModal);
-  document.getElementById('btnCloseSettings').addEventListener('click', tutupSemuaModal);
-
-  // Inisialisasi Awal
-  perbaruiTampilan();
-  setInterval(perbaruiTampilan, 1000);
-  setTimeout(function() {
-    setMainFocus('prayer-0');
-  }, 150);
+  // Inisialisasi awal
+  perbaruiUI();
+  setInterval(perbaruiUI, 1000);
+  setMainFocus(document.getElementById("card-subuh"));
 </script>
 </body>
 </html>
