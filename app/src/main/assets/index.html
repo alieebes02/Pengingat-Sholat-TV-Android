@@ -165,11 +165,12 @@ button:focus,select:focus,input:focus,.pcard:focus{outline:none;border-color:var
           <option value="fajar">Tema: Fajar</option>
         </select>
       </div>
-      <div class="controls">
-        <label style="color:var(--muted);font-size:1.1vw;display:flex;align-items:center;gap:0.6vw;">
-          🔊 Volume
-          <input type="range" id="volSlider" min="0" max="100" value="80" style="width:12vw;">
-        </label>
+      <div class="controls" style="align-items:center;">
+        <span style="color:var(--muted);font-size:1.1vw;">🔊 Volume</span>
+        <button id="btnVolMin" type="button">- 10%</button>
+        <span id="volLabel" style="font-weight:800;color:var(--accent);min-width:4vw;text-align:center;">80%</span>
+        <button id="btnVolPlus" type="button">+ 10%</button>
+        <input type="hidden" id="volSlider" value="80">
       </div>
       <div class="controls" style="flex-direction:column;gap:0.8vh;">
         <div class="status" style="color:var(--accent);font-weight:800;">Suara Subuh (biasanya berbeda dari waktu lain)</div>
