@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,7 +70,7 @@ public class AlarmPopupActivity extends Activity {
         card.setPadding(pad, pad, pad, pad);
 
         TextView tvIcon = new TextView(this);
-        tvIcon.setText("\u263E");
+        tvIcon.setText("☾");
         tvIcon.setTextSize(48);
         tvIcon.setTextColor(Color.parseColor("#D9A441"));
         tvIcon.setGravity(Gravity.CENTER);
@@ -85,15 +87,32 @@ public class AlarmPopupActivity extends Activity {
         tvSub.setTextSize(18);
         tvSub.setTextColor(Color.parseColor("#F2EDE4"));
         tvSub.setGravity(Gravity.CENTER);
+        tvSub.setPadding(0, 0, 0, dp(24));
+
+        Button btnTutup = new Button(this);
+        btnTutup.setText("Tutup Pengingat");
+        btnTutup.setTextSize(16);
+        btnTutup.setTextColor(Color.parseColor("#0B1B2B"));
+        GradientDrawable btnBg = new GradientDrawable();
+        btnBg.setColor(Color.parseColor("#D9A441"));
+        btnBg.setCornerRadius(20f);
+        btnTutup.setBackground(btnBg);
+        btnTutup.setPadding(dp(28), dp(12), dp(28), dp(12));
+        btnTutup.setFocusable(true);
+        btnTutup.setFocusableInTouchMode(true);
+        btnTutup.setOnClickListener(v -> finish());
 
         card.addView(tvIcon);
         card.addView(tvJudul);
         card.addView(tvSub);
+        card.addView(btnTutup);
 
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         root.addView(card, lp);
         setContentView(root);
+
+        btnTutup.requestFocus();
 
         mintaAudioFocus();
         mainkanDanTutupOtomatis(slot);
@@ -213,7 +232,13 @@ public class AlarmPopupActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed() {
-        finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                || keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+                || keyCode == KeyEvent.KEYCODE_ENTER) {
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
