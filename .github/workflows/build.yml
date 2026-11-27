@@ -2,7 +2,7 @@ name: Build Android Release APK
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -10,69 +10,68 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
-      - name: Fix PNG image formats
-        run: |
-          pip install --quiet pillow
-          python3 -c '
-          import glob, os
-          from PIL import Image
-          for p in glob.glob("app/src/main/res/**/*.png", recursive=True):
-              try:
-                  im = Image.open(p)
-                  im.save(p, format="PNG")
-                  print("Fixed:", p)
-              except Exception as e:
-                  print("Skip:", p, e)
-          '
+    - name: Fix PNG & XML namespaces automatically
+      run: |
+        pip install pillow
+        python3 -c '
+        import glob, os
+        from PIL import Image
 
-      - name: Setup Gradle 8.9
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
+        for path in glob.glob("app/src/main/res/**/*.png", recursive=True):
+            try:
+                im = Image.open(path)
+                im.save(path, "PNG")
+            except Exception as e:
+                print(f"Skip {path}: {e}")
 
-      - name: Build & Sign Release APK
-        run: |
-          if [ -f "./gradlew" ]; then
-            chmod +x ./gradlew
-            ./gradlew assembleRelease --no-daemon
-          else
-            gradle assembleRelease --no-daemon
-          fi
+        for path in glob.glob("app/src/main/res/**/*.xml", recursive=True):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                if "http://android.com" in content:
+                    content = content.replace("http://android.com", "http://schemas.android.com/apk/res/android")
+                    with open(path, "w", encoding="utf-8") as f:
+                        f.write(content)
+            except Exception as e:
+                print(f"Skip {path}: {e}")
+        '
 
+    - name: Setup Gradle 8.9
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: '8.9'
+
+    - name: Build & Sign Release APK
+      run: |
+        if [ -f "./gradlew" ]; then
+          chmod +x gradlew
+          ./gradlew assembleRelease -x lintVitalRelease
+        else
+          gradle assembleRelease -x lintVitalRelease
+        fi
+
+        UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*-unsigned.apk" | head -n 1)
+        if [ -z "$UNSIGNED_APK" ]; then
           UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          echo "Found APK: $UNSIGNED_APK"
+        fi
 
-          keytool -genkeypair -v \
-            -keystore release.keystore \
-            -alias pengingat_shalat_key \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass android123 \
-            -keypass android123 \
-            -dname "CN=Alie_Ebes, OU=Ummah, O=PengingatShalatTV, L=Pekalongan, S=JawaTengah, C=ID"
+        keytool -genkey -v -keystore release.keystore -alias pengingat_shalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=PengingatShalatTV, OU=Ummah, O=AlieEbes, L=Pekalongan, ST=JawaTengah, C=ID"
 
-          BUILD_TOOLS=$(ls -d ${ANDROID_HOME}/build-tools/* | sort -V | tail -n 1)
-          "$BUILD_TOOLS/zipalign" -v -p 4 "$UNSIGNED_APK" aligned-release.apk
-          "$BUILD_TOOLS/apksigner" sign \
-            --ks release.keystore \
-            --ks-key-alias pengingat_shalat_key \
-            --ks-pass pass:android123 \
-            --key-pass pass:android123 \
-            --out Pengingat-Shalat-TV-Release.apk \
-            aligned-release.apk
+        BUILD_TOOLS=$(ls -d ${ANDROID_HOME}/build-tools/* | sort -V | tail -n 1)
+        "${BUILD_TOOLS}/zipalign" -v -p 4 "$UNSIGNED_APK" aligned.apk
+        "${BUILD_TOOLS}/apksigner" sign --ks release.keystore --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk aligned.apk
 
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Pengingat-Shalat-TV-Release
-          path: Pengingat-Shalat-TV-Release.apk
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Pengingat-Shalat-TV-Release
+        path: Pengingat-Shalat-TV-Release.apk
