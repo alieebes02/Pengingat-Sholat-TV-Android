@@ -1,1008 +1,1078 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Pengingat Shalat — TV</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Pengingat Shalat TV</title>
 <style>
-:root{
-  --bg:#0B1B2B; --bg2:#102738; --card:#142F43; --card-active:#1C3B52;
-  --accent:#D9A441; --accent-soft:#8A6A2C; --pattern-line:rgba(217,164,65,0.08);
-  --text:#F2EDE4; --muted:#8FA8B8;
-  color-scheme: dark;
-}
-:root[data-theme="senja"]{
-  --bg:#231225; --bg2:#301A32; --card:#3A1F3E; --card-active:#4C2A4F;
-  --accent:#E8886B; --accent-soft:#8F4F3C; --pattern-line:rgba(232,136,107,0.08); --text:#F7EEE8; --muted:#C19BAE;
-}
-:root[data-theme="fajar"]{
-  --bg:#0E2230; --bg2:#15344A; --card:#1C4260; --card-active:#245175;
-  --accent:#8FD8C8; --accent-soft:#4D8B7C; --pattern-line:rgba(143,216,200,0.08); --text:#EAF6F2; --muted:#9FC2CE;
-}
-*{box-sizing:border-box;}
-html,body{height:100%;}
-body{
-  margin:0;
-  background-color:var(--bg);
-  background-image:
-    radial-gradient(ellipse at 50% -10%, var(--bg2), var(--bg) 60%),
-    repeating-linear-gradient(45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px),
-    repeating-linear-gradient(-45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px);
-  color:var(--text); font-family:'Manrope',sans-serif;
-  padding:5vh 5vw;
-  padding-top:calc(4.2vh + env(safe-area-inset-top,0px));
-  padding-bottom:calc(5vh + env(safe-area-inset-bottom,0px));
-  display:flex; flex-direction:column; min-height:100%; gap:1.5vh;
-  overflow:hidden;
-}
-.topbar{display:flex; justify-content:space-between; align-items:flex-start; color:var(--muted); font-size:1.3vw;}
-.topbar .date{font-size:1.45vw; font-weight:600; color:var(--text); letter-spacing:0.01em;}
-.topbar .date-hijri{font-size:1.15vw; color:var(--accent); opacity:0.9; margin-top:0.2vh;}
-.clock-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:0.6vh;}
-.topbar .clock{
-  font-family:'Manrope',sans-serif; font-weight:800; font-size:2.4vw;
-  color:var(--text); letter-spacing:0.04em; line-height:1; font-variant-numeric:tabular-nums;
-}
-.topbar .clock .sec{font-size:1.65vw; color:var(--accent); font-weight:700;}
-.adzan-badge{
-  font-size:0.95vw; color:var(--accent); font-weight:600;
-  background:rgba(217,164,65,0.12); border:1px solid rgba(217,164,65,0.38);
-  border-radius:999px; padding:0.35vh 1vw; letter-spacing:0.02em;
-}
-.ornamen{display:flex; align-items:center; justify-content:center; gap:1vw; color:var(--accent); opacity:0.8; margin-bottom:0.2vh;}
-.ornamen .garis{height:1px; width:6vw; background:linear-gradient(90deg, transparent, var(--accent), transparent);}
-.moon-watermark{position:fixed; top:-7vw; right:-7vw; width:34vw; height:34vw; z-index:-1; opacity:0.14; pointer-events:none;}
-.moon-watermark circle:first-child{fill:var(--accent);}
-.moon-watermark circle:last-child{fill:var(--bg);}
-.skyline{position:fixed; left:0; right:0; bottom:0; width:100%; height:18vh; z-index:-1; opacity:0.16; pointer-events:none;}
-.skyline rect, .skyline path, .skyline circle{fill:var(--accent);}
-.frame-border{position:fixed; inset:1.5vh 1.5vw; border:2px solid var(--accent); border-radius:6px; z-index:1; pointer-events:none; opacity:0.5;}
-.frame-border::before{content:''; position:absolute; inset:6px; border:1px solid var(--accent); border-radius:4px; opacity:0.6;}
-.frame-corner{position:fixed; width:4vw; height:4vw; min-width:38px; min-height:38px; z-index:2; pointer-events:none; opacity:0.85;}
-.frame-corner path{fill:none; stroke:var(--accent); stroke-width:2.5;}
-.frame-corner circle{fill:var(--accent);}
-.frame-corner.tl{top:1.3vh; left:1.3vw;}
-.frame-corner.tr{top:1.3vh; right:1.3vw; transform:rotate(90deg);}
-.frame-corner.br{bottom:1.3vh; right:1.3vw; transform:rotate(180deg);}
-.frame-corner.bl{bottom:1.3vh; left:1.3vw; transform:rotate(270deg);}
+  :root {
+    --bg-top: #081523;
+    --bg-bot: #10283D;
+    --card-bg: rgba(20, 47, 67, 0.72);
+    --card-border: rgba(217, 164, 65, 0.25);
+    --gold: #D9A441;
+    --gold-light: #F2C96B;
+    --cream: #F2EDE4;
+    --muted: #9EB3C2;
+    --active-glow: rgba(217, 164, 65, 0.35);
+  }
 
-.hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:0.7vh;}
-.hero .label{color:var(--muted); font-size:1.35vw; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;}
-.hero .name{font-family:'Spectral',serif; font-weight:600; font-size:clamp(28px, 5vw, 7.6vh); color:var(--accent); line-height:1.05;}
-.hero .countdown{
-  font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(34px, 6.6vw, 10.2vh);
-  letter-spacing:0.04em; font-variant-numeric:tabular-nums; line-height:1.05;
-}
-.progress-wrap{
-  width:min(34vw, 440px); height:6px; background:rgba(255,255,255,0.1);
-  border-radius:999px; overflow:hidden; margin:0.4vh 0 0.8vh; position:relative;
-}
-.progress-fill{
-  height:100%; width:0%; background:linear-gradient(90deg, var(--accent-soft), var(--accent));
-  border-radius:999px; box-shadow:0 0 12px var(--accent); transition:width 0.8s linear;
-}
-.meta-pills{display:flex; flex-direction:column; gap:1.1vh; justify-content:center; align-items:center; margin-top:0.4vh;}
-.loc-pill{
-  background:rgba(20,47,67,0.85); border:1px solid rgba(255,255,255,0.14);
-  color:var(--text); font-size:1.15vw; font-weight:600;
-  padding:0.45vh 1.2vw; border-radius:999px; letter-spacing:0.02em;
-}
-.method-pill{
-  background:rgba(217,164,65,0.16); border:1.5px solid var(--accent);
-  color:var(--accent); font-size:1.1vw; font-weight:800;
-  padding:0.45vh 1.2vw; border-radius:999px; letter-spacing:0.03em;
-  box-shadow:0 0 14px rgba(217,164,65,0.18);
-}
+  body.theme-siang {
+    --bg-top: #0E2A42;
+    --bg-bot: #1B4965;
+    --card-bg: rgba(27, 73, 101, 0.78);
+    --card-border: rgba(217, 164, 65, 0.38);
+    --cream: #FFFFFF;
+    --muted: #C2D6E3;
+  }
 
-.row{display:flex; gap:1.4vw; justify-content:center;}
-.pcard{
-  position:relative; background:var(--card); border-radius:4px 4px 18px 18px;
-  padding:2.4vh 1.6vw 2vh; min-width:11.5vw;
-  text-align:center; border:2px solid transparent;
-  transition:transform .25s, border-color .25s, background .25s, box-shadow .25s;
-}
-.pcard::before{
-  content:''; position:absolute; top:-9px; left:50%; transform:translateX(-50%);
-  width:60%; height:16px; border-radius:50% 50% 0 0; background:var(--card);
-  border:2px solid transparent; transition:background .25s;
-}
-.pcard.active::before{background:var(--card-active); border-color:var(--accent);}
-.pcard .pname{font-size:1.25vw; color:var(--muted); margin-bottom:0.4vh; font-weight:600; letter-spacing:0.02em;}
-.pcard .ptime{font-size:2.05vw; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:0.02em;}
-.pcard.active{
-  background:var(--card-active); border-color:var(--accent); transform:translateY(-6px);
-  box-shadow:0 8px 24px rgba(217,164,65,0.28);
-}
-.pcard.active .pname{color:var(--accent); font-weight:800;}
-.next-tag{
-  display:none; margin-top:0.5vh; font-size:0.78vw; font-weight:800; letter-spacing:0.08em;
-  color:var(--bg); background:var(--accent); border-radius:999px; padding:0.2vh 0.75vw;
-}
-.pcard.active .next-tag{display:inline-block;}
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+  }
 
-#infoIslami .pcard{
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:2.4vh 1.6vw 1.6vh; gap:0.3vh;
-}
-#infoIslami .pcard .pname{margin-bottom:0;}
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at 78% 24%, #153550 0%, var(--bg-top) 48%, var(--bg-bot) 100%);
+    color: var(--cream);
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
 
-.controls{display:flex; gap:1.4vw; flex-wrap:wrap; justify-content:center;}
-button, select{
-  font-family:'Manrope',sans-serif; font-size:1.15vw; color:var(--text);
-  background:var(--card); border:2px solid transparent; border-radius:12px;
-  padding:1.3vh 1.4vw; cursor:pointer; appearance:none;
-}
-button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft);}
-.status{font-size:1vw; color:var(--muted); text-align:center;}
+  /* Dekorasi bulan sabit & siluet masjid lembut di latar belakang */
+  .bg-decor {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
 
-.gear-btn{
-  position:fixed; left:4.2vw; bottom:6.5vh; z-index:20;
-  width:4.4vw; height:4.4vw; min-width:50px; min-height:50px;
-  border-radius:50%; background:rgba(20,47,67,0.92);
-  border:2px solid rgba(217,164,65,0.45);
-  display:flex; align-items:center; justify-content:center; font-size:1.9vw;
-  cursor:pointer; padding:0; transition:transform .2s, border-color .2s, box-shadow .2s, background .2s;
-}
-.gear-btn:focus{
-  background:var(--card-active); border:3px solid var(--accent);
-  box-shadow:0 0 18px rgba(217,164,65,0.9); transform:scale(1.12);
-}
+  .crescent {
+    position: absolute;
+    top: 8vh;
+    right: 11vw;
+    width: 24vh;
+    height: 24vh;
+    border-radius: 50%;
+    box-shadow: 3.5vh 1.5vh 0 0 rgba(217, 164, 65, 0.08);
+  }
 
-.settings-overlay{
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
-  z-index:30; align-items:center; justify-content:center; padding:4vh 4vw;
-}
-.settings-overlay.open{display:flex;}
-.settings-panel{
-  background:var(--bg2); border-radius:20px; padding:3vh 3vw; max-width:92vw; max-height:88vh;
-  overflow-y:auto; display:flex; flex-direction:column; gap:2vh; width:min(900px, 92vw);
-  border-top:3px solid var(--accent);
-}
-.settings-header{display:flex; justify-content:space-between; align-items:center; gap:2vw;}
-.settings-header h2{margin:0; font-family:'Spectral',serif; font-size:1.8vw; color:var(--accent); display:flex; align-items:center; gap:0.6vw;}
+  .mosque-silhouette {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 22vh;
+    background: linear-gradient(to top, rgba(6, 17, 28, 0.75), transparent);
+  }
 
-@media (max-width:700px){
-  .topbar .date{font-size:3.2vw;} .topbar .date-hijri{font-size:2.6vw;}
-  .topbar .clock{font-size:5vw;} .topbar .clock .sec{font-size:3.5vw;} .adzan-badge{font-size:2.3vw;}
-  .hero .name{font-size:8vw;} .hero .countdown{font-size:11vw;} .hero .label{font-size:3vw;}
-  .loc-pill, .method-pill{font-size:2.8vw;}
-  .row{flex-wrap:wrap;} .pcard{min-width:26vw;} .pcard .pname{font-size:3vw;} .pcard .ptime{font-size:4.5vw;}
-  button,select{font-size:3vw;} .status{font-size:2.8vw;}
-  .gear-btn{left:5vw; bottom:7.5vh; width:13vw; height:13vw; font-size:5.5vw;}
-  .settings-header h2{font-size:5vw;}
-}
+  /* Frame Bingkai Emas TV (Dinaikkan di atas bilah running text) */
+  .tv-frame {
+    position: fixed;
+    top: 2.2vh;
+    left: 1.5vw;
+    right: 1.5vw;
+    bottom: 6.6vh; /* Diberi ruang pas untuk bar Mutiara Hadits di bawahnya agar tidak terpotong */
+    border: 1.5px solid rgba(217, 164, 65, 0.32);
+    border-radius: 18px;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Container Utama (Disesuaikan dengan batas bawah frame baru) */
+  .main-container {
+    position: relative;
+    z-index: 1;
+    width: 100vw;
+    height: 93.4vh;
+    padding: 4.2vh 4vw 3.2vh 4vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Baris Atas: Tanggal & Jam Digital */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .date-box .masehi {
+    font-size: 2.1vw;
+    font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 0.4px;
+  }
+
+  .date-box .hijri {
+    font-size: 1.4vw;
+    color: var(--muted);
+    margin-top: 0.4vh;
+  }
+
+  .clock-box {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .clock-time {
+    font-size: 4.5vw;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--cream);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  }
+
+  .clock-time .sec {
+    font-size: 3.1vw;
+    color: var(--gold);
+  }
+
+  .adzan-badge {
+    margin-top: 0.8vh;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vw;
+    padding: 0.45vh 1.1vw;
+    border-radius: 999px;
+    background: rgba(217, 164, 65, 0.14);
+    border: 1px solid rgba(217, 164, 65, 0.45);
+    color: var(--gold-light);
+    font-size: 1.1vw;
+    font-weight: 600;
+  }
+
+  /* Bagian Tengah: Hitung Mundur, Lokasi & Metode */
+  .hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: -1.5vh;
+  }
+
+  .hero-diamond {
+    color: var(--gold);
+    font-size: 1.1vw;
+    margin-bottom: 0.5vh;
+  }
+
+  .hero-label {
+    font-size: 1.25vw;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .hero-prayer-name {
+    font-size: 4.6vw;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1.08;
+    margin: 0.3vh 0;
+    text-shadow: 0 4px 24px rgba(217, 164, 65, 0.25);
+  }
+
+  .hero-countdown {
+    font-size: 4.3vw;
+    font-weight: 700;
+    color: var(--cream);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    line-height: 1.05;
+  }
+
+  /* Progress Bar Hitung Mundur */
+  .progress-wrap {
+    width: 34vw;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 1.4vh;
+    margin-bottom: 1.5vh;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 999px;
+    transition: width 1s linear;
+  }
+
+  /* Kapsul Lokasi & Metode (Jarak seimbang) */
+  .info-pills {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1vh;
+  }
+
+  .pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vw;
+    padding: 0.5vh 1.4vw;
+    border-radius: 999px;
+    background: rgba(12, 31, 46, 0.85);
+    border: 1px solid rgba(217, 164, 65, 0.35);
+    font-size: 1.15vw;
+    color: var(--cream);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .pill-badge.method-pill {
+    border-color: rgba(217, 164, 65, 0.5);
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  /* Baris Kartu 5 Waktu Shalat */
+  .prayer-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.4vw;
+    width: 82vw;
+    margin: 0 auto;
+  }
+
+  .prayer-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 16px;
+    padding: 1.7vh 1vw;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .prayer-card .p-name {
+    font-size: 1.35vw;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .prayer-card .p-time {
+    font-size: 2.3vw;
+    font-weight: 700;
+    color: var(--cream);
+    margin-top: 0.4vh;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prayer-card .next-tag {
+    display: none;
+    margin-top: 0.7vh;
+    padding: 0.25vh 0.9vw;
+    border-radius: 999px;
+    background: var(--gold);
+    color: #0B1B2B;
+    font-size: 0.85vw;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+  }
+
+  /* Kartu Waktu Shalat Berikutnya (Aktif) */
+  .prayer-card.active {
+    background: linear-gradient(180deg, rgba(217, 164, 65, 0.22), rgba(20, 47, 67, 0.9));
+    border: 2.5px solid var(--gold);
+    box-shadow: 0 0 24px var(--active-glow);
+    transform: translateY(-3px);
+  }
+
+  .prayer-card.active .p-name {
+    color: var(--gold-light);
+  }
+
+  .prayer-card.active .next-tag {
+    display: inline-block;
+  }
+
+  /* Baris Kartu Hari Besar Islam */
+  .holiday-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2vw;
+    width: 48vw;
+    margin: 0 auto;
+  }
+
+  .holiday-card {
+    background: rgba(14, 34, 50, 0.78);
+    border: 1px solid rgba(217, 164, 65, 0.24);
+    border-radius: 12px;
+    padding: 1vh 0.8vw;
+    text-align: center;
+  }
+
+  .holiday-card .h-title {
+    font-size: 1.15vw;
+    font-weight: 700;
+    color: var(--gold-light);
+  }
+
+  .holiday-card .h-date {
+    font-size: 0.9vw;
+    color: var(--muted);
+    margin-top: 0.2vh;
+  }
+
+  .holiday-card .h-days {
+    font-size: 1.3vw;
+    font-weight: 700;
+    color: var(--cream);
+    margin-top: 0.3vh;
+  }
+
+  /* Footer Credit di dalam frame */
+  .footer-credit {
+    text-align: center;
+    font-size: 0.85vw;
+    color: rgba(158, 179, 194, 0.55);
+    margin-bottom: -0.4vh;
+  }
+
+  /* Tombol Pengaturan (Gear) - Posisi aman di sudut kiri bawah dalam frame */
+  .btn-settings {
+    position: fixed;
+    left: 3.4vw;
+    bottom: 9.2vh;
+    z-index: 10;
+    width: 4.2vw;
+    height: 4.2vw;
+    border-radius: 50%;
+    background: rgba(20, 47, 67, 0.9);
+    border: 1.5px solid rgba(217, 164, 65, 0.45);
+    color: var(--muted);
+    font-size: 1.8vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .btn-settings:focus,
+  .btn-settings:hover {
+    outline: none;
+    border: 2.5px solid var(--gold-light);
+    color: var(--gold-light);
+    background: rgba(217, 164, 65, 0.22);
+    box-shadow: 0 0 20px rgba(217, 164, 65, 0.65);
+    transform: scale(1.08);
+  }
+
+  /* BILAH RUNNING TEXT MUTIARA HADITS (Di bagian paling bawah, terpisah di bawah frame) */
+  .hadits-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5.2vh;
+    background: #07121E;
+    border-top: 1.5px solid rgba(217, 164, 65, 0.45);
+    display: flex;
+    align-items: center;
+    z-index: 15;
+    overflow: hidden;
+  }
+
+  .hadits-label {
+    flex-shrink: 0;
+    height: 100%;
+    padding: 0 1.4vw;
+    background: linear-gradient(90deg, #C8922E, #E3B34C);
+    color: #081523;
+    font-size: 1.05vw;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    display: flex;
+    align-items: center;
+    gap: 0.45vw;
+    box-shadow: 4px 0 14px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+  }
+
+  .hadits-marquee-wrap {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+  }
+
+  .hadits-marquee-content {
+    display: inline-block;
+    padding-left: 100%;
+    font-size: 1.15vw;
+    color: var(--cream);
+    font-weight: 500;
+    animation: jalanHadits 55s linear infinite;
+  }
+
+  .hadits-sep {
+    color: var(--gold);
+    margin: 0 1.4vw;
+  }
+
+  @keyframes jalanHadits {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* MODAL PENGATURAN */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 13, 22, 0.85);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 3vh 4vw;
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal-box {
+    width: 78vw;
+    max-height: 88vh;
+    overflow-y: auto;
+    background: #11293D;
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    padding: 3vh 3vw;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(217, 164, 65, 0.25);
+    padding-bottom: 1.5vh;
+    margin-bottom: 2.2vh;
+  }
+
+  .modal-title {
+    font-size: 1.9vw;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .setting-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2vw;
+    justify-content: center;
+    margin-bottom: 2.2vh;
+  }
+
+  .setting-section-title {
+    width: 100%;
+    text-align: center;
+    font-size: 1.1vw;
+    color: var(--gold-light);
+    font-weight: 600;
+    margin-bottom: 0.6vh;
+  }
+
+  .tv-btn {
+    padding: 1.1vh 1.6vw;
+    border-radius: 999px;
+    background: rgba(20, 47, 67, 0.95);
+    border: 1.5px solid rgba(217, 164, 65, 0.4);
+    color: var(--cream);
+    font-size: 1.15vw;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .tv-btn:focus,
+  .tv-btn:hover {
+    outline: none;
+    border: 2.5px solid var(--gold-light);
+    background: rgba(217, 164, 65, 0.25);
+    box-shadow: 0 0 16px rgba(217, 164, 65, 0.6);
+    transform: scale(1.04);
+  }
+
+  .volume-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    margin-bottom: 2.2vh;
+    font-size: 1.15vw;
+    color: var(--muted);
+  }
+
+  .volume-wrap input[type="range"] {
+    width: 18vw;
+    accent-color: var(--gold);
+    height: 8px;
+  }
 </style>
 </head>
 <body>
-  <svg class="moon-watermark" viewBox="0 0 100 100" aria-hidden="true">
-    <circle cx="50" cy="50" r="40"/>
-    <circle cx="68" cy="38" r="34"/>
-  </svg>
-  <svg class="skyline" viewBox="0 0 800 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-    <rect x="150" y="100" width="16" height="60"/>
-    <circle cx="158" cy="96" r="9"/>
-    <rect x="634" y="100" width="16" height="60"/>
-    <circle cx="642" cy="96" r="9"/>
-    <rect x="258" y="118" width="44" height="42"/>
-    <path d="M258 118 a22 22 0 0 1 44 0 z"/>
-    <rect x="498" y="118" width="44" height="42"/>
-    <path d="M498 118 a22 22 0 0 1 44 0 z"/>
-    <rect x="355" y="58" width="90" height="102"/>
-    <path d="M355 58 a45 45 0 0 1 90 0 z"/>
-  </svg>
 
-  <div class="frame-border" aria-hidden="true"></div>
-  <svg class="frame-corner tl" viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M10 90 L10 40 Q10 10 40 10 L90 10"/>
-    <path d="M10 60 Q10 30 40 30 Q40 10 70 10"/>
-    <circle cx="10" cy="10" r="5"/>
-  </svg>
-  <svg class="frame-corner tr" viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M10 90 L10 40 Q10 10 40 10 L90 10"/>
-    <path d="M10 60 Q10 30 40 30 Q40 10 70 10"/>
-    <circle cx="10" cy="10" r="5"/>
-  </svg>
-  <svg class="frame-corner br" viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M10 90 L10 40 Q10 10 40 10 L90 10"/>
-    <path d="M10 60 Q10 30 40 30 Q40 10 70 10"/>
-    <circle cx="10" cy="10" r="5"/>
-  </svg>
-  <svg class="frame-corner bl" viewBox="0 0 100 100" aria-hidden="true">
-    <path d="M10 90 L10 40 Q10 10 40 10 L90 10"/>
-    <path d="M10 60 Q10 30 40 30 Q40 10 70 10"/>
-    <circle cx="10" cy="10" r="5"/>
-  </svg>
-
-  <div class="topbar">
-    <div>
-      <div class="date" id="tgl">—</div>
-      <div class="date-hijri" id="tglHijriah">—</div>
-    </div>
-    <div class="clock-wrap">
-      <div class="clock" id="jam">--:--<span class="sec">:00</span></div>
-      <div class="adzan-badge">🔔 Adzan Otomatis Aktif</div>
-    </div>
+  <div class="bg-decor">
+    <div class="crescent"></div>
+    <div class="mosque-silhouette"></div>
   </div>
 
-  <div class="status" id="bannerHari" style="display:none; text-align:center; font-size:1.3vw; color:var(--accent); font-weight:800;"></div>
+  <!-- Bingkai Emas TV (Berakhir tepat di atas bar Mutiara Hadits) -->
+  <div class="tv-frame"></div>
 
-  <div class="hero">
-    <div class="ornamen"><span class="garis"></span><span>❖</span><span class="garis"></span></div>
-    <div class="label">Waktu shalat berikutnya</div>
-    <div class="name" id="nextName">Memuat…</div>
-    <div class="countdown" id="countdown">--:--:--</div>
-    <div class="progress-wrap" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="meta-pills">
-      <div class="loc-pill" id="locInfo">📍 Lokasi belum aktif</div>
-      <div class="method-pill" id="labelMetode">🧭 Metode: Kemenag RI</div>
+  <!-- Konten Utama -->
+  <div class="main-container">
+    <!-- Baris Atas -->
+    <div class="topbar">
+      <div class="date-box">
+        <div class="masehi" id="tglMasehi">Memuat tanggal...</div>
+        <div class="hijri" id="tglHijri">Memuat kalender Hijriah...</div>
+      </div>
+      <div class="clock-box">
+        <div class="clock-time" id="jamDigital">00:00<span class="sec">:00</span></div>
+        <div class="adzan-badge">&#128276; Adzan Otomatis Aktif</div>
+      </div>
     </div>
+
+    <!-- Bagian Tengah -->
+    <div class="hero-section">
+      <div class="hero-diamond">&#9670;</div>
+      <div class="hero-label">WAKTU SHALAT BERIKUTNYA</div>
+      <div class="hero-prayer-name" id="nextPrayerName">Dzuhur</div>
+      <div class="hero-countdown" id="countdownText">00:00:00</div>
+
+      <div class="progress-wrap">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="info-pills">
+        <div class="pill-badge" id="lokasiText">&#128205; Mendeteksi lokasi...</div>
+        <div class="pill-badge method-pill" id="metodeText">&#129517; Metode: Kemenag RI</div>
+      </div>
+    </div>
+
+    <!-- 5 Kartu Waktu Shalat -->
+    <div class="prayer-grid">
+      <div class="prayer-card" id="card-subuh">
+        <div class="p-name">Subuh</div>
+        <div class="p-time" id="time-subuh">--:--</div>
+        <div class="next-tag">BERIKUTNYA</div>
+      </div>
+      <div class="prayer-card" id="card-dzuhur">
+        <div class="p-name">Dzuhur</div>
+        <div class="p-time" id="time-dzuhur">--:--</div>
+        <div class="next-tag">BERIKUTNYA</div>
+      </div>
+      <div class="prayer-card" id="card-ashar">
+        <div class="p-name">Ashar</div>
+        <div class="p-time" id="time-ashar">--:--</div>
+        <div class="next-tag">BERIKUTNYA</div>
+      </div>
+      <div class="prayer-card" id="card-maghrib">
+        <div class="p-name">Maghrib</div>
+        <div class="p-time" id="time-maghrib">--:--</div>
+        <div class="next-tag">BERIKUTNYA</div>
+      </div>
+      <div class="prayer-card" id="card-isya">
+        <div class="p-name">Isya</div>
+        <div class="p-time" id="time-isya">--:--</div>
+        <div class="next-tag">BERIKUTNYA</div>
+      </div>
+    </div>
+
+    <!-- 3 Kartu Hari Besar Islam -->
+    <div class="holiday-grid">
+      <div class="holiday-card">
+        <div class="h-title">Ramadhan</div>
+        <div class="h-date" id="date-ramadhan">-</div>
+        <div class="h-days" id="days-ramadhan">- hari lagi</div>
+      </div>
+      <div class="holiday-card">
+        <div class="h-title">Idul Fitri</div>
+        <div class="h-date" id="date-fitri">-</div>
+        <div class="h-days" id="days-fitri">- hari lagi</div>
+      </div>
+      <div class="holiday-card">
+        <div class="h-title">Idul Adha</div>
+        <div class="h-date" id="date-adha">-</div>
+        <div class="h-days" id="days-adha">- hari lagi</div>
+      </div>
+    </div>
+
+    <!-- Credit -->
+    <div class="footer-credit">Free for the Ummah, not for sale &middot; By Alie_Ebes &copy;2026</div>
   </div>
 
-  <div class="row" id="prayerRow" style="margin-top:0.5vh;"></div>
-  <div class="row" id="infoIslami" style="margin-top:0;"></div>
+  <!-- Tombol Pengaturan -->
+  <button class="btn-settings" id="btnOpenSettings" tabindex="0" onclick="bukaPengaturan()" title="Pengaturan">&#9881;</button>
 
-  <div class="status" id="statusMsg" style="font-size:0.9vw; opacity:0.85;">Free for the Ummah, not for sale • By. Alie_Ebes ©2026</div>
-
-  <button id="btnGear" class="gear-btn" aria-label="Pengaturan" title="Pengaturan">⚙️</button>
-
-  <div class="settings-overlay" id="settingsOverlay">
-    <div class="settings-panel">
-      <div class="settings-header">
-        <h2>☾ Pengaturan</h2>
-        <button id="btnTutupSettings">✕ Tutup</button>
-      </div>
-
-      <div class="controls">
-        <button id="btnLoc">📍 Aktifkan Lokasi</button>
-        <select id="selMetode">
-          <option value="kemenag">Metode: Kemenag RI</option>
-          <option value="muhammadiyah">Metode: HISABMU/KHGT Muhammadiyah</option>
-          <option value="mwl">Metode: MWL</option>
-          <option value="isna">Metode: ISNA</option>
-        </select>
-        <select id="selTema">
-          <option value="malam">Tema: Malam</option>
-          <option value="senja">Tema: Senja</option>
-          <option value="fajar">Tema: Fajar</option>
-        </select>
-      </div>
-
-      <div class="controls">
-        <label style="color:var(--muted); font-size:1.1vw; display:flex; align-items:center; gap:0.6vw;">
-          🔊 Volume
-          <input type="range" id="volSlider" min="0" max="100" value="80" style="width:12vw;">
-        </label>
-      </div>
-
-      <div class="controls" style="flex-direction:column; gap:0.8vh;">
-        <div class="status" style="color:var(--accent); font-weight:800;">Suara Subuh (biasanya berbeda dari waktu lain)</div>
-        <div class="controls">
-          <select id="selNada-subuh">
-            <option value="bawaan">Nada: Bawaan (Beep)</option>
-            <option value="adzan_fajr">Nada: Adzan Subuh (Bawaan)</option>
-            <option value="custom">Nada: Audio Saya</option>
-          </select>
-          <button id="btnTest-subuh">🔔 Tes</button>
-          <button id="btnUpload-subuh">📁 Unggah</button>
-          <button id="btnHapus-subuh" style="display:none;">🗑️ Hapus</button>
-          <input type="file" id="fileAdzan-subuh" accept="audio/*" style="display:none;">
-        </div>
-        <div class="status" id="fileNameLabel-subuh"></div>
-      </div>
-
-      <div class="controls" style="flex-direction:column; gap:0.8vh;">
-        <div class="status" style="color:var(--accent); font-weight:800;">Suara Dzuhur / Ashar / Maghrib / Isya</div>
-        <div class="controls">
-          <select id="selNada-lainnya">
-            <option value="bawaan">Nada: Bawaan (Beep)</option>
-            <option value="adzan_biasa">Nada: Adzan (Bawaan)</option>
-            <option value="custom">Nada: Audio Saya</option>
-          </select>
-          <button id="btnTest-lainnya">🔔 Tes</button>
-          <button id="btnUpload-lainnya">📁 Unggah</button>
-          <button id="btnHapus-lainnya" style="display:none;">🗑️ Hapus</button>
-          <input type="file" id="fileAdzan-lainnya" accept="audio/*" style="display:none;">
-        </div>
-        <div class="status" id="fileNameLabel-lainnya"></div>
-      </div>
-
-      <div class="controls" style="flex-direction:column; gap:0.8vh; border-top:1px solid rgba(217,164,65,0.2); padding-top:1.4vh;">
-        <div class="status" style="color:var(--accent); font-weight:800;">Uji Tampilan &amp; Suara Layar Penuh TV</div>
-        <div class="controls">
-          <button id="btnPopupSubuh">🕌 Tes Pop-up Subuh</button>
-          <button id="btnPopupDzuhur">🕌 Tes Pop-up Dzuhur</button>
-        </div>
+  <!-- Running Text Mutiara Hadits (Di luar & di bawah bingkai emas agar tidak memotong frame) -->
+  <div class="hadits-bar">
+    <div class="hadits-label">&#10022; MUTIARA HADITS</div>
+    <div class="hadits-marquee-wrap">
+      <div class="hadits-marquee-content" id="haditsMarquee">
+        &#10022; "Perjanjian antara kami dan mereka adalah shalat; barangsiapa meninggalkannya maka sungguh ia telah kafir." (HR. Tirmidzi)
+        <span class="hadits-sep">&#10022;</span>
+        "Jadikanlah sabar dan shalat sebagai penolongmu." (QS. Al-Baqarah: 45)
+        <span class="hadits-sep">&#10022;</span>
+        "Shalat berjamaah lebih utama dibandingkan shalat sendirian dengan dua puluh tujuh derajat." (HR. Bukhari &amp; Muslim)
+        <span class="hadits-sep">&#10022;</span>
+        "Sesungguhnya amal hamba yang pertama kali dihisab pada hari kiamat adalah shalatnya." (HR. Abu Dawud)
+        <span class="hadits-sep">&#10022;</span>
+        "Barangsiapa menjaga shalat lima waktu, maka baginya cahaya, bukti, dan keselamatan pada hari kiamat." (HR. Ahmad)
       </div>
     </div>
   </div>
 
-  <div class="settings-overlay" id="detailOverlay">
-    <div class="settings-panel" style="max-width:600px;">
-      <div class="settings-header">
-        <h2 id="detailTitle">Shalat</h2>
-        <button id="btnTutupDetail">✕ Tutup</button>
+  <!-- Modal Pengaturan -->
+  <div class="modal-overlay" id="modalSettings">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">&#9790; Pengaturan</div>
+        <button class="tv-btn" id="btnCloseSettings" onclick="tutupPengaturan()">&#10005; Tutup</button>
       </div>
-      <div style="text-align:center; font-family:'Manrope',sans-serif; font-weight:800; font-size:3vw; color:var(--accent);" id="detailJam">--:--</div>
-      <div class="status" id="detailMetode" style="font-weight:700;"></div>
-      <div class="status" id="detailDasar" style="text-align:left; line-height:1.6;"></div>
+
+      <div class="setting-row">
+        <button class="tv-btn" onclick="perbaruiLokasi()">&#128205; Aktifkan Lokasi</button>
+        <button class="tv-btn" id="btnMetode" onclick="gantiMetode()">Metode: Kemenag RI</button>
+        <button class="tv-btn" id="btnTema" onclick="gantiTema()">Tema: Malam</button>
+      </div>
+
+      <div class="volume-wrap">
+        <span>&#128266; Volume</span>
+        <input type="range" id="volRange" min="0" max="100" value="80" onchange="ubahVolume(this.value)" />
+        <span id="volLabel">80%</span>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-section-title">Suara Subuh (biasanya berbeda dari waktu lain)</div>
+        <button class="tv-btn" id="btnNadaSubuh" onclick="gantiNada('subuh')">Nada: Adzan Subuh (Bawaan)</button>
+        <button class="tv-btn" onclick="tesSuara('subuh')">&#128276; Tes</button>
+        <button class="tv-btn" onclick="unggahAudio('subuh')">&#128193; Unggah</button>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-section-title">Suara Dzuhur / Ashar / Maghrib / Isya</div>
+        <button class="tv-btn" id="btnNadaLainnya" onclick="gantiNada('lainnya')">Nada: Adzan (Bawaan)</button>
+        <button class="tv-btn" onclick="tesSuara('dzuhur')">&#128276; Tes</button>
+        <button class="tv-btn" onclick="unggahAudio('lainnya')">&#128193; Unggah</button>
+      </div>
+
+      <div class="setting-row" style="margin-bottom:0;">
+        <div class="setting-section-title">Uji Tampilan &amp; Suara Layar Penuh TV</div>
+        <button class="tv-btn" onclick="tesPopup('subuh')">&#128332; Tes Pop-up Subuh</button>
+        <button class="tv-btn" onclick="tesPopup('dzuhur')">&#128332; Tes Pop-up Dzuhur</button>
+      </div>
     </div>
   </div>
+
+  <input type="file" id="filePicker" accept="audio/*" style="display:none" />
+
 <script>
-function loadPref(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
-function savePref(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  const METODE_LIST = [
+    { id: 'kemenag', nama: 'Kemenag RI', fajr: 20, isha: 18 },
+    { id: 'muhammadiyah', nama: 'HISABMU / KHGT Muhammadiyah', fajr: 18, isha: 18 },
+    { id: 'mwl', nama: 'Muslim World League (MWL)', fajr: 18, isha: 17 },
+    { id: 'makkah', nama: 'Umm al-Qura (Makkah)', fajr: 18.5, isha: 90 }
+  ];
 
-const root=document.documentElement;
-const selTema=document.getElementById('selTema');
-const selMetode=document.getElementById('selMetode');
-selTema.value=loadPref('tema','malam');
-selMetode.value=loadPref('metode','kemenag');
-root.setAttribute('data-theme', selTema.value);
-
-const KETERANGAN_METODE={
-  kemenag:'Kementerian Agama RI',
-  muhammadiyah:'HISABMU / KHGT Muhammadiyah',
-  mwl:'Muslim World League (MWL)',
-  isna:'Islamic Society of North America (ISNA)'
-};
-
-function perbaruiBadgeMetode(){
-  const elLabel=document.getElementById('labelMetode');
-  if(elLabel) elLabel.textContent='🧭 Metode: '+(KETERANGAN_METODE[selMetode.value] || selMetode.value);
-}
-perbaruiBadgeMetode();
-
-selTema.addEventListener('change',()=>{ root.setAttribute('data-theme',selTema.value); savePref('tema',selTema.value); });
-selMetode.addEventListener('change',()=>{ savePref('metode',selMetode.value); perbaruiBadgeMetode(); hitungDanTampilkan(); syncNative(); });
-
-function syncNative(){
-  if(typeof Native==='undefined') return;
-  try{
-    const nadaSubuh=document.getElementById('selNada-subuh') ? document.getElementById('selNada-subuh').value : 'bawaan';
-    const nadaLainnya=document.getElementById('selNada-lainnya') ? document.getElementById('selNada-lainnya').value : 'bawaan';
-    const vol=document.getElementById('volSlider') ? parseInt(document.getElementById('volSlider').value,10)||80 : 80;
-    Native.simpanPengaturan(selMetode.value, nadaSubuh, nadaLainnya, vol);
-    Native.jadwalkanUlang();
-  }catch(e){}
-}
-
-const settingsOverlay=document.getElementById('settingsOverlay');
-const detailOverlay=document.getElementById('detailOverlay');
-const btnGear=document.getElementById('btnGear');
-const btnTutupSettings=document.getElementById('btnTutupSettings');
-const btnTutupDetail=document.getElementById('btnTutupDetail');
-
-btnGear.addEventListener('click', ()=>{
-  settingsOverlay.classList.add('open');
-  btnTutupSettings.focus();
-});
-btnTutupSettings.addEventListener('click', ()=>{
-  hentikanSemuaAudio();
-  settingsOverlay.classList.remove('open');
-  btnGear.focus();
-});
-btnTutupDetail.addEventListener('click', ()=> detailOverlay.classList.remove('open'));
-
-function tutupMenuDariRemot() {
-  if (detailOverlay.classList.contains('open')) {
-    detailOverlay.classList.remove('open');
-    return "closed";
-  }
-  if (settingsOverlay.classList.contains('open')) {
-    hentikanSemuaAudio();
-    settingsOverlay.classList.remove('open');
-    btnGear.focus();
-    return "closed";
-  }
-  return "exit";
-}
-
-document.addEventListener('keydown', (e)=>{
-  if(settingsOverlay.classList.contains('open') && (e.key==='Escape' || e.key==='Backspace' || e.key==='GoBack')){
-    e.preventDefault();
-    hentikanSemuaAudio();
-    settingsOverlay.classList.remove('open');
-    btnGear.focus();
-  }
-  if(detailOverlay.classList.contains('open') && (e.key==='Escape' || e.key==='Backspace' || e.key==='GoBack')){
-    e.preventDefault();
-    detailOverlay.classList.remove('open');
-  }
-});
-
-document.getElementById('btnPopupSubuh').addEventListener('click', ()=>{
-  if(typeof Native!=='undefined' && typeof Native.tesPopupAdzan==='function'){
-    Native.tesPopupAdzan('subuh');
-  }
-});
-document.getElementById('btnPopupDzuhur').addEventListener('click', ()=>{
-  if(typeof Native!=='undefined' && typeof Native.tesPopupAdzan==='function'){
-    Native.tesPopupAdzan('dzuhur');
-  }
-});
-
-function tampilkanDetailShalat(key){
-  const item=jadwalCache.find(p=>p.key===key);
-  if(!item) return;
-  const metode=selMetode.value;
-  const namaMetode=KETERANGAN_METODE[metode] || metode;
-  const m=METHODS[metode] || METHODS.kemenag;
-  let dasar='';
-  if(key==='subuh'){
-    dasar='Dimulai saat posisi matahari berada pada sudut -'+m.fajr+'° di bawah ufuk timur (terbitnya fajar shadiq), menurut kriteria '+namaMetode+'.';
-  } else if(key==='dzuhur'){
-    dasar='Dimulai saat matahari tepat melewati titik kulminasi/meridian (tergelincir ke barat), ditambah 2 menit waktu ihtiyat (kehati-hatian). Waktu ini sama untuk semua metode.';
-  } else if(key==='ashar'){
-    dasar='Dimulai saat panjang bayangan suatu benda sama dengan panjang bendanya ditambah panjang bayangan saat tengah hari (kriteria mazhab Syafi\'i). Tidak dipengaruhi oleh pilihan metode di atas.';
-  } else if(key==='maghrib'){
-    dasar='Dimulai saat matahari terbenam penuh di ufuk barat, pada sudut -0.833° (memperhitungkan refraksi atmosfer dan jari-jari piringan matahari). Waktu ini sama untuk semua metode.';
-  } else if(key==='isya'){
-    dasar='Dimulai saat posisi matahari berada pada sudut -'+m.isha+'° di bawah ufuk barat (hilangnya cahaya senja merah), menurut kriteria '+namaMetode+'.';
-  }
-  document.getElementById('detailTitle').textContent=item.nama;
-  document.getElementById('detailJam').textContent=toHHMM(item.t);
-  document.getElementById('detailMetode').textContent='Metode aktif: '+namaMetode;
-  document.getElementById('detailDasar').textContent=dasar;
-  detailOverlay.classList.add('open');
-  btnTutupDetail.focus();
-}
-
-function tampilkanDetailIslami(label, targetJdn, statusText, penjelasan){
-  const g=jdnToGregorian(targetJdn);
-  const h=jdnToIslamic(targetJdn);
-  document.getElementById('detailTitle').textContent=label;
-  document.getElementById('detailJam').textContent=g.day+' '+BULAN_MASEHI[g.month-1]+' '+g.year;
-  document.getElementById('detailMetode').textContent=h.day+' '+BULAN_HIJRIAH[h.month-1]+' '+h.year+' H — '+statusText;
-  document.getElementById('detailDasar').textContent=penjelasan;
-  detailOverlay.classList.add('open');
-  btnTutupDetail.focus();
-}
-const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
-function gregorianToJDN(y,m,d){
-  const a=Math.floor((14-m)/12);
-  const y2=y+4800-a;
-  const m2=m+12*a-3;
-  return d+Math.floor((153*m2+2)/5)+365*y2+Math.floor(y2/4)-Math.floor(y2/100)+Math.floor(y2/400)-32045;
-}
-function islamicToJDN(year,month,day){
-  return day+Math.ceil(29.5*(month-1))+(year-1)*354+Math.floor((3+11*year)/30)+1948440-1;
-}
-function jdnToIslamic(jdn){
-  let year=Math.floor((30*(jdn-1948440)+10646)/10631);
-  let month=Math.min(12, Math.ceil((jdn-(29+islamicToJDN(year,1,1)))/29.5)+1);
-  let day=jdn-islamicToJDN(year,month,1)+1;
-  return {year,month,day};
-}
-function tampilkanTanggalHijriah(){
-  const now=new Date();
-  const jdn=gregorianToJDN(now.getFullYear(), now.getMonth()+1, now.getDate());
-  const h=jdnToIslamic(jdn);
-  const elH=document.getElementById('tglHijriah');
-  if(elH) elH.textContent=h.day+' '+BULAN_HIJRIAH[h.month-1]+' '+h.year+' H';
-
-  const banner=document.getElementById('bannerHari');
-  if(banner){
-    if(h.month===9){
-      banner.style.display='block';
-      banner.textContent='🌙 Bulan Ramadhan '+h.year+' H — Hari ke-'+h.day;
-    } else if(h.month===10 && h.day===1){
-      banner.style.display='block';
-      banner.textContent='🎉 Selamat Idul Fitri '+h.year+' H, Mohon Maaf Lahir dan Batin';
-    } else if(h.month===12 && h.day===10){
-      banner.style.display='block';
-      banner.textContent='🕌 Selamat Hari Raya Idul Adha '+h.year+' H';
-    } else {
-      banner.style.display='none';
-    }
-  }
-  renderInfoIslami(h, jdn);
-}
-
-function jdnToGregorian(jdn){
-  const a=jdn+32044;
-  const b=Math.floor((4*a+3)/146097);
-  const c=a-Math.floor((146097*b)/4);
-  const d=Math.floor((4*c+3)/1461);
-  const e=c-Math.floor((1461*d)/4);
-  const m=Math.floor((5*e+2)/153);
-  const day=e-Math.floor((153*m+2)/5)+1;
-  const month=m+3-12*Math.floor(m/10);
-  const year=100*b+d-4800+Math.floor(m/10);
-  return {year, month, day};
-}
-const BULAN_MASEHI=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-
-function renderInfoIslami(h, jdn){
-  const box=document.getElementById('infoIslami');
-  if(!box) return;
-  const items=[];
-
-  const PENJELASAN={
-    'Ramadhan':'Bulan ke-9 kalender Hijriah, bulan wajib berpuasa bagi umat Islam. Dihitung dengan hisab tabular, sehingga tanggal bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
-    'Idul Fitri':'Hari raya 1 Syawal, menandai berakhirnya bulan Ramadhan. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
-    'Idul Adha':'Hari raya 10 Dzulhijjah, bertepatan dengan puncak ibadah haji dan disunnahkan berkurban. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari penetapan resmi.'
+  let state = {
+    lat: parseFloat(localStorage.getItem('lat')) || -6.87,
+    lng: parseFloat(localStorage.getItem('lng')) || 109.62,
+    lokasiNama: localStorage.getItem('lokasiNama') || 'Lokasi tersimpan (-6.87, 109.62)',
+    metode: localStorage.getItem('metode') || 'kemenag',
+    tema: localStorage.getItem('tema') || 'malam',
+    volume: parseInt(localStorage.getItem('volume') || '80', 10),
+    nadaSubuh: localStorage.getItem('nadaSubuh') || 'adzan_fajr',
+    nadaLainnya: localStorage.getItem('nadaLainnya') || 'adzan_biasa',
+    audioCustomSubuh: localStorage.getItem('audioCustomSubuh') || '',
+    audioCustomLainnya: localStorage.getItem('audioCustomLainnya') || ''
   };
 
-  function buatItem(label, targetJdn, statusText){
-    const g=jdnToGregorian(targetJdn);
-    const tanggal=g.day+' '+BULAN_MASEHI[g.month-1]+' '+g.year;
-    return {label, tanggal, status:statusText, targetJdn};
-  }
+  let jadwalHariIni = null;
+  let jadwalBesok = null;
+  let audioPreview = null;
+  let targetUploadSlot = 'lainnya';
 
-  if(h.month===9){
-    items.push(buatItem('Ramadhan', jdn, 'Hari ke-'+h.day));
-  } else {
-    const tahun=h.year + (h.month>9 ? 1 : 0);
-    const target=islamicToJDN(tahun,9,1);
-    items.push(buatItem('Ramadhan', target, (target-jdn)+' hari lagi'));
-  }
-
-  if(h.month===10 && h.day===1){
-    items.push(buatItem('Idul Fitri', jdn, 'Hari ini!'));
-  } else {
-    const tahun=h.year + ((h.month>10 || (h.month===10 && h.day>1)) ? 1 : 0);
-    const target=islamicToJDN(tahun,10,1);
-    items.push(buatItem('Idul Fitri', target, (target-jdn)+' hari lagi'));
-  }
-
-  if(h.month===12 && h.day===10){
-    items.push(buatItem('Idul Adha', jdn, 'Hari ini!'));
-  } else {
-    const tahun=h.year + ((h.month===12 && h.day>10) ? 1 : 0);
-    const target=islamicToJDN(tahun,12,10);
-    items.push(buatItem('Idul Adha', target, (target-jdn)+' hari lagi'));
-  }
-
-  box.innerHTML = items.map(it=>
-    '<div class="pcard"><div class="pname">'+it.label+'</div>'+
-    '<div style="font-size:0.95vw; color:var(--muted); margin:0.15vh 0;">'+it.tanggal+'</div>'+
-    '<div class="ptime" style="font-size:1.3vw;">'+it.status+'</div></div>'
-  ).join('');
-
-  Array.from(box.children).forEach((el, i)=>{
-    el.tabIndex=0;
-    el.addEventListener('click', ()=> tampilkanDetailIslami(items[i].label, items[i].targetJdn, items[i].status, PENJELASAN[items[i].label]));
-    el.addEventListener('keydown', (e)=>{
-      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); tampilkanDetailIslami(items[i].label, items[i].targetJdn, items[i].status, PENJELASAN[items[i].label]); }
-    });
-  });
-}
-
-let tanggalTerakhirHijriah=null;
-function tickClock(){
-  const now=new Date();
-  const hh=String(now.getHours()).padStart(2,'0');
-  const mm=String(now.getMinutes()).padStart(2,'0');
-  const ss=String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('jam').innerHTML=hh+':'+mm+'<span class="sec">:'+ss+'</span>';
-  document.getElementById('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-
-  const tglSkrg=now.toDateString();
-  if(tglSkrg!==tanggalTerakhirHijriah){
-    tanggalTerakhirHijriah=tglSkrg;
-    tampilkanTanggalHijriah();
-  }
-}
-setInterval(tickClock,1000); tickClock();
-
-const METHODS={
-  kemenag:{fajr:20, isha:18},
-  muhammadiyah:{fajr:18, isha:18},
-  mwl:{fajr:18, isha:17},
-  isna:{fajr:15, isha:15}
-};
-const dtr=d=>d*Math.PI/180, rtd=r=>r*180/Math.PI;
-function fixAngle(a){ a=a-360*Math.floor(a/360); return a<0?a+360:a; }
-function fixHour(h){ h=h-24*Math.floor(h/24); return h<0?h+24:h; }
-
-function julian(y,m,d){
-  if(m<=2){ y-=1; m+=12; }
-  const A=Math.floor(y/100), B=2-A+Math.floor(A/4);
-  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5;
-}
-function sunPosition(jd){
-  const D=jd-2451545.0;
-  const g=fixAngle(357.529+0.98560028*D);
-  const q=fixAngle(280.459+0.98564736*D);
-  const L=fixAngle(q+1.915*Math.sin(dtr(g))+0.020*Math.sin(dtr(2*g)));
-  const e=23.439-0.00000036*D;
-  const dec=rtd(Math.asin(Math.sin(dtr(e))*Math.sin(dtr(L))));
-  let RA=rtd(Math.atan2(Math.cos(dtr(e))*Math.sin(dtr(L)),Math.cos(dtr(L))))/15;
-  RA=fixHour(RA);
-  const eqt=q/15-RA;
-  return {dec:dec, eqt:eqt};
-}
-function sunAngleTime(jd, angle, lat, lng, tz, dir){
-  const {dec,eqt}=sunPosition(jd+0.5);
-  const noon=12-lng/15-eqt+tz;
-  const num=-Math.sin(dtr(angle))-Math.sin(dtr(lat))*Math.sin(dtr(dec));
-  const den=Math.cos(dtr(lat))*Math.cos(dtr(dec));
-  const ratio=num/den;
-  if(Math.abs(ratio)>1) return null;
-  const t=rtd(Math.acos(ratio))/15;
-  return noon + (dir==='ccw'?-t:t);
-}
-function asrTime(jd, lat, lng, tz, factor){
-  const {dec,eqt}=sunPosition(jd+0.5);
-  const noon=12-lng/15-eqt+tz;
-  const a=rtd(Math.atan(1/(factor+Math.tan(dtr(Math.abs(lat-dec))))));
-  const num=Math.sin(dtr(a))-Math.sin(dtr(lat))*Math.sin(dtr(dec));
-  const den=Math.cos(dtr(lat))*Math.cos(dtr(dec));
-  const t=rtd(Math.acos(num/den))/15;
-  return noon+t;
-}
-function toHHMM(t){
-  if(t===null||isNaN(t)) return '--:--';
-  t=fixHour(t);
-  const h=Math.floor(t); const m=Math.round((t-h)*60);
-  const hh=(m===60? h+1:h), mm=(m===60?0:m);
-  return String(fixHour(hh)).padStart(2,'0').slice(0,2)+':'+String(mm).padStart(2,'0');
-}
-
-let coords=null;
-let timezoneOffset=-new Date().getTimezoneOffset()/60;
-
-function hitungWaktu(lat,lng,methodKey){
-  const m=METHODS[methodKey]||METHODS.kemenag;
-  const now=new Date();
-  const jd=julian(now.getFullYear(), now.getMonth()+1, now.getDate());
-  const fajr=sunAngleTime(jd, m.fajr, lat, lng, timezoneOffset, 'ccw');
-  const {eqt}=sunPosition(jd+0.5);
-  const dzuhur=12-lng/15-eqt+timezoneOffset+(2/60);
-  const ashar=asrTime(jd, lat, lng, timezoneOffset, 1);
-  const maghrib=sunAngleTime(jd, 0.833, lat, lng, timezoneOffset, 'cw');
-  const isya=sunAngleTime(jd, m.isha, lat, lng, timezoneOffset, 'cw');
-  return [
-    {key:'subuh', nama:'Subuh', t:fajr},
-    {key:'dzuhur', nama:'Dzuhur', t:dzuhur},
-    {key:'ashar', nama:'Ashar', t:ashar},
-    {key:'maghrib', nama:'Maghrib', t:maghrib},
-    {key:'isya', nama:'Isya', t:isya},
-  ];
-}
-
-let jadwalCache=[];
-function hitungDanTampilkan(){
-  if(!coords) return;
-  perbaruiBadgeMetode();
-  jadwalCache=hitungWaktu(coords.lat, coords.lng, selMetode.value);
-  renderCards();
-  updateCountdown();
-}
-
-function renderCards(){
-  const row=document.getElementById('prayerRow');
-  row.innerHTML='';
-  jadwalCache.forEach(p=>{
-    const div=document.createElement('div');
-    div.className='pcard'; div.tabIndex=0; div.id='card-'+p.key;
-    div.innerHTML='<div class="pname">'+p.nama+'</div><div class="ptime">'+toHHMM(p.t)+'</div><div class="next-tag">BERIKUTNYA</div>';
-    div.addEventListener('click', ()=> tampilkanDetailShalat(p.key));
-    div.addEventListener('keydown', (e)=>{
-      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); tampilkanDetailShalat(p.key); }
-    });
-    row.appendChild(div);
-  });
-}
-
-function timeToDate(t){
-  const now=new Date();
-  const h=Math.floor(fixHour(t)); const m=Math.round((fixHour(t)-h)*60);
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
-}
-
-let lastNotified='';
-function updateCountdown(){
-  if(!jadwalCache.length) return;
-  const now=new Date();
-  let next=null, nextDate=null, prevDate=null;
-  for(let i=0; i<jadwalCache.length; i++){
-    const p=jadwalCache[i];
-    if(p.t===null) continue;
-    const d=timeToDate(p.t);
-    if(d>now){
-      next=p;
-      nextDate=d;
-      if(i>0 && jadwalCache[i-1].t!==null){
-        prevDate=timeToDate(jadwalCache[i-1].t);
-      } else {
-        prevDate=timeToDate(jadwalCache[jadwalCache.length-1].t);
-        prevDate.setDate(prevDate.getDate()-1);
-      }
-      break;
+  function simpanKeNative() {
+    if (window.Native && typeof window.Native.saveConfig === 'function') {
+      try {
+        window.Native.saveConfig(
+          state.lat,
+          state.lng,
+          state.metode,
+          state.volume,
+          state.nadaSubuh,
+          state.nadaLainnya
+        );
+      } catch (e) {}
     }
   }
-  if(!next){
-    next=jadwalCache[0];
-    nextDate=timeToDate(next.t); nextDate.setDate(nextDate.getDate()+1);
-    prevDate=timeToDate(jadwalCache[jadwalCache.length-1].t);
-  }
-  document.getElementById('nextName').textContent=next.nama;
-  const diff=Math.max(0, nextDate-now);
-  const hh=String(Math.floor(diff/3600000)).padStart(2,'0');
-  const mm=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
-  const ss=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
-  document.getElementById('countdown').textContent=hh+':'+mm+':'+ss;
 
-  const fill=document.getElementById('progressFill');
-  if(fill && prevDate && nextDate){
-    const total=Math.max(1, nextDate-prevDate);
-    const sudah=Math.max(0, Math.min(total, now-prevDate));
-    fill.style.width=((sudah/total)*100).toFixed(1)+'%';
-  }
-
-  document.querySelectorAll('.pcard').forEach(c=>c.classList.remove('active'));
-  const el=document.getElementById('card-'+next.key);
-  if(el) el.classList.add('active');
-
-  if(diff<1000 && lastNotified!==next.key+now.toDateString()){
-    lastNotified=next.key+now.toDateString();
-    mainkan(next.key==='subuh' ? 'subuh' : 'lainnya');
-  }
-}
-setInterval(updateCountdown,1000);
-
-function rapikanTeksLokasi(teks){
-  if(!teks) return teks;
-  return teks.replace(/,\s*Jawa,\s*Indonesia/i, ', Pekalongan, Jawa Tengah')
-             .replace(/,\s*Jawa Tengah,\s*Indonesia/i, ', Jawa Tengah')
-             .replace(/,\s*Indonesia$/i, '')
-             .replace(/,\s*Jawa,/i, ', Jawa Tengah,');
-}
-
-document.getElementById('btnLoc').addEventListener('click', aktifkanLokasi);
-function aktifkanLokasi(){
-  const info=document.getElementById('locInfo');
-  if(!('geolocation' in navigator)){ info.textContent='📍 Perangkat tidak mendukung lokasi otomatis.'; return; }
-  info.textContent='📍 Meminta izin lokasi…';
-  navigator.geolocation.getCurrentPosition(pos=>{
-    coords={lat:pos.coords.latitude, lng:pos.coords.longitude};
-    savePref('lat', coords.lat); savePref('lng', coords.lng);
-    info.textContent='📍 Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
-    hitungDanTampilkan();
-    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
-    ambilNamaLokasi(coords.lat, coords.lng);
-  }, err=>{
-    info.textContent='📍 Izin lokasi ditolak/gagal. Izinkan akses lokasi di pengaturan TV.';
-  }, {enableHighAccuracy:false, timeout:10000});
-}
-
-function namaDariKoordinatLokal(lat, lng){
-  if (Math.abs(lat - (-6.87)) < 0.15 && Math.abs(lng - 109.62) < 0.15) {
-    return 'Wonokerto, Kab. Pekalongan, Jawa Tengah';
-  }
-  return null;
-}
-
-function perbaruiGpsOtomatis(){
-  if(!('geolocation' in navigator)) return;
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const latBaru = pos.coords.latitude;
-    const lngBaru = pos.coords.longitude;
-    const pindahJauh = !coords || Math.abs(latBaru - coords.lat) > 0.02 || Math.abs(lngBaru - coords.lng) > 0.02;
-
-    coords = {lat: latBaru, lng: lngBaru};
-    savePref('lat', coords.lat);
-    savePref('lng', coords.lng);
-
-    if (pindahJauh) {
-      savePref('lokasiNama', '');
-      const cadangan = namaDariKoordinatLokal(coords.lat, coords.lng);
-      document.getElementById('locInfo').textContent = '📍 ' + (cadangan || ('Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')'));
-    }
-
-    hitungDanTampilkan();
-    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
-    ambilNamaLokasi(coords.lat, coords.lng);
-  }, ()=>{
-  }, {enableHighAccuracy:false, timeout:12000, maximumAge:60000});
-}
-
-(function initLoc(){
-  const lat=loadPref('lat',null), lng=loadPref('lng',null);
-  if(lat && lng){
-    coords={lat:parseFloat(lat), lng:parseFloat(lng)};
-    const namaTersimpan=rapikanTeksLokasi(loadPref('lokasiNama', null)) || namaDariKoordinatLokal(coords.lat, coords.lng);
-    document.getElementById('locInfo').textContent = '📍 ' + (namaTersimpan || ('Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')'));
-    hitungDanTampilkan();
-    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
-    ambilNamaLokasi(coords.lat, coords.lng);
-  }
-  setTimeout(perbaruiGpsOtomatis, 1500);
-})();
-
-async function ambilNamaLokasi(lat, lng){
-  try{
-    const res=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lng+'&localityLanguage=id');
-    if(!res.ok) throw new Error('gagal ambil nama lokasi');
-    const data=await res.json();
-    const bagian=[];
-    if(data.locality) bagian.push(data.locality);
-    if(data.city && data.city!==data.locality) bagian.push(data.city);
-    if(data.localityInfo && Array.isArray(data.localityInfo.administrative)){
-      const kab = data.localityInfo.administrative.find(a => a.adminLevel === 5 || (a.name && a.name.toLowerCase().includes('kabupaten')));
-      if(kab && !bagian.includes(kab.name)) bagian.push(kab.name);
-    }
-    if(data.principalSubdivision){
-      const prov = data.principalSubdivision === 'Jawa' ? 'Jawa Tengah' : data.principalSubdivision;
-      if(!bagian.includes(prov)) bagian.push(prov);
-    }
-    const nama=rapikanTeksLokasi(bagian.filter(Boolean).join(', ')) || namaDariKoordinatLokal(lat, lng);
-    if(nama){
-      savePref('lokasiNama', nama);
-      document.getElementById('locInfo').textContent='📍 '+nama;
-    }
-  }catch(e){
-    const cadangan = namaDariKoordinatLokal(lat, lng);
-    if(cadangan) document.getElementById('locInfo').textContent='📍 '+cadangan;
-  }
-}
-
-const volSlider=document.getElementById('volSlider');
-volSlider.value=loadPref('volume','80');
-volSlider.addEventListener('input', ()=> savePref('volume', volSlider.value));
-function getVolume(){ return (parseInt(volSlider.value,10)||80)/100; }
-
-volSlider.addEventListener('keydown', (e)=>{
-  if(e.key==='ArrowUp' || e.key==='ArrowDown'){
-    e.preventDefault();
-    const urutan=Array.from(document.querySelectorAll('button, select, input, [tabindex]'));
-    const idx=urutan.indexOf(volSlider);
-    const target=urutan[idx + (e.key==='ArrowUp' ? -1 : 1)];
-    if(target) target.focus();
-  }
-});
-
-let actx=null;
-function nadaCtx(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); return actx; }
-function beep(freq, start, dur, type){
-  const ctx=nadaCtx();
-  const osc=ctx.createOscillator(); const gain=ctx.createGain();
-  osc.type=type||'sine'; osc.frequency.value=freq;
-  const vol=0.25*getVolume();
-  gain.gain.setValueAtTime(0.0001, ctx.currentTime+start);
-  gain.gain.exponentialRampToValueAtTime(Math.max(vol,0.0001), ctx.currentTime+start+0.05);
-  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+start+dur);
-  osc.connect(gain); gain.connect(ctx.destination);
-  osc.start(ctx.currentTime+start); osc.stop(ctx.currentTime+start+dur+0.05);
-}
-function mainkanBeep(){
-  beep(523,0,0.5); beep(523,0.6,0.5); beep(523,1.2,0.5);
-}
-
-let audioAktifSekarang=null;
-let tombolTesAktif=null;
-function resetTombolTes(){
-  if(tombolTesAktif){ tombolTesAktif.textContent='🔔 Tes'; tombolTesAktif=null; }
-}
-function hentikanSemuaAudio(){
-  if(audioAktifSekarang){
-    try{ audioAktifSekarang.pause(); audioAktifSekarang.currentTime=0; }catch(e){}
-    audioAktifSekarang=null;
-  }
-  if(typeof Native!=='undefined' && typeof Native.hentikanTes==='function'){
-    try{ Native.hentikanTes(); }catch(e){}
-  }
-  resetTombolTes();
-}
-
-const SLOTS={};
-function setupSlot(slot, labelNama){
-  const sel=document.getElementById('selNada-'+slot);
-  const btnTest=document.getElementById('btnTest-'+slot);
-  const btnUpload=document.getElementById('btnUpload-'+slot);
-  const btnHapus=document.getElementById('btnHapus-'+slot);
-  const fileInput=document.getElementById('fileAdzan-'+slot);
-  const fileNameLabel=document.getElementById('fileNameLabel-'+slot);
-  const state={ data: loadPref('customAdzan-'+slot+'-data', null), name: loadPref('customAdzan-'+slot+'-name','') };
-  sel.value=loadPref('nada-'+slot,'bawaan');
-
-  function refresh(){
-    const adaFile = loadPref('customAdzan-'+slot+'-hasfile', null)==='true';
-    if(adaFile){
-      fileNameLabel.textContent='🎵 '+labelNama+': '+(loadPref('customAdzan-'+slot+'-name','') || 'audio kustom');
-      btnHapus.style.display='inline-block';
+  function terapkanTema() {
+    if (state.tema === 'siang') {
+      document.body.classList.add('theme-siang');
+      document.getElementById('btnTema').textContent = 'Tema: Siang';
     } else {
-      fileNameLabel.textContent='';
-      btnHapus.style.display='none';
-      if(sel.value==='custom'){ sel.value='bawaan'; savePref('nada-'+slot,'bawaan'); }
+      document.body.classList.remove('theme-siang');
+      document.getElementById('btnTema').textContent = 'Tema: Malam';
     }
   }
-  refresh();
 
-  sel.addEventListener('change', ()=>{ savePref('nada-'+slot, sel.value); syncNative(); });
-  btnUpload.addEventListener('click', ()=> fileInput.click());
-  fileInput.addEventListener('change', (e)=>{
-    const f=e.target.files && e.target.files[0];
-    if(!f) return;
-    if(f.size>3*1024*1024){
-      document.getElementById('statusMsg').textContent='File terlalu besar (maks sekitar 3MB). Pilih audio yang lebih pendek.';
-      return;
+  function updateUIInfo() {
+    document.getElementById('lokasiText').innerHTML = '&#128205; ' + state.lokasiNama;
+    const m = METODE_LIST.find(x => x.id === state.metode) || METODE_LIST[0];
+    document.getElementById('metodeText').innerHTML = '&#129517; Metode: ' + m.nama;
+    document.getElementById('btnMetode').textContent = 'Metode: ' + m.nama;
+
+    document.getElementById('volRange').value = state.volume;
+    document.getElementById('volLabel').textContent = state.volume + '%';
+
+    document.getElementById('btnNadaSubuh').textContent =
+      state.nadaSubuh === 'custom' && state.audioCustomSubuh
+        ? 'Nada: ' + state.audioCustomSubuh
+        : (state.nadaSubuh === 'beep' ? 'Nada: Beep Singkat' : 'Nada: Adzan Subuh (Bawaan)');
+
+    document.getElementById('btnNadaLainnya').textContent =
+      state.nadaLainnya === 'custom' && state.audioCustomLainnya
+        ? 'Nada: ' + state.audioCustomLainnya
+        : (state.nadaLainnya === 'beep' ? 'Nada: Beep Singkat' : 'Nada: Adzan (Bawaan)');
+  }
+
+  function hitungJadwalShalat(dateObj, lat, lng, metodeId) {
+    const m = METODE_LIST.find(x => x.id === metodeId) || METODE_LIST[0];
+    const rad = Math.PI / 180;
+    const deg = 180 / Math.PI;
+
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+
+    let y = year, mo = month;
+    if (mo <= 2) { y -= 1; mo += 12; }
+    const A = Math.floor(y / 100);
+    const B = 2 - A + Math.floor(A / 4);
+    const jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (mo + 1)) + day + B - 1524.5;
+
+    const d = jd - 2451545.0;
+    const g = (357.529 + 0.98560028 * d) % 360;
+    const q = (280.459 + 0.98564736 * d) % 360;
+    const L = (q + 1.915 * Math.sin(g * rad) + 0.020 * Math.sin(2 * g * rad)) % 360;
+    const e = 23.439 - 0.00000036 * d;
+    const decl = Math.asin(Math.sin(e * rad) * Math.sin(L * rad)) * deg;
+    let ra = Math.atan2(Math.cos(e * rad) * Math.sin(L * rad), Math.cos(L * rad)) * deg / 15;
+    if (ra < 0) ra += 24;
+    const eqTime = (q / 15) - ra;
+
+    const tz = -dateObj.getTimezoneOffset() / 60;
+    const transit = 12 + tz - (lng / 15) - eqTime;
+
+    function sudutWaktu(angle) {
+      const cosH = (Math.sin(angle * rad) - Math.sin(lat * rad) * Math.sin(decl * rad)) /
+                   (Math.cos(lat * rad) * Math.cos(decl * rad));
+      if (cosH > 1) return 0;
+      if (cosH < -1) return 12;
+      return Math.acos(cosH) * deg / 15;
     }
-    const hasNative = typeof Native!=='undefined' && typeof Native.simpanAudioBase64==='function';
-    const reader=new FileReader();
-    reader.onload=()=>{
-      try{
-        if(!hasNative){ savePref('customAdzan-'+slot+'-data', reader.result); state.data=reader.result; }
-        savePref('customAdzan-'+slot+'-name', f.name);
-        savePref('customAdzan-'+slot+'-hasfile', 'true');
-        state.name=f.name;
-        sel.value='custom'; savePref('nada-'+slot,'custom');
-        refresh();
-        if(hasNative){
-          try{ Native.simpanAudioBase64(slot, reader.result, f.name); }catch(e){}
-        }
-        document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' berhasil diunggah dan tersimpan di perangkat ini.';
-      }catch(err){
-        document.getElementById('statusMsg').textContent='Gagal menyimpan audio (penyimpanan perangkat mungkin penuh). Coba file yang lebih kecil.';
-      }
+
+    const subuhJam = transit - sudutWaktu(-m.fajr);
+    const dzuhurJam = transit + (2 / 60);
+    const asharAngle = Math.atan(1 / (1 + Math.tan(Math.abs(lat - decl) * rad))) * deg;
+    const asharJam = transit + sudutWaktu(asharAngle);
+    const maghribJam = transit + sudutWaktu(-0.833) + (2 / 60);
+    const isyaJam = m.isha === 90 ? maghribJam + 1.5 : transit + sudutWaktu(-m.isha);
+
+    function keTimestamp(jamDesimal) {
+      const totalMenit = Math.round(jamDesimal * 60);
+      const res = new Date(year, month - 1, day, 0, 0, 0, 0);
+      res.setMinutes(totalMenit);
+      return res.getTime();
+    }
+
+    return {
+      subuh: keTimestamp(subuhJam),
+      dzuhur: keTimestamp(dzuhurJam),
+      ashar: keTimestamp(asharJam),
+      maghrib: keTimestamp(maghribJam),
+      isya: keTimestamp(isyaJam)
     };
-    reader.readAsDataURL(f);
-  });
-  btnHapus.addEventListener('click', ()=>{
-    try{
-      localStorage.removeItem('customAdzan-'+slot+'-data');
-      localStorage.removeItem('customAdzan-'+slot+'-name');
-      localStorage.removeItem('customAdzan-'+slot+'-hasfile');
-    }catch(e){}
-    state.data=null; state.name='';
-    refresh();
-    if(typeof Native!=='undefined' && typeof Native.hapusAudioNative==='function'){
-      try{ Native.hapusAudioNative(slot); }catch(e){}
-    }
-    document.getElementById('statusMsg').textContent='Audio '+labelNama.toLowerCase()+' dihapus. Kembali ke nada bawaan.';
-  });
-  btnTest.addEventListener('click', ()=>{
-    if(tombolTesAktif===btnTest){
-      hentikanSemuaAudio();
-    } else {
-      hentikanSemuaAudio();
-      tombolTesAktif=btnTest;
-      btnTest.textContent='⏹️ Stop';
-      mainkan(slot);
-    }
-  });
-  if('Notification' in window && Notification.permission==='default'){
-    btnTest.addEventListener('click', ()=>{ try{ Notification.requestPermission(); }catch(e){} }, {once:true});
   }
 
-  SLOTS[slot]={ sel, state };
-}
-setupSlot('subuh','Suara Subuh');
-setupSlot('lainnya','Suara Lainnya');
-volSlider.addEventListener('input', syncNative);
-syncNative();
+  function formatJamMenit(ts) {
+    const d = new Date(ts);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
 
-function mainkan(slot){
-  const { sel, state }=SLOTS[slot];
-  const jenis=sel.value;
-  if(jenis==='custom'){
-    if(typeof Native!=='undefined' && typeof Native.mainkanTes==='function'){
-      try{ Native.mainkanTes(slot); }catch(e){ mainkanBeep(); setTimeout(resetTombolTes,1800); }
-    } else if(state.data){
-      const audio=new Audio(state.data);
-      audio.volume=getVolume();
-      audio.onended=()=>{ if(audioAktifSekarang===audio) audioAktifSekarang=null; resetTombolTes(); };
-      audioAktifSekarang=audio;
-      audio.play().catch(()=>{ document.getElementById('statusMsg').textContent='Tidak bisa memutar audio kustom otomatis di browser ini.'; resetTombolTes(); });
-    } else {
-      mainkanBeep(); setTimeout(resetTombolTes,1800);
+  function formatHijriah(dateObj) {
+    try {
+      const fmt = new Intl.DateTimeFormat('id-TN-u-ca-islamic-umalqura', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+      return fmt.format(dateObj);
+    } catch (e) {
+      return '';
     }
-  } else if(jenis==='adzan_biasa' || jenis==='adzan_fajr'){
-    const audio=new Audio(jenis+'.mp3');
-    audio.volume=getVolume();
-    audio.onended=()=>{ if(audioAktifSekarang===audio) audioAktifSekarang=null; resetTombolTes(); };
-    audioAktifSekarang=audio;
-    audio.play().catch(()=>{ mainkanBeep(); setTimeout(resetTombolTes,1800); });
-  } else {
-    mainkanBeep();
-    setTimeout(resetTombolTes,1800);
   }
-  if('Notification' in window && Notification.permission==='granted'){
-    try{ new Notification('Waktu Shalat', {body:'Saatnya shalat.'}); }catch(e){}
+
+  function hitungHariBesar(now) {
+    const events = [
+      { id: 'ramadhan', target: new Date(2027, 1, 8), label: '8 Februari 2027' },
+      { id: 'fitri', target: new Date(2027, 2, 10), label: '10 Maret 2027' },
+      { id: 'adha', target: new Date(2027, 4, 17), label: '17 Mei 2027' }
+    ];
+    const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    events.forEach(ev => {
+      const diff = Math.max(0, Math.ceil((ev.target.getTime() - startToday) / 86400000));
+      document.getElementById('date-' + ev.id).textContent = ev.label;
+      document.getElementById('days-' + ev.id).textContent = diff + ' hari lagi';
+    });
   }
-}
+
+  function refreshJadwal() {
+    const now = new Date();
+    const besok = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    jadwalHariIni = hitungJadwalShalat(now, state.lat, state.lng, state.metode);
+    jadwalBesok = hitungJadwalShalat(besok, state.lat, state.lng, state.metode);
+
+    ['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'].forEach(k => {
+      document.getElementById('time-' + k).textContent = formatJamMenit(jadwalHariIni[k]);
+    });
+
+    hitungHariBesar(now);
+    simpanKeNative();
+  }
+
+  function tick() {
+    const now = new Date();
+    const nowMs = now.getTime();
+
+    const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const bulanNama = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    document.getElementById('tglMasehi').textContent =
+      hariNama[now.getDay()] + ', ' + now.getDate() + ' ' + bulanNama[now.getMonth()] + ' ' + now.getFullYear();
+    document.getElementById('tglHijri').textContent = formatHijriah(now);
+
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('jamDigital').innerHTML = hh + ':' + mm + '<span class="sec">:' + ss + '</span>';
+
+    if (!jadwalHariIni) refreshJadwal();
+
+    const urutan = [
+      { key: 'subuh', nama: 'Subuh', ts: jadwalHariIni.subuh },
+      { key: 'dzuhur', nama: 'Dzuhur', ts: jadwalHariIni.dzuhur },
+      { key: 'ashar', nama: 'Ashar', ts: jadwalHariIni.ashar },
+      { key: 'maghrib', nama: 'Maghrib', ts: jadwalHariIni.maghrib },
+      { key: 'isya', nama: 'Isya', ts: jadwalHariIni.isya },
+      { key: 'subuh', nama: 'Subuh', ts: jadwalBesok.subuh }
+    ];
+
+    let nextIdx = urutan.findIndex(item => item.ts > nowMs);
+    if (nextIdx === -1) nextIdx = 5;
+
+    const target = urutan[nextIdx];
+    const prevTs = nextIdx > 0 ? urutan[nextIdx - 1].ts : (jadwalHariIni.subuh - 8 * 3600000);
+
+    document.getElementById('nextPrayerName').textContent = target.nama;
+
+    const sisaDetik = Math.max(0, Math.floor((target.ts - nowMs) / 1000));
+    const cH = String(Math.floor(sisaDetik / 3600)).padStart(2, '0');
+    const cM = String(Math.floor((sisaDetik % 3600) / 60)).padStart(2, '0');
+    const cS = String(sisaDetik % 60).padStart(2, '0');
+    document.getElementById('countdownText').textContent = cH + ':' + cM + ':' + cS;
+
+    const totalRentang = Math.max(1, target.ts - prevTs);
+    const berjalan = Math.max(0, Math.min(totalRentang, nowMs - prevTs));
+    const persen = Math.round((berjalan / totalRentang) * 100);
+    document.getElementById('progressFill').style.width = persen + '%';
+
+    ['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'].forEach(k => {
+      const card = document.getElementById('card-' + k);
+      if (k === target.key) card.classList.add('active');
+      else card.classList.remove('active');
+    });
+
+    if (hh === '00' && mm === '00' && ss === '01') {
+      refreshJadwal();
+    }
+  }
+
+  function bukaPengaturan() {
+    document.getElementById('modalSettings').classList.add('open');
+    setTimeout(() => {
+      const btn = document.getElementById('btnCloseSettings');
+      if (btn) btn.focus();
+    }, 80);
+  }
+
+  function tutupPengaturan() {
+    document.getElementById('modalSettings').classList.remove('open');
+    if (audioPreview) {
+      audioPreview.pause();
+      audioPreview = null;
+    }
+    setTimeout(() => {
+      const gear = document.getElementById('btnOpenSettings');
+      if (gear) gear.focus();
+    }, 80);
+  }
+
+  function tutupMenuDariRemot() {
+    const modal = document.getElementById('modalSettings');
+    if (modal && modal.classList.contains('open')) {
+      tutupPengaturan();
+      return 'closed';
+    }
+    return 'exit';
+  }
+
+  function gantiMetode() {
+    const idx = METODE_LIST.findIndex(x => x.id === state.metode);
+    const next = METODE_LIST[(idx + 1) % METODE_LIST.length];
+    state.metode = next.id;
+    localStorage.setItem('metode', state.metode);
+    updateUIInfo();
+    refreshJadwal();
+  }
+
+  function gantiTema() {
+    state.tema = state.tema === 'malam' ? 'siang' : 'malam';
+    localStorage.setItem('tema', state.tema);
+    terapkanTema();
+  }
+
+  function ubahVolume(val) {
+    state.volume = parseInt(val, 10);
+    localStorage.setItem('volume', state.volume);
+    document.getElementById('volLabel').textContent = state.volume + '%';
+    simpanKeNative();
+  }
+
+  function gantiNada(tipe) {
+    if (tipe === 'subuh') {
+      state.nadaSubuh = state.nadaSubuh === 'adzan_fajr' ? 'beep' : 'adzan_fajr';
+      localStorage.setItem('nadaSubuh', state.nadaSubuh);
+    } else {
+      state.nadaLainnya = state.nadaLainnya === 'adzan_biasa' ? 'beep' : 'adzan_biasa';
+      localStorage.setItem('nadaLainnya', state.nadaLainnya);
+    }
+    updateUIInfo();
+    simpanKeNative();
+  }
+
+  function tesSuara(slot) {
+    if (audioPreview) {
+      audioPreview.pause();
+      audioPreview = null;
+    }
+    const file = slot === 'subuh' ? 'adzan_fajr.mp3' : 'adzan_biasa.mp3';
+    audioPreview = new Audio(file);
+    audioPreview.volume = state.volume / 100;
+    audioPreview.play().catch(() => {});
+  }
+
+  function tesPopup(slot) {
+    if (window.Native && typeof window.Native.tesPopupAdzan === 'function') {
+      window.Native.tesPopupAdzan(slot);
+    } else if (window.Native && typeof window.Native.testAlarm === 'function') {
+      window.Native.testAlarm(slot);
+    }
+  }
+
+  function unggahAudio(slot) {
+    targetUploadSlot = slot;
+    document.getElementById('filePicker').click();
+  }
+
+  document.getElementById('filePicker').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (targetUploadSlot === 'subuh') {
+      state.nadaSubuh = 'custom';
+      state.audioCustomSubuh = file.name;
+      localStorage.setItem('nadaSubuh', 'custom');
+      localStorage.setItem('audioCustomSubuh', file.name);
+    } else {
+      state.nadaLainnya = 'custom';
+      state.audioCustomLainnya = file.name;
+      localStorage.setItem('nadaLainnya', 'custom');
+      localStorage.setItem('audioCustomLainnya', file.name);
+    }
+    updateUIInfo();
+  });
+
+  function perbaruiLokasi() {
+    document.getElementById('lokasiText').innerHTML = '&#128205; Mencari koordinat...';
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          state.lat = parseFloat(pos.coords.latitude.toFixed(4));
+          state.lng = parseFloat(pos.coords.longitude.toFixed(4));
+          localStorage.setItem('lat', state.lat);
+          localStorage.setItem('lng', state.lng);
+          ambilNamaKota(state.lat, state.lng);
+          refreshJadwal();
+        },
+        () => {
+          state.lokasiNama = 'Lokasi tersimpan (' + state.lat + ', ' + state.lng + ')';
+          updateUIInfo();
+        },
+        { timeout: 8000 }
+      );
+    }
+  }
+
+  function ambilNamaKota(lat, lng) {
+    fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=id')
+      .then(r => r.json())
+      .then(d => {
+        const kec = d.locality || '';
+        const kab = d.city || d.principalSubdivision || '';
+        const gabung = [kec, kab].filter(Boolean).join(', ');
+        state.lokasiNama = gabung ? gabung : ('Lokasi tersimpan (' + lat + ', ' + lng + ')');
+        localStorage.setItem('lokasiNama', state.lokasiNama);
+        updateUIInfo();
+      })
+      .catch(() => {
+        state.lokasiNama = 'Lokasi tersimpan (' + lat + ', ' + lng + ')';
+        updateUIInfo();
+      });
+  }
+
+  terapkanTema();
+  updateUIInfo();
+  refreshJadwal();
+  setInterval(tick, 1000);
+  tick();
 </script>
 </body>
 </html>
