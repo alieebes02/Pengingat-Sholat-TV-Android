@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pengingat Shalat — TV</title>
-<link rel="preconnect" href="https://googleapis.com">
-<link href="https://googleapis.com/css2?family=Spectral:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0B1B2B; --bg2:#102738; --card:#142F43; --card-active:#1C3B52;
@@ -77,13 +77,13 @@ body{
 }
 .progress-wrap{
   width:min(34vw, 440px); height:6px; background:rgba(255,255,255,0.1);
-  border-radius:999px; overflow:hidden; margin:0.4vh 0 0.6vh; position:relative;
+  border-radius:999px; overflow:hidden; margin:0.5vh 0 1.4vh; position:relative;
 }
 .progress-fill{
   height:100%; width:0%; background:linear-gradient(90deg, var(--accent-soft), var(--accent));
   border-radius:999px; box-shadow:0 0 12px var(--accent); transition:width 0.8s linear;
 }
-.meta-pills{display:flex; flex-direction:column; gap:0.7vh; justify-content:center; align-items:center; margin-top:0.3vh;}
+.meta-pills{display:flex; flex-direction:column; gap:1.3vh; justify-content:center; align-items:center; margin-top:0.2vh;}
 .loc-pill{
   background:rgba(20,47,67,0.85); border:1px solid rgba(255,255,255,0.14);
   color:var(--text); font-size:1.15vw; font-weight:600;
@@ -136,7 +136,6 @@ button, select{
 }
 button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft);}
 .status{font-size:1vw; color:var(--muted); text-align:center;}
-.status.ok{color:var(--accent);}
 
 .gear-btn{
   position:fixed; left:3.5vw; bottom:4vh; z-index:20;
@@ -149,26 +148,6 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
 .gear-btn:focus{
   background:var(--card-active); border:3px solid var(--accent);
   box-shadow:0 0 18px rgba(217,164,65,0.9); transform:scale(1.15);
-}
-
-.ticker-bar{
-  position:fixed; left:1.5vw; right:1.5vw; bottom:1.5vh; height:4.2vh; min-height:32px;
-  background:rgba(16,39,56,0.92); border-top:1px solid rgba(217,164,65,0.4);
-  border-radius:0 0 5px 5px; display:flex; align-items:center; overflow:hidden; z-index:10;
-}
-.ticker-label{
-  background:var(--accent); color:var(--bg); font-weight:800; font-size:0.95vw;
-  padding:0 1.2vw; height:100%; display:flex; align-items:center; white-space:nowrap;
-  letter-spacing:0.04em; z-index:2;
-}
-.ticker-track{flex:1; overflow:hidden; white-space:nowrap; position:relative;}
-.ticker-content{
-  display:inline-block; padding-left:100%; font-size:1.05vw; color:var(--text);
-  animation:marqueeHadits 48s linear infinite;
-}
-@keyframes marqueeHadits{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-100%);}
 }
 
 .settings-overlay{
@@ -193,7 +172,6 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   button,select{font-size:3vw;} .status{font-size:2.8vw;}
   .gear-btn{width:13vw; height:13vw; font-size:5.5vw;}
   .settings-header h2{font-size:5vw;}
-  .ticker-label, .ticker-content{font-size:2.8vw;}
 }
 </style>
 </head>
@@ -480,6 +458,7 @@ function tampilkanDetailIslami(label, targetJdn, statusText, penjelasan){
   detailOverlay.classList.add('open');
   btnTutupDetail.focus();
 }
+
 const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
 function gregorianToJDN(y,m,d){
   const a=Math.floor((14-m)/12);
@@ -837,7 +816,8 @@ function perbaruiGpsOtomatis(){
 
 async function ambilNamaLokasi(lat, lng){
   try{
-    const res=await fetch('https://bigdatacloud.net');
+    const url='https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lng)+'&localityLanguage=id';
+    const res=await fetch(url);
     if(!res.ok) throw new Error('gagal ambil nama lokasi');
     const data=await res.json();
     const bagian=[];
