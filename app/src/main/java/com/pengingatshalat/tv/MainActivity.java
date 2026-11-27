@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         webView = new WebView(this);
         webView.setFocusable(true);
         webView.setFocusableInTouchMode(true);
+        webView.requestFocus();
         setContentView(webView);
 
         WebSettings settings = webView.getSettings();
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                pasangNavigasiRemoteTv();
+                terapkanFokusRemoteTv();
             }
         });
 
@@ -89,35 +90,25 @@ public class MainActivity extends AppCompatActivity {
         mintaSemuaIzinStandar();
         cekIzinAlarmDanOverlay();
         webView.loadUrl("file:///android_asset/index.html");
-        webView.requestFocus();
         AlarmScheduler.scheduleAll(this);
     }
 
-    private void pasangNavigasiRemoteTv() {
-        String jsRemote = "(function() {" +
-                "  if (window._tvNavReady) return;" +
-                "  window._tvNavReady = true;" +
-                "  var style = document.createElement('style');" +
-                "  style.innerHTML = '" +
-                "    button:focus, select:focus, input:focus, a:focus, [tabindex]:focus {" +
-                "      outline: 3px solid #D9A441 !important;" +
-                "      outline-offset: 3px !important;" +
-                "      box-shadow: 0 0 12px rgba(217, 164, 65, 0.85) !important;" +
-                "      transform: scale(1.03);" +
-                "      transition: all 0.15s ease;" +
-                "    }" +
-                "  ';" +
-                "  document.head.appendChild(style);" +
-                "  function siapkanFokus() {" +
-                "    var elems = document.querySelectorAll('button, select, input, a, [onclick]');" +
-                "    elems.forEach(function(el) {" +
-                "      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');" +
-                "    });" +
+    private void terapkanFokusRemoteTv() {
+        String js = "(function() {" +
+                "  if (!document.getElementById('tv-focus-style')) {" +
+                "    var style = document.createElement('style');" +
+                "    style.id = 'tv-focus-style';" +
+                "    style.innerHTML = 'button:focus, select:focus, input:focus, a:focus, [tabindex]:focus { outline: 4px solid #D9A441 !important; outline-offset: 3px !important; box-shadow: 0 0 15px rgba(217, 164, 65, 0.85) !important; transform: scale(1.03); transition: transform 0.15s ease; }';" +
+                "    document.head.appendChild(style);" +
                 "  }" +
-                "  siapkanFokus();" +
-                "  setInterval(siapkanFokus, 1500);" +
+                "  var items = document.querySelectorAll('button, select, input, a');" +
+                "  for (var i = 0; i < items.length; i++) {" +
+                "    if (!items[i].hasAttribute('tabindex')) {" +
+                "      items[i].setAttribute('tabindex', '0');" +
+                "    }" +
+                "  }" +
                 "})();";
-        webView.evaluateJavascript(jsRemote, null);
+        webView.evaluateJavascript(js, null);
     }
 
     private void mintaSemuaIzinStandar() {
@@ -160,8 +151,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             new AlertDialog.Builder(this)
-                    .setTitle("Izin Tampilan Popup & Auto-Start TV")
-                    .setMessage("Agar aplikasi dapat otomatis terbuka saat TV menyala dan menampilkan popup adzan di atas aplikasi lain, aktifkan izin 'Tampilkan di atas aplikasi lain' (Display over other apps).")
+                    .setTitle("Izin Tampilan Popup Adzan")
+                    .setMessage("Agar pengingat adzan dapat muncul otomatis di layar TV saat Anda sedang menonton aplikasi lain, aktifkan izin 'Tampilkan di atas aplikasi lain' (Display over other apps) untuk aplikasi ini.")
                     .setCancelable(false)
                     .setPositiveButton("Buka Pengaturan", (dialog, which) -> {
                         try {
@@ -202,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             webView.evaluateJavascript("javascript:tutupMenuDariRemot()", result -> {
-                if (""exit"".equals(result) || "null".equals(result)) {
+                if (result == null || "null".equals(result) || result.contains("exit")) {
                     if (webView.canGoBack()) {
                         webView.goBack();
                     } else {
