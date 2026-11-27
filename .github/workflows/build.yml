@@ -2,7 +2,7 @@ name: Build Android Release APK
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -18,22 +18,23 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease
+        run: |
+          if [ -f "gradlew" ]; then
+            chmod +x gradlew
+            ./gradlew assembleRelease
+          else
+            gradle assembleRelease
+          fi
 
       - name: Generate Keystore & Sign Release APK
         run: |
-          APK_UNSIGNED=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          keytool -genkeypair -v -keystore release.jks -alias pengingat_shalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=PengingatShalatTV, OU=Dev, O=AlieEbes, L=Pekalongan, S=JawaTengah, C=ID"
-          ZIPALIGN=$(find $ANDROID_HOME/build-tools -name "zipalign" | sort -V | tail -n 1)
-          APKSIGNER=$(find $ANDROID_HOME/build-tools -name "apksigner" | sort -V | tail -n 1)
-          $ZIPALIGN -f -v 4 "$APK_UNSIGNED" app-release-aligned.apk
-          $APKSIGNER sign --ks release.jks --ks-key-alias pengingat_shalat --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk app-release-aligned.apk
+          keytool -genkey -v -keystore release.keystore -alias pengingatshalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=PengingatShalatTV, OU=Community, O=AlieEbes, L=Pekalongan, S=JawaTengah, C=ID"
+          UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          BUILD_TOOLS=$(ls -d ${ANDROID_HOME}/build-tools/* | sort -V | tail -n 1)
+          "${BUILD_TOOLS}/zipalign" -v -p 4 "$UNSIGNED_APK" app-release-aligned.apk
+          "${BUILD_TOOLS}/apksigner" sign --ks release.keystore --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk app-release-aligned.apk
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
