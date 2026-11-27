@@ -1,35 +1,44 @@
-name: Build APK
+name: Build Android Release APK
 
 on:
   push:
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Ambil kode proyek
+      - name: Checkout Kode
         uses: actions/checkout@v4
 
-      - name: Siapkan Java
+      - name: Siapkan Java JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Tunjuk lokasi Android SDK bawaan server
-        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Siapkan Gradle versi tetap
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.6'
+      - name: Beri Izin Eksekusi Gradlew
+        run: chmod +x ./gradlew
 
-      - name: Build APK (debug)
-        run: gradle assembleDebug --stacktrace
+      - name: Buat Kunci Tanda Tangan (Keystore Release)
+        run: |
+          keytool -genkeypair -v -keystore release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias pengingatshalat -storepass shalat123456 -keypass shalat123456 -dname "CN=Alie Ebes, OU=PengingatShalatTV, O=Ummah, L=Pekalongan, S=Jawa Tengah, C=ID"
 
-      - name: Unggah hasil APK
+      - name: Build & Tandatangani APK Release
+        run: |
+          ./gradlew assembleRelease
+          BUILD_TOOLS_DIR=$(find "$ANDROID_HOME/build-tools" -maxdepth 1 -mindepth 1 | sort -V | tail -n 1)
+          UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          "$BUILD_TOOLS_DIR/zipalign" -v -p 4 "$UNSIGNED_APK" app-release-aligned.apk
+          "$BUILD_TOOLS_DIR/apksigner" sign --ks release-key.jks --ks-key-alias pengingatshalat --ks-pass pass:shalat123456 --key-pass pass:shalat123456 --out Pengingat-Shalat-TV-Release.apk app-release-aligned.apk
+
+      - name: Unggah Hasil APK Release
         uses: actions/upload-artifact@v4
         with:
-          name: PengingatShalatTV-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Pengingat-Shalat-TV-Release
+          path: Pengingat-Shalat-TV-Release.apk
