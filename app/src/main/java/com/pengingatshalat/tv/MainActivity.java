@@ -2,6 +2,7 @@ package com.pengingatshalat.tv;
 
 import android.Manifest;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,10 +21,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQ_LOCATION = 1001;
+    private static final int REQ_PERMISSIONS = 1001;
     private static final int REQ_FILE_CHOOSER = 1002;
     private WebView webView;
     private ValueCallback<Uri[]> filePathCallback;
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                mintaIzinLokasi();
+                mintaSemuaIzinStandar();
                 boolean izinSudahAda =
                         ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                                 == PackageManager.PERMISSION_GRANTED;
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
-                mintaIzinPenyimpanan();
+                mintaSemuaIzinStandar();
                 if (filePathCallback != null) filePathCallback.onReceiveValue(null);
                 filePathCallback = callback;
                 Intent intent = params.createIntent();
@@ -74,44 +77,72 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mintaIzinLokasi();
-        mintaIzinPenyimpanan();
-        mintaIzinNotifikasiDanAlarm();
+        mintaSemuaIzinStandar();
+        cekIzinAlarmDanOverlay();
         webView.loadUrl("file:///android_asset/index.html");
         AlarmScheduler.scheduleAll(this);
     }
 
-    private void mintaIzinLokasi() {
+    private void mintaSemuaIzinStandar() {
+        List<String> daftarIzin = new ArrayList<>();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQ_LOCATION);
+            daftarIzin.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            daftarIzin.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
-    }
 
-    private void mintaIzinPenyimpanan() {
-        String izin = Build.VERSION.SDK_INT >= 33
+        String izinAudio = Build.VERSION.SDK_INT >= 33
                 ? Manifest.permission.READ_MEDIA_AUDIO
                 : Manifest.permission.READ_EXTERNAL_STORAGE;
-        if (ContextCompat.checkSelfPermission(this, izin) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{izin}, REQ_LOCATION);
+        if (ContextCompat.checkSelfPermission(this, izinAudio) != PackageManager.PERMISSION_GRANTED) {
+            daftarIzin.add(izinAudio);
         }
-    }
 
-    private void mintaIzinNotifikasiDanAlarm() {
         if (Build.VERSION.SDK_INT >= 33) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQ_LOCATION);
+                daftarIzin.add(Manifest.permission.POST_NOTIFICATIONS);
             }
         }
+
+        if (!daftarIzin.isEmpty()) {
+            ActivityCompat.requestPermissions(this, daftarIzin.toArray(new String[0]), REQ_PERMISSIONS);
+        }
+    }
+
+    private void cekIzinAlarmDanOverlay() {
         if (Build.VERSION.SDK_INT >= 31) {
             AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
             if (am != null && !am.canScheduleExactAlarms()) {
-                try { startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)); }
-                catch (Exception ignored) { }
+                try {
+                    startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM));
+                } catch (Exception ignored) { }
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Izin Tampilan Popup Adzan")
+                    .setMessage("Agar pengingat adzan dapat muncul otomatis di layar TV saat Anda sedang menonton aplikasi lain, aktifkan izin 'Tampilkan di atas aplikasi lain' (Display over other apps) untuk aplikasi ini.")
+                    .setCancelable(false)
+                    .setPositiveButton("Buka Pengaturan", (dialog, which) -> {
+                        try {
+                            Intent intent = new Intent(
+                                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:" + getPackageName())
+                            );
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            try {
+                                startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
+                            } catch (Exception ex) {
+                                Toast.makeText(this, "Silakan aktifkan izin Overlay secara manual di Pengaturan Aplikasi TV.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Nanti", (dialog, which) -> dialog.dismiss())
+                    .show();
         }
     }
 
