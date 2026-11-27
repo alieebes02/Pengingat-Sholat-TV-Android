@@ -77,13 +77,13 @@ body{
 }
 .progress-wrap{
   width:min(34vw, 440px); height:6px; background:rgba(255,255,255,0.1);
-  border-radius:999px; overflow:hidden; margin:0.5vh 0 1.4vh; position:relative;
+  border-radius:999px; overflow:hidden; margin:0.4vh 0 0.8vh; position:relative;
 }
 .progress-fill{
   height:100%; width:0%; background:linear-gradient(90deg, var(--accent-soft), var(--accent));
   border-radius:999px; box-shadow:0 0 12px var(--accent); transition:width 0.8s linear;
 }
-.meta-pills{display:flex; flex-direction:column; gap:1.3vh; justify-content:center; align-items:center; margin-top:0.2vh;}
+.meta-pills{display:flex; flex-direction:column; gap:1.1vh; justify-content:center; align-items:center; margin-top:0.4vh;}
 .loc-pill{
   background:rgba(20,47,67,0.85); border:1px solid rgba(255,255,255,0.14);
   color:var(--text); font-size:1.15vw; font-weight:600;
@@ -138,7 +138,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
 .status{font-size:1vw; color:var(--muted); text-align:center;}
 
 .gear-btn{
-  position:fixed; left:3.5vw; bottom:4vh; z-index:20;
+  position:fixed; left:4.2vw; bottom:6.5vh; z-index:20;
   width:4.4vw; height:4.4vw; min-width:50px; min-height:50px;
   border-radius:50%; background:rgba(20,47,67,0.92);
   border:2px solid rgba(217,164,65,0.45);
@@ -147,7 +147,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
 }
 .gear-btn:focus{
   background:var(--card-active); border:3px solid var(--accent);
-  box-shadow:0 0 18px rgba(217,164,65,0.9); transform:scale(1.15);
+  box-shadow:0 0 18px rgba(217,164,65,0.9); transform:scale(1.12);
 }
 
 .settings-overlay{
@@ -170,7 +170,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   .loc-pill, .method-pill{font-size:2.8vw;}
   .row{flex-wrap:wrap;} .pcard{min-width:26vw;} .pcard .pname{font-size:3vw;} .pcard .ptime{font-size:4.5vw;}
   button,select{font-size:3vw;} .status{font-size:2.8vw;}
-  .gear-btn{width:13vw; height:13vw; font-size:5.5vw;}
+  .gear-btn{left:5vw; bottom:7.5vh; width:13vw; height:13vw; font-size:5.5vw;}
   .settings-header h2{font-size:5vw;}
 }
 </style>
@@ -458,7 +458,6 @@ function tampilkanDetailIslami(label, targetJdn, statusText, penjelasan){
   detailOverlay.classList.add('open');
   btnTutupDetail.focus();
 }
-
 const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
 function gregorianToJDN(y,m,d){
   const a=Math.floor((14-m)/12);
@@ -797,7 +796,6 @@ function perbaruiGpsOtomatis(){
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
     ambilNamaLokasi(coords.lat, coords.lng);
   }, ()=>{
-    // Tetap gunakan lokasi tersimpan jika GPS belum siap
   }, {enableHighAccuracy:false, timeout:12000, maximumAge:60000});
 }
 
@@ -816,8 +814,7 @@ function perbaruiGpsOtomatis(){
 
 async function ambilNamaLokasi(lat, lng){
   try{
-    const url='https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lng)+'&localityLanguage=id';
-    const res=await fetch(url);
+    const res=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lng+'&localityLanguage=id');
     if(!res.ok) throw new Error('gagal ambil nama lokasi');
     const data=await res.json();
     const bagian=[];
