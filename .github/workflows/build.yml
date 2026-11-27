@@ -2,7 +2,7 @@ name: Build Android Release APK
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -24,36 +24,34 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Fix PNG image formats
+        run: |
+          python3 -c '
+          import glob, subprocess
+          for path in glob.glob("app/src/main/res/**/*.png", recursive=True):
+              subprocess.run(["convert", path, "PNG32:" + path], check=False)
+          '
+
       - name: Build & Sign Release APK
         run: |
-          GRADLEW_PATH=$(find . -maxdepth 3 -name "gradlew" | head -n 1)
-          if [ -n "$GRADLEW_PATH" ]; then
-            PROJECT_DIR=$(dirname "$GRADLEW_PATH")
-            cd "$PROJECT_DIR"
+          if [ -f "./gradlew" ]; then
             chmod +x gradlew
             ./gradlew assembleRelease
           else
-            BUILD_GRADLE=$(find . -maxdepth 3 -name "settings.gradle*" | head -n 1)
-            if [ -n "$BUILD_GRADLE" ]; then
-              cd "$(dirname "$BUILD_GRADLE")"
-            fi
             gradle assembleRelease
           fi
 
-          UNSIGNED_APK=$(find . -path "*/build/outputs/apk/release/*.apk" | head -n 1)
-          if [ -z "$UNSIGNED_APK" ]; then
-            echo "File APK release tidak ditemukan!"
-            exit 1
-          fi
+          UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          echo "Found APK: $UNSIGNED_APK"
 
-          keytool -genkey -v -keystore release.keystore -alias pengingat_shalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=Alie_Ebes, OU=Ummah, O=PengingatShalatTV, L=Pekalongan, S=JawaTengah, C=ID"
+          keytool -genkey -v -keystore release.keystore -alias pengingatshalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=Alie_Ebes, OU=TV, O=PengingatShalat, L=Pekalongan, S=JawaTengah, C=ID"
 
-          BUILD_TOOLS_DIR=$(find /usr/local/lib/android/sdk/build-tools -maxdepth 1 -mindepth 1 | sort -V | tail -n 1)
-          "$BUILD_TOOLS_DIR/zipalign" -v -p 4 "$UNSIGNED_APK" aligned.apk
-          "$BUILD_TOOLS_DIR/apksigner" sign --ks release.keystore --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk aligned.apk
+          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
+          $BUILD_TOOLS/zipalign -v -p 4 "$UNSIGNED_APK" app-release-aligned.apk
+          $BUILD_TOOLS/apksigner sign --ks release.keystore --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk app-release-aligned.apk
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: Pengingat-Shalat-TV-Release
-          path: "**/Pengingat-Shalat-TV-Release.apk"
+          path: Pengingat-Shalat-TV-Release.apk
