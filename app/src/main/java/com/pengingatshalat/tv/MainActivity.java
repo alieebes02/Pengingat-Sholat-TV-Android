@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!daftarIzin.isEmpty()) {
-            ActivityCompat.requestPermissions(this, daftarIzin.toArray(new String), REQ_PERMISSIONS);
+            ActivityCompat.requestPermissions(this, daftarIzin.toArray(new String[0]), REQ_PERMISSIONS);
         }
     }
 
