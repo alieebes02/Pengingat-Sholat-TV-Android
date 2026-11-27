@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pengingat Shalat — TV</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://googleapis.com">
+<link href="https://googleapis.com/css2?family=Spectral:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0B1B2B; --bg2:#102738; --card:#142F43; --card-active:#1C3B52;
@@ -31,27 +31,24 @@ body{
     repeating-linear-gradient(45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px),
     repeating-linear-gradient(-45deg, transparent 0 38px, var(--pattern-line) 38px 40px, transparent 40px 78px);
   color:var(--text); font-family:'Manrope',sans-serif;
-  padding:4.5vh 5vw; padding-top:calc(4.5vh + env(safe-area-inset-top,0px));
-  padding-bottom:calc(4.5vh + env(safe-area-inset-bottom,0px));
-  box-sizing:border-box;
-  display:flex; flex-direction:column; min-height:100%; gap:1.8vh;
-  overflow-x:hidden;
+  padding:4.2vh 5vw 7.5vh;
+  padding-top:calc(4.2vh + env(safe-area-inset-top,0px));
+  padding-bottom:calc(7.5vh + env(safe-area-inset-bottom,0px));
+  display:flex; flex-direction:column; min-height:100%; gap:1.5vh;
+  overflow:hidden;
 }
-.topbar{display:flex; justify-content:space-between; align-items:flex-start; color:var(--muted); font-size:1.3vw; min-font-size:16px;}
-.topbar .date{font-size:1.45vw; font-weight:600; color:var(--text);}
-.topbar .date-sub{font-size:1.2vw; color:var(--muted); margin-top:0.2vh;}
+.topbar{display:flex; justify-content:space-between; align-items:flex-start; color:var(--muted); font-size:1.3vw;}
+.topbar .date{font-size:1.45vw; font-weight:600; color:var(--text); letter-spacing:0.01em;}
+.topbar .date-hijri{font-size:1.15vw; color:var(--accent); opacity:0.9; margin-top:0.2vh;}
 .clock-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:0.6vh;}
 .topbar .clock{
-  font-family:'Manrope',sans-serif; font-weight:800; font-size:2.5vw;
-  color:var(--text); letter-spacing:0.04em; line-height:1;
-  font-variant-numeric:tabular-nums;
+  font-family:'Manrope',sans-serif; font-weight:800; font-size:2.4vw;
+  color:var(--text); letter-spacing:0.04em; line-height:1; font-variant-numeric:tabular-nums;
 }
-.topbar .clock .sec{
-  font-size:0.68em; color:var(--accent); font-weight:700; margin-left:0.15vw;
-}
+.topbar .clock .sec{font-size:1.65vw; color:var(--accent); font-weight:700;}
 .adzan-badge{
   font-size:0.95vw; color:var(--accent); font-weight:600;
-  background:rgba(217,164,65,0.14); border:1px solid rgba(217,164,65,0.4);
+  background:rgba(217,164,65,0.12); border:1px solid rgba(217,164,65,0.38);
   border-radius:999px; padding:0.35vh 1vw; letter-spacing:0.02em;
 }
 .ornamen{display:flex; align-items:center; justify-content:center; gap:1vw; color:var(--accent); opacity:0.8; margin-bottom:0.2vh;}
@@ -59,67 +56,78 @@ body{
 .moon-watermark{position:fixed; top:-7vw; right:-7vw; width:34vw; height:34vw; z-index:-1; opacity:0.14; pointer-events:none;}
 .moon-watermark circle:first-child{fill:var(--accent);}
 .moon-watermark circle:last-child{fill:var(--bg);}
-.skyline{position:fixed; left:0; right:0; bottom:0; width:100%; height:20vh; z-index:-1; opacity:0.18; pointer-events:none;}
+.skyline{position:fixed; left:0; right:0; bottom:4.5vh; width:100%; height:18vh; z-index:-1; opacity:0.16; pointer-events:none;}
 .skyline rect, .skyline path, .skyline circle{fill:var(--accent);}
 .frame-border{position:fixed; inset:1.5vh 1.5vw; border:2px solid var(--accent); border-radius:6px; z-index:1; pointer-events:none; opacity:0.5;}
 .frame-border::before{content:''; position:absolute; inset:6px; border:1px solid var(--accent); border-radius:4px; opacity:0.6;}
-.frame-corner{position:fixed; width:4vw; height:4vw; min-width:38px; min-height:38px; z-index:2; pointer-events:none; opacity:0.8;}
+.frame-corner{position:fixed; width:4vw; height:4vw; min-width:38px; min-height:38px; z-index:2; pointer-events:none; opacity:0.85;}
 .frame-corner path{fill:none; stroke:var(--accent); stroke-width:2.5;}
 .frame-corner circle{fill:var(--accent);}
 .frame-corner.tl{top:1.3vh; left:1.3vw;}
 .frame-corner.tr{top:1.3vh; right:1.3vw; transform:rotate(90deg);}
 .frame-corner.br{bottom:1.3vh; right:1.3vw; transform:rotate(180deg);}
 .frame-corner.bl{bottom:1.3vh; left:1.3vw; transform:rotate(270deg);}
+
 .hero{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:0.7vh;}
 .hero .label{color:var(--muted); font-size:1.35vw; letter-spacing:0.05em; text-transform:uppercase; font-weight:600;}
-.hero .name{font-family:'Spectral',serif; font-weight:600; font-size:clamp(28px, 5.2vw, 8vh); color:var(--accent); line-height:1.05;}
-.hero .countdown{font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(36px, 7vw, 11vh); letter-spacing:0.04em; font-variant-numeric:tabular-nums; line-height:1.05;}
+.hero .name{font-family:'Spectral',serif; font-weight:600; font-size:clamp(28px, 5vw, 7.6vh); color:var(--accent); line-height:1.05;}
+.hero .countdown{
+  font-family:'Manrope',sans-serif; font-weight:800; font-size:clamp(34px, 6.6vw, 10.2vh);
+  letter-spacing:0.04em; font-variant-numeric:tabular-nums; line-height:1.05;
+}
 .progress-wrap{
-  width:min(36vw, 480px); height:0.65vh; min-height:5px;
-  background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden;
-  margin:0.4vh 0 0.6vh; border:1px solid rgba(217,164,65,0.2);
+  width:min(34vw, 440px); height:6px; background:rgba(255,255,255,0.1);
+  border-radius:999px; overflow:hidden; margin:0.4vh 0 0.6vh; position:relative;
 }
 .progress-fill{
   height:100%; width:0%; background:linear-gradient(90deg, var(--accent-soft), var(--accent));
-  border-radius:999px; transition:width 0.8s ease;
+  border-radius:999px; box-shadow:0 0 12px var(--accent); transition:width 0.8s linear;
 }
+.meta-pills{display:flex; flex-wrap:wrap; gap:0.8vw; justify-content:center; align-items:center; margin-top:0.2vh;}
 .loc-pill{
-  display:inline-flex; align-items:center; gap:0.5vw;
-  background:rgba(20,47,67,0.78); border:1px solid rgba(217,164,65,0.32);
-  padding:0.55vh 1.3vw; border-radius:999px; color:var(--text);
-  font-size:1.25vw; font-weight:600; backdrop-filter:blur(4px);
+  background:rgba(20,47,67,0.85); border:1px solid rgba(255,255,255,0.14);
+  color:var(--text); font-size:1.15vw; font-weight:600;
+  padding:0.45vh 1.2vw; border-radius:999px; letter-spacing:0.02em;
 }
-.loc-pill.ok{border-color:rgba(217,164,65,0.55);}
-.hero #labelMetode{font-size:1.02vw; margin-top:0.2vh; color:var(--muted);}
+.method-pill{
+  background:rgba(217,164,65,0.16); border:1.5px solid var(--accent);
+  color:var(--accent); font-size:1.1vw; font-weight:800;
+  padding:0.45vh 1.2vw; border-radius:999px; letter-spacing:0.03em;
+  box-shadow:0 0 14px rgba(217,164,65,0.18);
+}
+
 .row{display:flex; gap:1.4vw; justify-content:center;}
 .pcard{
-  position:relative; background:var(--card); border-radius:4px 4px 18px 18px; padding:2.5vh 1.6vw 2.1vh; min-width:11.5vw;
-  text-align:center; border:2px solid transparent; transition:transform .25s, border-color .25s, background .25s, box-shadow .25s;
+  position:relative; background:var(--card); border-radius:4px 4px 18px 18px;
+  padding:2.4vh 1.6vw 2vh; min-width:11.5vw;
+  text-align:center; border:2px solid transparent;
+  transition:transform .25s, border-color .25s, background .25s, box-shadow .25s;
 }
 .pcard::before{
   content:''; position:absolute; top:-9px; left:50%; transform:translateX(-50%);
   width:60%; height:16px; border-radius:50% 50% 0 0; background:var(--card);
-  border:2px solid transparent; transition:background .25s, border-color .25s;
+  border:2px solid transparent; transition:background .25s;
 }
 .pcard.active::before{background:var(--card-active); border-color:var(--accent);}
-.pcard .pname{font-size:1.25vw; color:var(--muted); margin-bottom:0.5vh; font-weight:600;}
-.pcard .ptime{font-size:2.05vw; font-weight:800; font-variant-numeric:tabular-nums;}
-.pcard .next-tag{
-  display:none; margin-top:0.6vh; font-size:0.78vw; font-weight:800;
-  letter-spacing:0.08em; color:var(--bg); background:var(--accent);
-  padding:0.2vh 0.75vw; border-radius:999px; text-transform:uppercase;
-}
+.pcard .pname{font-size:1.25vw; color:var(--muted); margin-bottom:0.4vh; font-weight:600; letter-spacing:0.02em;}
+.pcard .ptime{font-size:2.05vw; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:0.02em;}
 .pcard.active{
-  background:var(--card-active); border-color:var(--accent);
-  transform:translateY(-6px); box-shadow:0 8px 24px rgba(217,164,65,0.22);
+  background:var(--card-active); border-color:var(--accent); transform:translateY(-6px);
+  box-shadow:0 8px 24px rgba(217,164,65,0.28);
 }
-.pcard.active .pname{color:var(--accent);}
+.pcard.active .pname{color:var(--accent); font-weight:800;}
+.next-tag{
+  display:none; margin-top:0.5vh; font-size:0.78vw; font-weight:800; letter-spacing:0.08em;
+  color:var(--bg); background:var(--accent); border-radius:999px; padding:0.2vh 0.75vw;
+}
 .pcard.active .next-tag{display:inline-block;}
+
 #infoIslami .pcard{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:2.5vh 1.6vw 1.8vh; gap:0.35vh; min-width:12.5vw;
+  padding:2.4vh 1.6vw 1.6vh; gap:0.3vh;
 }
 #infoIslami .pcard .pname{margin-bottom:0;}
+
 .controls{display:flex; gap:1.4vw; flex-wrap:wrap; justify-content:center;}
 button, select{
   font-family:'Manrope',sans-serif; font-size:1.15vw; color:var(--text);
@@ -127,20 +135,42 @@ button, select{
   padding:1.3vh 1.4vw; cursor:pointer; appearance:none;
 }
 button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 4px var(--accent-soft);}
-.status{font-size:1.05vw; color:var(--muted); text-align:center;}
+.status{font-size:1vw; color:var(--muted); text-align:center;}
 .status.ok{color:var(--accent);}
+
 .gear-btn{
-  position:fixed; left:4vw; bottom:4vh; z-index:20;
-  width:4.6vw; height:4.6vw; min-width:54px; min-height:54px;
-  border-radius:50%; background:rgba(20,47,67,0.9);
+  position:fixed; left:3.5vw; bottom:6.8vh; z-index:20;
+  width:4.4vw; height:4.4vw; min-width:50px; min-height:50px;
+  border-radius:50%; background:rgba(20,47,67,0.92);
   border:2px solid rgba(217,164,65,0.45);
-  display:flex; align-items:center; justify-content:center; font-size:2vw;
+  display:flex; align-items:center; justify-content:center; font-size:1.9vw;
   cursor:pointer; padding:0; transition:transform .2s, border-color .2s, box-shadow .2s, background .2s;
 }
 .gear-btn:focus{
   background:var(--card-active); border:3px solid var(--accent);
-  box-shadow:0 0 18px rgba(217,164,65,0.85); transform:scale(1.15);
+  box-shadow:0 0 18px rgba(217,164,65,0.9); transform:scale(1.15);
 }
+
+.ticker-bar{
+  position:fixed; left:1.5vw; right:1.5vw; bottom:1.5vh; height:4.2vh; min-height:32px;
+  background:rgba(16,39,56,0.92); border-top:1px solid rgba(217,164,65,0.4);
+  border-radius:0 0 5px 5px; display:flex; align-items:center; overflow:hidden; z-index:10;
+}
+.ticker-label{
+  background:var(--accent); color:var(--bg); font-weight:800; font-size:0.95vw;
+  padding:0 1.2vw; height:100%; display:flex; align-items:center; white-space:nowrap;
+  letter-spacing:0.04em; z-index:2;
+}
+.ticker-track{flex:1; overflow:hidden; white-space:nowrap; position:relative;}
+.ticker-content{
+  display:inline-block; padding-left:100%; font-size:1.05vw; color:var(--text);
+  animation:marqueeHadits 48s linear infinite;
+}
+@keyframes marqueeHadits{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-100%);}
+}
+
 .settings-overlay{
   display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75);
   z-index:30; align-items:center; justify-content:center; padding:4vh 4vw;
@@ -149,21 +179,21 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
 .settings-panel{
   background:var(--bg2); border-radius:20px; padding:3vh 3vw; max-width:92vw; max-height:88vh;
   overflow-y:auto; display:flex; flex-direction:column; gap:2vh; width:min(900px, 92vw);
+  border-top:3px solid var(--accent);
 }
 .settings-header{display:flex; justify-content:space-between; align-items:center; gap:2vw;}
 .settings-header h2{margin:0; font-family:'Spectral',serif; font-size:1.8vw; color:var(--accent); display:flex; align-items:center; gap:0.6vw;}
-.settings-panel{border-top:3px solid var(--accent);}
+
 @media (max-width:700px){
-  .topbar{font-size:3.2vw;} .topbar .date{font-size:3.6vw;} .topbar .date-sub{font-size:2.9vw;}
-  .topbar .clock{font-size:5.5vw;} .adzan-badge{font-size:2.5vw;}
+  .topbar .date{font-size:3.2vw;} .topbar .date-hijri{font-size:2.6vw;}
+  .topbar .clock{font-size:5vw;} .topbar .clock .sec{font-size:3.5vw;} .adzan-badge{font-size:2.3vw;}
   .hero .name{font-size:8vw;} .hero .countdown{font-size:11vw;} .hero .label{font-size:3vw;}
-  .loc-pill{font-size:3vw; padding:0.7vh 3vw;} .progress-wrap{width:70vw;}
+  .loc-pill, .method-pill{font-size:2.8vw;}
   .row{flex-wrap:wrap;} .pcard{min-width:26vw;} .pcard .pname{font-size:3vw;} .pcard .ptime{font-size:4.5vw;}
-  .pcard .next-tag{font-size:2vw;}
-  button,select{font-size:3vw;}
-  .status{font-size:3vw;}
-  .gear-btn{width:14vw; height:14vw; font-size:6vw;}
+  button,select{font-size:3vw;} .status{font-size:2.8vw;}
+  .gear-btn{width:13vw; height:13vw; font-size:5.5vw;}
   .settings-header h2{font-size:5vw;}
+  .ticker-label, .ticker-content{font-size:2.8vw;}
 }
 </style>
 </head>
@@ -210,10 +240,10 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
   <div class="topbar">
     <div>
       <div class="date" id="tgl">—</div>
-      <div class="date-sub" id="tglHijriah">—</div>
+      <div class="date-hijri" id="tglHijriah">—</div>
     </div>
     <div class="clock-wrap">
-      <div class="clock" id="jam">--:--<span class="sec">:--</span></div>
+      <div class="clock" id="jam">--:--<span class="sec">:00</span></div>
       <div class="adzan-badge">🔔 Adzan Otomatis Aktif</div>
     </div>
   </div>
@@ -226,15 +256,31 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
     <div class="name" id="nextName">Memuat…</div>
     <div class="countdown" id="countdown">--:--:--</div>
     <div class="progress-wrap" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="loc-pill" id="locWrap"><span>📍</span><span id="locInfo">Lokasi belum aktif</span></div>
-    <div class="status" id="labelMetode"></div>
+    <div class="meta-pills">
+      <div class="loc-pill" id="locInfo">📍 Lokasi belum aktif</div>
+      <div class="method-pill" id="labelMetode">🧭 Metode: Kemenag RI</div>
+    </div>
   </div>
-  <div class="row" id="prayerRow" style="margin-top:0.8vh;"></div>
-  <div class="row" id="infoIslami" style="margin-top:0.2vh;"></div>
 
-  <div class="status" id="statusMsg">Free for the Ummah, not for sale<br>By. Alie_Ebes ©2026</div>
+  <div class="row" id="prayerRow" style="margin-top:0.5vh;"></div>
+  <div class="row" id="infoIslami" style="margin-top:0;"></div>
+
+  <div class="status" id="statusMsg" style="font-size:0.9vw; opacity:0.85;">Free for the Ummah, not for sale • By. Alie_Ebes ©2026</div>
 
   <button id="btnGear" class="gear-btn" aria-label="Pengaturan" title="Pengaturan">⚙️</button>
+
+  <div class="ticker-bar">
+    <div class="ticker-label">❖ MUTIARA HADITS</div>
+    <div class="ticker-track">
+      <div class="ticker-content">
+        "Amalan yang paling dicintai oleh Allah adalah shalat pada waktunya." (HR. Bukhari &amp; Muslim) &nbsp;&nbsp;❖&nbsp;&nbsp;
+        "Shalat berjamaah lebih utama dibandingkan shalat sendirian dengan dua puluh tujuh derajat." (HR. Bukhari &amp; Muslim) &nbsp;&nbsp;❖&nbsp;&nbsp;
+        "Perjanjian antara kami dan mereka adalah shalat; barangsiapa meninggalkannya maka sungguh ia telah kafir." (HR. Tirmidzi) &nbsp;&nbsp;❖&nbsp;&nbsp;
+        "Jadikanlah sabar dan shalat sebagai penolongmu." (QS. Al-Baqarah: 45) &nbsp;&nbsp;❖&nbsp;&nbsp;
+        "Barangsiapa menjaga shalat lima waktu, maka baginya cahaya, bukti, dan keselamatan pada hari kiamat." (HR. Ahmad)
+      </div>
+    </div>
+  </div>
 
   <div class="settings-overlay" id="settingsOverlay">
     <div class="settings-panel">
@@ -318,9 +364,7 @@ button:focus, select:focus, input:focus, .pcard:focus{outline:none; border-color
       <div class="status" id="detailDasar" style="text-align:left; line-height:1.6;"></div>
     </div>
   </div>
-
 <script>
-// ---------- Preferensi lokal (tanpa akun) ----------
 function loadPref(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:v; }catch(e){ return d; } }
 function savePref(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 
@@ -331,8 +375,21 @@ selTema.value=loadPref('tema','malam');
 selMetode.value=loadPref('metode','kemenag');
 root.setAttribute('data-theme', selTema.value);
 
+const KETERANGAN_METODE={
+  kemenag:'Kementerian Agama RI',
+  muhammadiyah:'HISABMU / KHGT Muhammadiyah',
+  mwl:'Muslim World League (MWL)',
+  isna:'Islamic Society of North America (ISNA)'
+};
+
+function perbaruiBadgeMetode(){
+  const elLabel=document.getElementById('labelMetode');
+  if(elLabel) elLabel.textContent='🧭 Metode: '+(KETERANGAN_METODE[selMetode.value] || selMetode.value);
+}
+perbaruiBadgeMetode();
+
 selTema.addEventListener('change',()=>{ root.setAttribute('data-theme',selTema.value); savePref('tema',selTema.value); });
-selMetode.addEventListener('change',()=>{ savePref('metode',selMetode.value); hitungDanTampilkan(); syncNative(); });
+selMetode.addEventListener('change',()=>{ savePref('metode',selMetode.value); perbaruiBadgeMetode(); hitungDanTampilkan(); syncNative(); });
 
 function syncNative(){
   if(typeof Native==='undefined') return;
@@ -345,7 +402,6 @@ function syncNative(){
   }catch(e){}
 }
 
-// ---------- Menu pengaturan & tombol Back remot TV ----------
 const settingsOverlay=document.getElementById('settingsOverlay');
 const detailOverlay=document.getElementById('detailOverlay');
 const btnGear=document.getElementById('btnGear');
@@ -390,7 +446,6 @@ document.addEventListener('keydown', (e)=>{
   }
 });
 
-// ---------- Tombol Tes Pop-up Layar Penuh ----------
 document.getElementById('btnPopupSubuh').addEventListener('click', ()=>{
   if(typeof Native!=='undefined' && typeof Native.tesPopupAdzan==='function'){
     Native.tesPopupAdzan('subuh');
@@ -401,14 +456,6 @@ document.getElementById('btnPopupDzuhur').addEventListener('click', ()=>{
     Native.tesPopupAdzan('dzuhur');
   }
 });
-
-// ---------- Detail waktu shalat (klik kartu jadwal) ----------
-const KETERANGAN_METODE={
-  kemenag:'Kementerian Agama RI',
-  muhammadiyah:'HISABMU / KHGT Muhammadiyah',
-  mwl:'Muslim World League (MWL)',
-  isna:'Islamic Society of North America (ISNA)'
-};
 
 function tampilkanDetailShalat(key){
   const item=jadwalCache.find(p=>p.key===key);
@@ -446,8 +493,6 @@ function tampilkanDetailIslami(label, targetJdn, statusText, penjelasan){
   detailOverlay.classList.add('open');
   btnTutupDetail.focus();
 }
-
-// ---------- Kalender Hijriah (hisab tabular, offline) ----------
 const BULAN_HIJRIAH=["Muharram","Safar","Rabiul Awal","Rabiul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Syaban","Ramadhan","Syawal","Dzulqaidah","Dzulhijjah"];
 function gregorianToJDN(y,m,d){
   const a=Math.floor((14-m)/12);
@@ -486,7 +531,6 @@ function tampilkanTanggalHijriah(){
       banner.style.display='none';
     }
   }
-
   renderInfoIslami(h, jdn);
 }
 
@@ -510,7 +554,7 @@ function renderInfoIslami(h, jdn){
   const items=[];
 
   const PENJELASAN={
-    'Ramadhan':'Bulan ke-9 kalender Hijriah, bulan wajib berpuasa bagi umat Islam. Dihitung dengan hisab tabular (bukan rukyat/pengamatan hilal langsung), sehingga tanggal bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
+    'Ramadhan':'Bulan ke-9 kalender Hijriah, bulan wajib berpuasa bagi umat Islam. Dihitung dengan hisab tabular, sehingga tanggal bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
     'Idul Fitri':'Hari raya 1 Syawal, menandai berakhirnya bulan Ramadhan. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari pengumuman resmi pemerintah (Sidang Isbat).',
     'Idul Adha':'Hari raya 10 Dzulhijjah, bertepatan dengan puncak ibadah haji dan disunnahkan berkurban. Dihitung dengan hisab tabular, bisa berbeda ±1 hari dari penetapan resmi.'
   };
@@ -547,7 +591,7 @@ function renderInfoIslami(h, jdn){
 
   box.innerHTML = items.map(it=>
     '<div class="pcard"><div class="pname">'+it.label+'</div>'+
-    '<div style="font-size:0.95vw; color:var(--muted); margin:0.2vh 0;">'+it.tanggal+'</div>'+
+    '<div style="font-size:0.95vw; color:var(--muted); margin:0.15vh 0;">'+it.tanggal+'</div>'+
     '<div class="ptime" style="font-size:1.3vw;">'+it.status+'</div></div>'
   ).join('');
 
@@ -577,7 +621,6 @@ function tickClock(){
 }
 setInterval(tickClock,1000); tickClock();
 
-// ---------- Perhitungan waktu shalat (metode astronomis, tanpa koneksi internet) ----------
 const METHODS={
   kemenag:{fajr:20, isha:18},
   muhammadiyah:{fajr:18, isha:18},
@@ -606,7 +649,7 @@ function sunPosition(jd){
   return {dec:dec, eqt:eqt};
 }
 function sunAngleTime(jd, angle, lat, lng, tz, dir){
-  const {dec,eqt}=sunPosition(jd+ (12-0)/24 );
+  const {dec,eqt}=sunPosition(jd+0.5);
   const noon=12-lng/15-eqt+tz;
   const num=-Math.sin(dtr(angle))-Math.sin(dtr(lat))*Math.sin(dtr(dec));
   const den=Math.cos(dtr(lat))*Math.cos(dtr(dec));
@@ -641,7 +684,7 @@ function hitungWaktu(lat,lng,methodKey){
   const jd=julian(now.getFullYear(), now.getMonth()+1, now.getDate());
   const fajr=sunAngleTime(jd, m.fajr, lat, lng, timezoneOffset, 'ccw');
   const {eqt}=sunPosition(jd+0.5);
-  const dzuhur=12-lng/15-eqt+timezoneOffset+ (2/60);
+  const dzuhur=12-lng/15-eqt+timezoneOffset+(2/60);
   const ashar=asrTime(jd, lat, lng, timezoneOffset, 1);
   const maghrib=sunAngleTime(jd, 0.833, lat, lng, timezoneOffset, 'cw');
   const isya=sunAngleTime(jd, m.isha, lat, lng, timezoneOffset, 'cw');
@@ -657,8 +700,7 @@ function hitungWaktu(lat,lng,methodKey){
 let jadwalCache=[];
 function hitungDanTampilkan(){
   if(!coords) return;
-  const elLabel=document.getElementById('labelMetode');
-  if(elLabel) elLabel.textContent='Metode: '+(KETERANGAN_METODE[selMetode.value] || selMetode.value);
+  perbaruiBadgeMetode();
   jadwalCache=hitungWaktu(coords.lat, coords.lng, selMetode.value);
   renderCards();
   updateCountdown();
@@ -670,7 +712,7 @@ function renderCards(){
   jadwalCache.forEach(p=>{
     const div=document.createElement('div');
     div.className='pcard'; div.tabIndex=0; div.id='card-'+p.key;
-    div.innerHTML='<div class="pname">'+p.nama+'</div><div class="ptime">'+toHHMM(p.t)+'</div><div class="next-tag">Berikutnya</div>';
+    div.innerHTML='<div class="pname">'+p.nama+'</div><div class="ptime">'+toHHMM(p.t)+'</div><div class="next-tag">BERIKUTNYA</div>';
     div.addEventListener('click', ()=> tampilkanDetailShalat(p.key));
     div.addEventListener('keydown', (e)=>{
       if(e.key==='Enter' || e.key===' '){ e.preventDefault(); tampilkanDetailShalat(p.key); }
@@ -700,9 +742,8 @@ function updateCountdown(){
       if(i>0 && jadwalCache[i-1].t!==null){
         prevDate=timeToDate(jadwalCache[i-1].t);
       } else {
-        const lastPrev=timeToDate(jadwalCache[jadwalCache.length-1].t);
-        lastPrev.setDate(lastPrev.getDate()-1);
-        prevDate=lastPrev;
+        prevDate=timeToDate(jadwalCache[jadwalCache.length-1].t);
+        prevDate.setDate(prevDate.getDate()-1);
       }
       break;
     }
@@ -719,11 +760,11 @@ function updateCountdown(){
   const ss=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   document.getElementById('countdown').textContent=hh+':'+mm+':'+ss;
 
-  const pFill=document.getElementById('progressFill');
-  if(pFill && prevDate && nextDate){
+  const fill=document.getElementById('progressFill');
+  if(fill && prevDate && nextDate){
     const total=Math.max(1, nextDate-prevDate);
-    const elapsed=Math.max(0, Math.min(total, now-prevDate));
-    pFill.style.width=((elapsed/total)*100).toFixed(1)+'%';
+    const sudah=Math.max(0, Math.min(total, now-prevDate));
+    fill.style.width=((sudah/total)*100).toFixed(1)+'%';
   }
 
   document.querySelectorAll('.pcard').forEach(c=>c.classList.remove('active'));
@@ -737,29 +778,28 @@ function updateCountdown(){
 }
 setInterval(updateCountdown,1000);
 
-// ---------- Lokasi via GPS browser ----------
 function rapikanTeksLokasi(teks){
   if(!teks) return teks;
-  return teks.replace(/,\s*Jawa,\s*Indonesia/i, ', Pekalongan, Jawa Tengah, Indonesia')
+  return teks.replace(/,\s*Jawa,\s*Indonesia/i, ', Pekalongan, Jawa Tengah')
+             .replace(/,\s*Jawa Tengah,\s*Indonesia/i, ', Jawa Tengah')
+             .replace(/,\s*Indonesia$/i, '')
              .replace(/,\s*Jawa,/i, ', Jawa Tengah,');
 }
 
 document.getElementById('btnLoc').addEventListener('click', aktifkanLokasi);
 function aktifkanLokasi(){
   const info=document.getElementById('locInfo');
-  const wrap=document.getElementById('locWrap');
-  if(!('geolocation' in navigator)){ info.textContent='Perangkat tidak mendukung lokasi otomatis.'; return; }
-  info.textContent='Meminta izin lokasi…';
+  if(!('geolocation' in navigator)){ info.textContent='📍 Perangkat tidak mendukung lokasi otomatis.'; return; }
+  info.textContent='📍 Meminta izin lokasi…';
   navigator.geolocation.getCurrentPosition(pos=>{
     coords={lat:pos.coords.latitude, lng:pos.coords.longitude};
     savePref('lat', coords.lat); savePref('lng', coords.lng);
-    info.textContent='Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
-    if(wrap) wrap.classList.add('ok');
+    info.textContent='📍 Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')';
     hitungDanTampilkan();
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
     ambilNamaLokasi(coords.lat, coords.lng);
   }, err=>{
-    info.textContent='Izin lokasi ditolak/gagal. Gunakan menu remote TV untuk mengizinkan akses lokasi.';
+    info.textContent='📍 Izin lokasi ditolak/gagal. Izinkan akses lokasi di pengaturan TV.';
   }, {enableHighAccuracy:false, timeout:10000});
 }
 
@@ -768,9 +808,7 @@ function aktifkanLokasi(){
   if(lat && lng){
     coords={lat:parseFloat(lat), lng:parseFloat(lng)};
     const namaTersimpan=rapikanTeksLokasi(loadPref('lokasiNama', null));
-    document.getElementById('locInfo').textContent = namaTersimpan || ('Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')');
-    const wrap=document.getElementById('locWrap');
-    if(wrap) wrap.classList.add('ok');
+    document.getElementById('locInfo').textContent = '📍 ' + (namaTersimpan || ('Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')'));
     hitungDanTampilkan();
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
     ambilNamaLokasi(coords.lat, coords.lng);
@@ -779,7 +817,7 @@ function aktifkanLokasi(){
 
 async function ambilNamaLokasi(lat, lng){
   try{
-    const res=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+lat+'&longitude='+lng+'&localityLanguage=id');
+    const res=await fetch('https://bigdatacloud.net');
     if(!res.ok) throw new Error('gagal ambil nama lokasi');
     const data=await res.json();
     const bagian=[];
@@ -789,18 +827,14 @@ async function ambilNamaLokasi(lat, lng){
       const prov = data.principalSubdivision === 'Jawa' ? 'Jawa Tengah' : data.principalSubdivision;
       bagian.push(prov);
     }
-    if(data.countryName) bagian.push(data.countryName);
     const nama=rapikanTeksLokasi(bagian.filter(Boolean).join(', '));
     if(nama){
       savePref('lokasiNama', nama);
-      document.getElementById('locInfo').textContent=nama;
-      const wrap=document.getElementById('locWrap');
-      if(wrap) wrap.classList.add('ok');
+      document.getElementById('locInfo').textContent='📍 '+nama;
     }
   }catch(e){}
 }
 
-// ---------- Volume ----------
 const volSlider=document.getElementById('volSlider');
 volSlider.value=loadPref('volume','80');
 volSlider.addEventListener('input', ()=> savePref('volume', volSlider.value));
@@ -816,7 +850,6 @@ volSlider.addEventListener('keydown', (e)=>{
   }
 });
 
-// ---------- Nada & audio kustom per slot (subuh / lainnya) ----------
 let actx=null;
 function nadaCtx(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); return actx; }
 function beep(freq, start, dur, type){
@@ -962,7 +995,6 @@ function mainkan(slot){
     mainkanBeep();
     setTimeout(resetTombolTes,1800);
   }
-  document.getElementById('statusMsg').textContent='🔔 Waktu shalat telah tiba — nada pengingat diputar.';
   if('Notification' in window && Notification.permission==='granted'){
     try{ new Notification('Waktu Shalat', {body:'Saatnya shalat.'}); }catch(e){}
   }
