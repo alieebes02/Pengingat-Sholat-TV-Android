@@ -2,7 +2,7 @@ name: Build Android Release APK
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -19,25 +19,41 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build Release APK
+      - name: Setup Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build & Sign Release APK
         run: |
-          if [ -f "gradlew" ]; then
+          GRADLEW_PATH=$(find . -maxdepth 3 -name "gradlew" | head -n 1)
+          if [ -n "$GRADLEW_PATH" ]; then
+            PROJECT_DIR=$(dirname "$GRADLEW_PATH")
+            cd "$PROJECT_DIR"
             chmod +x gradlew
             ./gradlew assembleRelease
           else
+            BUILD_GRADLE=$(find . -maxdepth 3 -name "settings.gradle*" | head -n 1)
+            if [ -n "$BUILD_GRADLE" ]; then
+              cd "$(dirname "$BUILD_GRADLE")"
+            fi
             gradle assembleRelease
           fi
 
-      - name: Generate Keystore & Sign Release APK
-        run: |
-          keytool -genkey -v -keystore release.keystore -alias pengingatshalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=PengingatShalatTV, OU=Community, O=AlieEbes, L=Pekalongan, S=JawaTengah, C=ID"
-          UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          BUILD_TOOLS=$(ls -d ${ANDROID_HOME}/build-tools/* | sort -V | tail -n 1)
-          "${BUILD_TOOLS}/zipalign" -v -p 4 "$UNSIGNED_APK" app-release-aligned.apk
-          "${BUILD_TOOLS}/apksigner" sign --ks release.keystore --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk app-release-aligned.apk
+          UNSIGNED_APK=$(find . -path "*/build/outputs/apk/release/*.apk" | head -n 1)
+          if [ -z "$UNSIGNED_APK" ]; then
+            echo "File APK release tidak ditemukan!"
+            exit 1
+          fi
+
+          keytool -genkey -v -keystore release.keystore -alias pengingat_shalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=Alie_Ebes, OU=Ummah, O=PengingatShalatTV, L=Pekalongan, S=JawaTengah, C=ID"
+
+          BUILD_TOOLS_DIR=$(find /usr/local/lib/android/sdk/build-tools -maxdepth 1 -mindepth 1 | sort -V | tail -n 1)
+          "$BUILD_TOOLS_DIR/zipalign" -v -p 4 "$UNSIGNED_APK" aligned.apk
+          "$BUILD_TOOLS_DIR/apksigner" sign --ks release.keystore --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk aligned.apk
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: Pengingat-Shalat-TV-Release
-          path: Pengingat-Shalat-TV-Release.apk
+          path: "**/Pengingat-Shalat-TV-Release.apk"
