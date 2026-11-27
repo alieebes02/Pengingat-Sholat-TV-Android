@@ -19,36 +19,57 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Fix PNG image formats
+        run: |
+          pip install --quiet pillow
+          python3 -c '
+          import glob, os
+          from PIL import Image
+          for p in glob.glob("app/src/main/res/**/*.png", recursive=True):
+              try:
+                  im = Image.open(p)
+                  im.save(p, format="PNG")
+                  print("Fixed:", p)
+              except Exception as e:
+                  print("Skip:", p, e)
+          '
+
       - name: Setup Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
-      - name: Fix PNG image formats
-        run: |
-          python3 -c '
-          import glob, subprocess
-          for path in glob.glob("app/src/main/res/**/*.png", recursive=True):
-              subprocess.run(["convert", path, "PNG32:" + path], check=False)
-          '
-
       - name: Build & Sign Release APK
         run: |
           if [ -f "./gradlew" ]; then
-            chmod +x gradlew
-            ./gradlew assembleRelease
+            chmod +x ./gradlew
+            ./gradlew assembleRelease --no-daemon
           else
-            gradle assembleRelease
+            gradle assembleRelease --no-daemon
           fi
 
           UNSIGNED_APK=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
           echo "Found APK: $UNSIGNED_APK"
 
-          keytool -genkey -v -keystore release.keystore -alias pengingatshalat -keyalg RSA -keysize 2048 -validity 10000 -storepass android123 -keypass android123 -dname "CN=Alie_Ebes, OU=TV, O=PengingatShalat, L=Pekalongan, S=JawaTengah, C=ID"
+          keytool -genkeypair -v \
+            -keystore release.keystore \
+            -alias pengingat_shalat_key \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass android123 \
+            -keypass android123 \
+            -dname "CN=Alie_Ebes, OU=Ummah, O=PengingatShalatTV, L=Pekalongan, S=JawaTengah, C=ID"
 
-          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
-          $BUILD_TOOLS/zipalign -v -p 4 "$UNSIGNED_APK" app-release-aligned.apk
-          $BUILD_TOOLS/apksigner sign --ks release.keystore --ks-pass pass:android123 --key-pass pass:android123 --out Pengingat-Shalat-TV-Release.apk app-release-aligned.apk
+          BUILD_TOOLS=$(ls -d ${ANDROID_HOME}/build-tools/* | sort -V | tail -n 1)
+          "$BUILD_TOOLS/zipalign" -v -p 4 "$UNSIGNED_APK" aligned-release.apk
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks release.keystore \
+            --ks-key-alias pengingat_shalat_key \
+            --ks-pass pass:android123 \
+            --key-pass pass:android123 \
+            --out Pengingat-Shalat-TV-Release.apk \
+            aligned-release.apk
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
