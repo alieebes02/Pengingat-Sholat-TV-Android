@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             webView.evaluateJavascript("javascript:tutupMenuDariRemot()", result -> {
-                if (""exit"".equals(result) || "null".equals(result)) {
+                if ("\"exit\"".equals(result) || "null".equals(result)) {
                     if (webView.canGoBack()) {
                         webView.goBack();
                     } else {
