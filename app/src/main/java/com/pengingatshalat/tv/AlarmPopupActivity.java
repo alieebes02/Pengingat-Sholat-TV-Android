@@ -1,10 +1,13 @@
 package com.pengingatshalat.tv;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
@@ -23,6 +26,8 @@ public class AlarmPopupActivity extends Activity {
 
     private MediaPlayer mediaPlayer;
     private ToneGenerator toneGenerator;
+    private AudioManager audioManager;
+    private AudioFocusRequest audioFocusRequest;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable autoFinish;
 
@@ -41,6 +46,8 @@ public class AlarmPopupActivity extends Activity {
             );
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         String slot = getIntent().getStringExtra("slot");
         if (slot == null) slot = "lainnya";
@@ -88,10 +95,45 @@ public class AlarmPopupActivity extends Activity {
         root.addView(card, lp);
         setContentView(root);
 
+        mintaAudioFocus();
         mainkanDanTutupOtomatis(slot);
     }
 
-    private String namaDariKey(String key){
+    private void mintaAudioFocus() {
+        if (audioManager == null) return;
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                    .setAudioAttributes(attrs)
+                    .setWillPauseWhenDucked(true)
+                    .build();
+            audioManager.requestAudioFocus(audioFocusRequest);
+        } else {
+            audioManager.requestAudioFocus(null, AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        }
+    }
+
+    private void lepasAudioFocus() {
+        if (audioManager == null) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest);
+        } else {
+            audioManager.abandonAudioFocus(null);
+        }
+    }
+
+    private AudioAttributes buatAudioAttributes() {
+        return new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build();
+    }
+
+    private String namaDariKey(String key) {
         switch (key) {
             case "subuh": return "Subuh";
             case "dzuhur": return "Dzuhur";
@@ -102,11 +144,11 @@ public class AlarmPopupActivity extends Activity {
         }
     }
 
-    private int dp(int v){
+    private int dp(int v) {
         return (int) (v * getResources().getDisplayMetrics().density);
     }
 
-    private void mainkanDanTutupOtomatis(String slot){
+    private void mainkanDanTutupOtomatis(String slot) {
         SharedPreferences prefs = getSharedPreferences("pengingat_shalat", MODE_PRIVATE);
         String audioPath = prefs.getString("audio_path_" + slot, null);
         if (audioPath == null && !"subuh".equals(slot)) {
@@ -119,8 +161,8 @@ public class AlarmPopupActivity extends Activity {
             if (f.exists()) {
                 try {
                     mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setAudioAttributes(buatAudioAttributes());
                     mediaPlayer.setDataSource(audioPath);
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     mediaPlayer.setVolume(vol, vol);
                     mediaPlayer.setOnCompletionListener(mp -> finish());
                     mediaPlayer.prepare();
@@ -137,9 +179,9 @@ public class AlarmPopupActivity extends Activity {
             try {
                 AssetFileDescriptor afd = getAssets().openFd(namaAset);
                 mediaPlayer = new MediaPlayer();
+                mediaPlayer.setAudioAttributes(buatAudioAttributes());
                 mediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                 afd.close();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mediaPlayer.setVolume(vol, vol);
                 mediaPlayer.setOnCompletionListener(mp -> finish());
                 mediaPlayer.prepare();
@@ -149,7 +191,7 @@ public class AlarmPopupActivity extends Activity {
         }
 
         int volume = (int) (vol * ToneGenerator.MAX_VOLUME);
-        toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, volume);
+        toneGenerator = new ToneGenerator(AudioManager.STREAM_ALARM, volume);
         int durasi = 400;
         int[] jeda = {0, 600, 1200};
         for (int t : jeda) {
@@ -167,10 +209,11 @@ public class AlarmPopupActivity extends Activity {
         if (mediaPlayer != null) { try { mediaPlayer.release(); } catch (Exception ignored) { } }
         if (toneGenerator != null) { try { toneGenerator.release(); } catch (Exception ignored) { } }
         if (autoFinish != null) handler.removeCallbacks(autoFinish);
+        lepasAudioFocus();
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         finish();
     }
 }
