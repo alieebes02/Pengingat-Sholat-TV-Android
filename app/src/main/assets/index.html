@@ -803,16 +803,49 @@ function aktifkanLokasi(){
   }, {enableHighAccuracy:false, timeout:10000});
 }
 
+function namaDariKoordinatLokal(lat, lng){
+  if (Math.abs(lat - (-6.87)) < 0.15 && Math.abs(lng - 109.62) < 0.15) {
+    return 'Wonokerto, Kab. Pekalongan, Jawa Tengah';
+  }
+  return null;
+}
+
+function perbaruiGpsOtomatis(){
+  if(!('geolocation' in navigator)) return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const latBaru = pos.coords.latitude;
+    const lngBaru = pos.coords.longitude;
+    const pindahJauh = !coords || Math.abs(latBaru - coords.lat) > 0.02 || Math.abs(lngBaru - coords.lng) > 0.02;
+
+    coords = {lat: latBaru, lng: lngBaru};
+    savePref('lat', coords.lat);
+    savePref('lng', coords.lng);
+
+    if (pindahJauh) {
+      savePref('lokasiNama', '');
+      const cadangan = namaDariKoordinatLokal(coords.lat, coords.lng);
+      document.getElementById('locInfo').textContent = '📍 ' + (cadangan || ('Lokasi aktif ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')'));
+    }
+
+    hitungDanTampilkan();
+    if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
+    ambilNamaLokasi(coords.lat, coords.lng);
+  }, ()=>{
+    // Tetap gunakan lokasi tersimpan jika GPS belum siap
+  }, {enableHighAccuracy:false, timeout:12000, maximumAge:60000});
+}
+
 (function initLoc(){
   const lat=loadPref('lat',null), lng=loadPref('lng',null);
   if(lat && lng){
     coords={lat:parseFloat(lat), lng:parseFloat(lng)};
-    const namaTersimpan=rapikanTeksLokasi(loadPref('lokasiNama', null));
+    const namaTersimpan=rapikanTeksLokasi(loadPref('lokasiNama', null)) || namaDariKoordinatLokal(coords.lat, coords.lng);
     document.getElementById('locInfo').textContent = '📍 ' + (namaTersimpan || ('Lokasi tersimpan ('+coords.lat.toFixed(2)+', '+coords.lng.toFixed(2)+')'));
     hitungDanTampilkan();
     if(typeof Native!=='undefined'){ try{ Native.simpanLokasi(coords.lat, coords.lng); syncNative(); }catch(e){} }
     ambilNamaLokasi(coords.lat, coords.lng);
   }
+  setTimeout(perbaruiGpsOtomatis, 1500);
 })();
 
 async function ambilNamaLokasi(lat, lng){
@@ -823,16 +856,23 @@ async function ambilNamaLokasi(lat, lng){
     const bagian=[];
     if(data.locality) bagian.push(data.locality);
     if(data.city && data.city!==data.locality) bagian.push(data.city);
+    if(data.localityInfo && Array.isArray(data.localityInfo.administrative)){
+      const kab = data.localityInfo.administrative.find(a => a.adminLevel === 5 || (a.name && a.name.toLowerCase().includes('kabupaten')));
+      if(kab && !bagian.includes(kab.name)) bagian.push(kab.name);
+    }
     if(data.principalSubdivision){
       const prov = data.principalSubdivision === 'Jawa' ? 'Jawa Tengah' : data.principalSubdivision;
-      bagian.push(prov);
+      if(!bagian.includes(prov)) bagian.push(prov);
     }
-    const nama=rapikanTeksLokasi(bagian.filter(Boolean).join(', '));
+    const nama=rapikanTeksLokasi(bagian.filter(Boolean).join(', ')) || namaDariKoordinatLokal(lat, lng);
     if(nama){
       savePref('lokasiNama', nama);
       document.getElementById('locInfo').textContent='📍 '+nama;
     }
-  }catch(e){}
+  }catch(e){
+    const cadangan = namaDariKoordinatLokal(lat, lng);
+    if(cadangan) document.getElementById('locInfo').textContent='📍 '+cadangan;
+  }
 }
 
 const volSlider=document.getElementById('volSlider');
